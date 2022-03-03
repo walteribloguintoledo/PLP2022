@@ -1,0 +1,77 @@
+body
+{
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.signup-form,
+.Login-form
+{
+  width: 350px;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,0.3);
+  background: #fff;
+  padding: 20px;
+  margin: 3% auto 0;
+  
+}
+
+.Login-form h1,
+.SignUp-form h1
+{
+  color: #1c8adb;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.input-box
+{
+  border-radius: 20px;
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  border: 1px solid #999;
+  outline: none;
+}
+
+button
+{
+  color: #fff;
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 15px;
+  margin: 10px 0;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.fpass
+{
+  margin-top: -10;
+  margin-bottom: 50;
+
+}
+.fpass a
+{
+  color: black;
+}
+
+.Signup-btn button,
+.Login-btn button
+{
+  background-color: #1c8adb;
+}
+
+.Login-form .input-box:focus,
+.SignUp-form .input-box:focus
+{
+  border: 1px solid #1c8adb;
+}
+
+.SignUp-form p
+{
+  text-align: center;
+}
+
