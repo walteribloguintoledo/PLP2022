@@ -126,7 +126,13 @@
             alert( "Please provide your password!" );
             document.myForm.password.focus() ;
             return false;
-         }  
+         }
+         var pwd1 = document.myForm.password.value;
+         if(document.myForm.password2.value != pwd1){
+            alert( "yourpassword does not match" );
+            document.myForm.password2.focus() ;
+            return false;
+         }
 
          if( document.myForm.lastname.value == "" ) {
             alert( "Please provide your Last Name!" );
@@ -135,7 +141,7 @@
          }
          if( document.myForm.firstname.value == "" ) {
             alert( "Please provide your First name!" );
-            document.myForm.lastname.focus() ;
+            document.myForm.fastname.focus() ;
             return false;
          }
          if( document.myForm.age.value == "" ) {
@@ -147,8 +153,11 @@
             alert( "Please provide your Address!" );
             document.myForm.address.focus() ;
             return false;
+         }else{
+          alert("you succesfuly Validated")
          }
          return( true );
+         e.preventDefault();
       }
       
     </script>
