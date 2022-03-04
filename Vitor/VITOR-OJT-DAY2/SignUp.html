@@ -1,0 +1,46 @@
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sign Up</title>
+
+      <link rel="stylesheet" href="css/signup.css">
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <script src="script/signup.js"></script>
+  </head>
+
+  <body>
+    <div class = "SignUp-form">
+      <h1> Account Creation </h1>
+       <p>Already have an Account? <a href="Login.html">Log In</a></p>
+
+      <form method="get" onsubmit="return emptyfield()">
+          <input type="text" class="input-box"  placeholder="First Name" id="fname" name = "fname">
+          <input type="text" class="input-box"  placeholder="Last Name" id="lname" name="lname">
+          <label> Birthdate: </label><input type=date id = DOB>
+          <input type="email" class="input-box"  placeholder="Email Address" id="Email" name="Email">
+          <input type="text" class="input-box"  placeholder="Username" id="username" name="username">
+          <input type="password" class="input-box"  placeholder="Password" id="password" name="password">
+
+           <div class="Signup-btn">
+               <input type="submit" value="Submit" onclick = "ageCalculator()"/>
+          </div>
+      </form>
+
+      <h3 style="color:32A80F" id="result" align="center"></h3>
+      <h3 style="color:32A80F" id="ffname" align="center"></h3>
+        <!--onclick="showMessage()"-->
+        <!--<div class="container">
+          <p> First Name: <span id = "display_fname"></span></p>
+          <p> Last Name: <span id = "display_lname"></span></p>
+          <p> Age: <span id = "display_age"></span></p>
+          <p> Email Address: <span id = "display_Email"></span></p>
+        </div>-->
+    </div>
+  </body>
+
+
+
+</html>

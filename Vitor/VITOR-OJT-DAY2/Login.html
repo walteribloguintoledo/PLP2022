@@ -1,0 +1,36 @@
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="script/login.js"></script>
+  </head>
+
+    <body>
+      <div class="Login-form">
+        <h1>Login</h1>
+        <form method="post" action="Homepage.html" onsubmit="return emptyfield()">
+            <label>Username</label>
+            <input type="text" class="input-box" placeholder="Enter Username or Email" id="uname" name="uname">
+
+            <label>Password</label>
+            <input type="password" class="input-box" placeholder="Enter Password" id="pass" name="pass">
+
+            <div class="fpass">
+              <a href="#">Forgot Password?</a>
+            </div>
+
+            <div class="Login-btn">
+              <button type="submit">Login</button>
+            </div>
+
+            <div class="Sign-Up">
+              <p>Don't have an account? <a href="SignUp.html">Sign Up</a></p>
+            </div>
+          </form>
+      </div>
+    </body>
+</html>
