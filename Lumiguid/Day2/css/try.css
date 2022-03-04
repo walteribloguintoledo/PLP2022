@@ -1,0 +1,59 @@
+.checkbox_option{
+    label{
+        margin-right: 1em;
+        position: relative;
+        &:before {
+          content: "";
+          display: inline-block;
+          width: 0.5em;
+          height: 0.5em;
+          margin-right: 0.5em;
+          vertical-align: -2px;
+          border: 2px solid $grey;
+          padding: 0.12em;
+          background-color: transparent;
+          background-clip: content-box;
+          transition: all 0.2s ease;
+        }
+        &:after {
+          border-right: 2px solid $black;
+          border-top: 2px solid $black;
+          content: "";
+          height: 20px;
+          left: 2px;
+          position: absolute;
+          top: 7px;
+          transform: scaleX(-1) rotate(135deg);
+          transform-origin: left top;
+          width: 7px;
+          display: none;
+        }
+    }
+.radio_option {
+  label {
+      margin-right: 1em;
+    &:before {
+      content: "";
+      display: inline-block;
+      width: 0.5em;
+      height: 0.5em;
+      margin-right: 0.5em;
+      border-radius: 100%;
+      vertical-align: -3px;
+      border: 2px solid $grey;
+      padding: 0.15em;
+      background-color: transparent;
+      background-clip: content-box;
+      transition: all 0.2s ease;
+    }
+  }
+  input {
+    &:hover + label:before {
+      border-color: $black;
+    }
+    &:checked + label:before {
+      background-color: $black;
+      border-color: $black;
+    }
+  }
+}
