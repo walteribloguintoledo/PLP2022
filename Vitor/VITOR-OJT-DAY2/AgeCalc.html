@@ -1,0 +1,46 @@
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Age Calculation</title>
+
+      <link rel="stylesheet" href="css/signup.css">
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <script src="script/AgeCalc.js"></script>
+  </head>
+
+  <body>
+    <div class = "SignUp-form">
+      <h1> Age Calculation </h1>
+       <p>Already have an Account? <a href="#">Log In</a></p>
+
+      <form action="" method="get">
+          <input type="text" class="input-box"  placeholder="First Name" id="fname" name = "fname">
+          <input type="text" class="input-box"  placeholder="Last Name" id="lname" name="lname">
+          <input type="email" class="input-box"  placeholder="Email Address" id="Email" name="Email">
+          <span> Enter Date of Birth: <input type=date id = DOB> </span>
+          
+           <div class="Signup-btn"><br>
+               <button type="button" id="btn" onclick="emptyfield()" >Submit</button>
+          </div>
+
+        
+
+      </form>
+
+        <div class="container">
+          <p> First Name: <span id = "display_name"></span></p>
+          <p> Email Address: <span id = "display_Email"></span></p>
+
+          <p> Age: <span id="result"></span></p>
+        </div>
+
+        <!---->
+    </div>
+  </body>
+
+
+
+</html>

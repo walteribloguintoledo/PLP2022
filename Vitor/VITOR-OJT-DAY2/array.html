@@ -1,0 +1,36 @@
+<html>
+<head>
+
+    <title>Save input into Array</title>
+
+      <link rel="stylesheet" href="css/signup.css">
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <script src="script/array.js"></script>
+</head>
+<body>
+
+
+        <div class = "SignUp-form">
+      <h1> Account Creation </h1>
+       <p>Already have an Account? <a href="Login.html">Log In</a></p>
+
+      <form>
+          <input type="text" class="input-box"  placeholder="First Name" id="fname" name = "fname">
+          <input type="text" class="input-box"  placeholder="Last Name" id="lname" name="lname">
+          <input type="email" class="input-box"  placeholder="Email Address" id="Email" name="Email">
+          <input type="text" class="input-box"  placeholder="Username" id="username" name="username">
+          <input type="password" class="input-box"  placeholder="Password" id="password" name="password">
+
+           <div class="Signup-btn">
+               <button type="button" id="btn" onclick="emptyfield()">Submit</button>
+          </div>
+      </form>
+
+        <div id="msg">
+            <pre></pre>
+        </div>
+
+    </form>
+
+</body>
+</html>

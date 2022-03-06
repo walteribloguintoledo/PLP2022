@@ -1,0 +1,44 @@
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Validation and Age Calculation</title>
+
+      <link rel="stylesheet" href="css/signup.css">
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+      <script src="script/Validation.js"></script>
+  </head>
+
+  <body>
+    <div class = "SignUp-form">
+      <h1> Account Creation </h1>
+       <p>Already have an Account? <a href="#">Log In</a></p>
+
+      <form action="" method="get">
+          <input type="text" class="input-box"  placeholder="First Name" id="fname" name = "fname">
+          <input type="text" class="input-box"  placeholder="Last Name" id="lname" name="lname">
+          <input type="email" class="input-box"  placeholder="Email Address" id="Email" name="Email">
+          <input type="text" class="input-box"  placeholder="Username" id="username" name="username">
+          <input type="password" class="input-box"  placeholder="Password" id="password" name="password">
+
+           <div class="Signup-btn">
+               <button type="button" id="btn" onclick="callboth()" >Submit</button>
+          </div>
+      </form>
+
+        <div class="container">
+          <p> First Name: <span id = "display_name"></span></p>
+          <p> Email Address: <span id = "display_Email"></span></p>
+          <p> UserName: <span id = "display_username"></span></p>
+          <p> Password: <span id = "display_password"></span></p>
+        </div>
+
+        <!---->
+    </div>
+  </body>
+
+
+
+</html>
