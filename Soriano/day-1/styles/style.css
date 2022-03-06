@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+:root {
+    --main-bg-color: white;
+    --secondary-bg-color: #1d6add;
+    --main-font-style: 'Roboto';
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto';
+}
+
+#header {
+    position: relative;
+    padding: 20px 10px;
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav .logo-container {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+.nav ul li {
+    margin: 0 20px;
+}
+
+#intro {
+    background-color: #F8F9FA;
+}
+
+#intro div {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 60px 0;
+}
+
+#intro div p {
+    font-size: 18px;
+    margin: 20px 0;
+    margin-bottom: 40px;
+}
+
+.cta {
+    text-decoration: none;
+    background-color: #1d6add;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+.cta:hover {
+    background-color: #0B5ED7;
+}
+
+.section-title {
+    width: 100%;
+    text-align: center;
+    margin: 50px 0;
+}
+
+.card-container {
+    width: min-content;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+}
+
+.card-container .card-parent-container {
+    width: min-content;
+}
+
+.card {
+    width: 400px;
+    border: 1px solid rgb(196, 196, 196);
+    border-radius: 5px;
+}
+
+.card img {
+    width: 100%;
+}
+
+.card-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.card-body {
+    text-align: center;
+    padding: 20px;
+}
+
+.card-cta {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: var(--secondary-bg-color);
+    border-radius: 5px;
+    color: var(--main-bg-color);
+    padding: 10px 16px;
+    text-decoration: none;
+}
+
+footer {
+    margin-top: 100px;
+}
+
+#social {
+    width: 80%;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+}
+
+#social p {
+    margin-right: 20px;
+}
+
+#social img {
+    display: inline-block;
+    width: 40px;
+    margin-right: 10px;
+}
+
+.copyright {
+    padding: 20px;
+}
