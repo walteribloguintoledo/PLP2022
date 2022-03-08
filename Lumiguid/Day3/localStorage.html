@@ -81,11 +81,19 @@
          registered.push(person);
 
          document.forms[0].reset();
-
+         //display
          console.warn('added',{registered});
          let pre=document.querySelector('#msg pre');
          pre.textContent='\n'+JSON.stringify(registered, '\t',2);
-         
+
+
+         localStorage.setItem("my_person", JSON.stringify(registered));
+
+ //        const putfile = JSON.stringify(registered);
+ //        var getfile =JSON.parse(putfile);
+         var storedFile = JSON.parse(localStorage.getItem("my_person"));
+         console.log(storedFile);
+         console.log(storedFile[0].email)
          }
          document.addEventListener('DOMContentLoaded',()=>{
             document.getElementById("btn").addEventListener('click',addPerson);
