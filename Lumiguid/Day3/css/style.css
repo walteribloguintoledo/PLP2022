@@ -52,7 +52,7 @@ button{
 }
 
 
-input{
+input,textarea{
   width: 20%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -99,6 +99,7 @@ img.avatar {
   width: 20%;
   border-radius: 2%;
 }
+
 
 /* Add padding to containers */
 .container {
