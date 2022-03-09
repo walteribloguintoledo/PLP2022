@@ -82,7 +82,7 @@
 
   <div class="container">
       <div class="title_container">
-        <h2>Access Element</h2>
+        <h2>Please open console for reference</h2>
       </div>
       <div>
         <!--
@@ -93,20 +93,14 @@
             <input type="text" name="loc2" id="loc2" placeholder="index2"  />
           </div>
     -->   
-      <div><h6>Choose element to access:</h6></div>
-    <div>
-          <select name="loc" id="loc2">
-
-            <option value="email">Email</option>
-            <option value="firstname">FirstName</option>
-            <option value="lastname">LastName</option>
-            <option value="age">Age</option>
-            <option value="address">Address</option>            
-          </select>
-      
-    </div>
-          
-          <input type="button" class="btnlogin" onclick="search()" value="Search" />          
+      <div><h5>Choose element to access:</h5></div>
+          <div>
+            <input type="number" name="loc1" id="loc1" value="" placeholder="0"/>
+          </div>
+          <div>
+            <input type="number" name="loc2" id="loc2" value="" placeholder="0"  />
+          </div>
+          <input type="button" class="btnlogin" onclick="display()" value="Search" />          
       </div>
   </div>
 <style type="text/css">
@@ -133,51 +127,7 @@
         background-color: #04AA6D;
         color: white;
       }
-</style>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-        <!--
-trying to put into a table
-    -->
-    <table id="tbl">
-      <tr>
-          <th>Email</th>
-          <th>FirstName</th>
-          <th>LastName</th>
-          <th>Age</th>
-          <th>Address</th>
-      </tr>
-      <tr>
-          <td>yahoo</td>
-          <td>rave</td>
-          <td>dale</td>
-          <td>12</td>
-          <td>waiz city</td>
-      </tr>
-
-    </table>      
-    </div>
-
-
-
+</style>     
     <script type="text/JavaScript">
       //Create a container DIV that will show input values on form submit
       function showDiv(){
@@ -228,110 +178,48 @@ trying to put into a table
         var age = calculateAge(bday)
         var address = document.getElementById("address").value;
         submitted(email,lastname,firstname,bday,address);
-
-/*
-        var email = document.getElementById("email").value;
-        display_email.innerHTML= email;
-
-        var lastname = document.getElementById("lastname").value;
-        display_lastname.innerHTML= lastname;
-
-        var firstname = document.getElementById("firstname").value;
-        display_firstname.innerHTML= firstname;
-
-        var bday = document.getElementById("DOB").value;
-        var age = calculateAge(bday);
-        var address = document.getElementById("address").value;
-        display_address.innerHTML= address;
-*/
-        console.log(email);    
-        console.log(lastname);  
-        console.log(firstname);  
-        console.log(age);  
-        console.log(address);
-        console.log("------------------------------");
-        var registered = [];
-        let person = {
-            id: Date.now(),
-            email: email,
-            firstname:firstname,
-            lastname: lastname,
-            age: age,
-            address: address
-        }
-        registered.push(person);
-        console.table(person);
-/*
-        //access array
-        for(var i=0;i<=person.length;i++){
-            var index1 = person[i];
-            console.log(index1);
-        }
-*/
-
-      //display to div
-//      document.forms[0].reset();
-      let pre=document.querySelector('#msg pre');
-      pre.textContent='\n'+JSON.stringify(registered, '\t',2);
-      
-
-         
-    //  document.addEventListener('DOMContentLoaded',()=>{
-    //  document.getElementById("btn").addEventListener('click',addPerson);
-
-     //    });
+ //       registerPerson.push([email,lastname,firstname,age,address]);  
+      //  document.forms[0].reset();
+        store(email,lastname,firstname,age,address);
       }
-      function search(){
 
-        var email = document.getElementById("email").value;
-        var lastname = document.getElementById("lastname").value;
-        var firstname = document.getElementById("firstname").value;
-        var bday = document.getElementById("DOB").value;
-        var age = calculateAge(bday)
-        var address = document.getElementById("address").value;
-        submitted(email,lastname,firstname,bday,address);
 
-//        var ind1 = document.getElementById("loc1").value;
+      function display(){
+        var ind1 = document.getElementById("loc1").value;
         var ind2 = document.getElementById("loc2").value;
-        let person = {
-        email: email,
-        firstname:firstname,
-        lastname: lastname,
-        age: age,
-        address: address
-      }
-      //trying to access multiple array
- /*  
-      for(var i = 0; i < person.length; i++){
-        var value = person[i];
- //         if(person in grid == false){
- //           grid[firstname] = {}; // must initialize the sub-object, otherwise will get 'undefined' errors
- //           console.log(person[i]);
-            if(ind1 ==value){
-              for (var key in person) {
-                  var value = person[key];
-                   if(ind2 == key){
-                    alert(person[i][key]);
-                     }else{
-                    console.log('a');
-                     }
-              }
-            }else{
-              alert(value);
+        for(var i = 0; i < registerPerson.length; i++) {
+          for (var j = 0;j < registerPerson[i].length; j++){
+            var x = registerPerson[i][j];
+            if(ind1 == i && ind2 == j){
+              alert("The value is: " + x);
+              break;
             }
-      }
-*/
-      //access on only one
-      for (var key in person) {
-          if(ind2 == key){
-            alert(person[key])
-            break;
           }
+        }
+                  
       }
-       // console.log(person[0][firstname]); 
 
-      
-  }
+    var registerPerson = [];
+    function store(email,lastname,firstname,age,address){
+
+        var ems = email;
+        var last = lastname;
+        var first = firstname;
+        var ag = age;
+        var add = address;
+
+        registerPerson.push([ems,last,first,ag,add]);
+        console.table(registerPerson);
+      /*
+      function dis(){
+        for(var i = 0; i < registerPerson.length; i++) {
+          dis = dis + registerPerson[i] + "<br>";
+          alert("hello")
+        }
+      }
+      */
+    }
+
       function calculateAge(date){
         var dob = new Date(date);
             if(date==null || date=='') {
@@ -350,12 +238,13 @@ trying to put into a table
                
                //now calculate the age of the user
                var age = Math.abs(year - 1970);
-          }
+            }
 
          var age = document.getElementById("display_age").innerHTML =  
                   " " + age + " years old";
           return age;
     }
+
 
     function submitted(a,b,c,d,e){
         var email = a;
@@ -369,7 +258,7 @@ trying to put into a table
         var address = e;
         display_address.innerHTML= address;
         return email,lastname,firstname,age,address;
-    }
+    };
 
     </script>
         <br>

@@ -1,0 +1,29 @@
+<body>
+<script>
+var salary = [
+   ["ABC", 24, 18000],
+   ["EFG", 30, 30000],
+   ["IJK", 28, 41000],
+   ["EFG", 31, 28000],
+]; 
+  
+// Prints first array
+document.write("Original array :<br>");
+  
+for(var i = 0; i < salary.length; i++) {
+    document.write(salary[i] + "<br>");
+
+}
+console.table(salary)
+document.write("<br>After adding a new inner array :<br>");
+  
+// Pushing a new sub-array
+salary.push(["MNO", 29, 33300]);
+salary.push(["ww", 34, 111100]);
+
+for(var i = 0; i < salary.length; i++) {
+    console.log(salary[i] + "<br>");
+}
+console.table(salary)
+</script> 
+</body>
