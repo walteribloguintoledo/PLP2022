@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <style type="text/css">
+  </style>
+<title>Login</title>
+ <div class="header">
+  <div class="inner_header">
+    <div class="container-md">
+      <div class="row">
+        <div class="col-md-8">
+          <h1>Lumiguid's Blog</h1>
+        </div>
+        <div class="col-md-4 p-3">
+          <ul class="nav_link">
+            <li><a href="index.html">HOME PAGE</a></li>
+            <li><a href="login.html">LOGIN</a></li>
+            <li><a href="signup.html">SIGNUP</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+  <br><br><br><br>
+  <hr>
+</head>
+
+<body class="bods">
+  <div class="form_container" id="login">
+    <div class="title_container">
+      <h2>Please Enter Credentials to SignUp</h2>
+    </div>
+    <div class="row">
+      <div>
+        <form name="myForm">
+          <div>
+            <input type="text" name="email" id="email" placeholder="Email"/>
+          </div>
+          <div>
+            <input type="password" name="password" placeholder="Password"  />
+          </div>
+          <div>
+            <input type="password" name="password2" placeholder="Re-type Password"  />
+          </div>
+          <div>
+            <input type="text" name="firstname" id="firstname" placeholder="First Name" />
+          </div>
+          <div>
+            <input type="text" name="lastname" id="lastname" placeholder="Last Name"  />
+          </div>
+          <div>
+              <input type=date id = DOB>
+          </div>
+          <div>
+            <textarea type="text" name="name" id="address" placeholder="Address"></textarea>
+          </div>
+          <input type="button" class="btnlogin" onclick="showDiv()" value="DisplayDiv" />
+ <br>
+          <p>_________________________________________________________________________________________________</p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="title_container">
+      <h2>Your Credentials</h2>
+    </div>
+      <p> Email: <span id = "display_email"></span></p>
+      <p> First name: <span id = "display_firstname"></span></p>
+      <p> Last name: <span id = "display_lastname"></span></p>
+      <p> Age: <span id = "display_age"></span></p>   
+      <p> Address: <span id = "display_address"></span></p>               
+    </div>
+    <div id="msg">
+        <pre></pre>
+    </div>
+
+  <div class="container">
+      <div class="title_container">
+        <h2>Please open console for reference</h2>
+      </div>
+      <div>
+        <!--
+          <div>
+            <input type="number" name="loc1" id="loc1" placeholder="index1"/>
+          </div>
+          <div>
+            <input type="text" name="loc2" id="loc2" placeholder="index2"  />
+          </div>
+    -->   
+      <div><h5>Choose element to access:</h5></div>
+          <div>
+            <input type="number" name="loc1" id="loc1" value="" placeholder="0"/>
+          </div>
+          <div>
+            <input type="number" name="loc2" id="loc2" value="" placeholder="0"  />
+          </div>
+          <input type="button" class="btnlogin" onclick="display()" value="Search" />          
+      </div>
+  </div>
+<style type="text/css">
+  /*table design*/
+      #tbl {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      #tbl td, #tbl th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      #tbl tr:nth-child(even){background-color: #f2f2f2;}
+
+      #tbl tr:hover {background-color: #ddd;}
+
+      #tbl th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+      }
+</style>     
+    <script type="text/JavaScript">
+      //Create a container DIV that will show input values on form submit
+      function showDiv(){
+         if( document.myForm.email.value == "" ) {
+            alert( "Please provide your email!" );
+            document.myForm.email.focus() ;
+            return false;
+         }
+         if( document.myForm.password.value == "" ) {
+            alert( "Please provide your password!" );
+            document.myForm.password.focus() ;
+            return false;
+         }
+         var pwd1 = document.myForm.password.value;
+         if(document.myForm.password2.value != pwd1){
+            alert( "yourpassword does not match" );
+            document.myForm.password2.focus() ;
+            return false;
+         }
+         if( document.myForm.firstname.value == "" ) {
+            alert( "Please provide your First name!" );
+            document.myForm.fastname.focus() ;
+            return false;
+         }
+
+         if( document.myForm.lastname.value == "" ) {
+            alert( "Please provide your Last Name!" );
+            document.myForm.lastname.focus() ;
+            return false;
+         }
+         if( document.myForm.DOB.value == "" ) {
+            alert( "Please provide your birthday!" );
+            document.myForm.DOB.focus() ;
+            return false;
+         }
+         if( document.myForm.address.value == "" ) {
+            alert( "Please provide your Address!" );
+            document.myForm.address.focus() ;
+            return false;
+         }else{
+          alert("you succesfuly Validated")
+         }
+
+        var email = document.getElementById("email").value;
+        var lastname = document.getElementById("lastname").value;
+        var firstname = document.getElementById("firstname").value;
+        var bday = document.getElementById("DOB").value;
+        var age = calculateAge(bday)
+        var address = document.getElementById("address").value;
+        submitted(email,lastname,firstname,bday,address);
+ //       registerPerson.push([email,lastname,firstname,age,address]);  
+      //  document.forms[0].reset();
+        store(email,lastname,firstname,age,address);
+      }
+
+
+      function display(){
+        var ind1 = document.getElementById("loc1").value;
+        var ind2 = document.getElementById("loc2").value;
+        for(var i = 0; i < registerPerson.length; i++) {
+          for (var j = 0;j < registerPerson[i].length; j++){
+            var x = registerPerson[i][j];
+            if(ind1 == i && ind2 == j){
+              alert("The value is: " + x);
+              break;
+            }
+          }
+        }
+                  
+      }
+
+    var registerPerson = [];
+    function store(email,lastname,firstname,age,address){
+
+        var ems = email;
+        var last = lastname;
+        var first = firstname;
+        var ag = age;
+        var add = address;
+
+        registerPerson.push([ems,last,first,ag,add]);
+        console.table(registerPerson);
+      /*
+      function dis(){
+        for(var i = 0; i < registerPerson.length; i++) {
+          dis = dis + registerPerson[i] + "<br>";
+          alert("hello")
+        }
+      }
+      */
+    }
+
+      function calculateAge(date){
+        var dob = new Date(date);
+            if(date==null || date=='') {
+               alert( "Please provide your email!" );  
+               return false; 
+             } else {
+  
+               //calculate month difference from current date in time
+               var month_diff = Date.now() - dob.getTime();
+               
+               //convert the calculated difference in date format
+               var age_dt = new Date(month_diff); 
+               
+               //extract year from date    
+               var year = age_dt.getUTCFullYear();
+               
+               //now calculate the age of the user
+               var age = Math.abs(year - 1970);
+            }
+
+         var age = document.getElementById("display_age").innerHTML =  
+                  " " + age + " years old";
+          return age;
+    }
+
+
+    function submitted(a,b,c,d,e){
+        var email = a;
+        display_email.innerHTML= email;
+        var lastname = b;
+        display_lastname.innerHTML= lastname;
+        var firstname = c;
+        display_firstname.innerHTML= firstname;
+        var bday = d;
+        var age = calculateAge(bday);
+        var address = e;
+        display_address.innerHTML= address;
+        return email,lastname,firstname,age,address;
+    };
+
+    </script>
+        <br>
+        <br>
+        <br>
+ </body>
+</html>
+
+
+   
