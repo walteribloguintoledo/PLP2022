@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../day-1/styles/htmlpage.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="img"
+    style="background-image:url(../day-1/images/login.jpg); background-repeat: no-repeat; background-size: cover;">
+    <section class="login-container d-flex align-items-center justify-content-center text-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-5">
+                    <h2 class="heading-section">Blog Site</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                        <h3 class="mb-4 text-center">Create an account</h3>
+                        <form action="#" class="signin-form" id="sign_up_form">
+                            <div class="form-group my-2">
+                                <input type="text" id="full_name" class="form-control" placeholder="Fullname" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" id="user_name" class="form-control" placeholder="Username" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="email" id="email_address" class="form-control" placeholder="Email Address" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="text" id="address" class="form-control" placeholder="Address" required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="date" id="birth_date" class="form-control" placeholder="Birthdate"
+                                    required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input type="number" id="contact_number" class="form-control" placeholder="Contact No."
+                                    required>
+                            </div>
+                            <div class="form-group my-2">
+                                <input id="password-field" type="password" class="form-control" placeholder="Password"
+                                    required>
+                                <span toggle="#password-field"
+                                    class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                            </div>
+                            <div class="form-group my-2">
+                                <input id="confirm-password-field" type="password" class="form-control"
+                                    placeholder="Re-type Password" required>
+                                <span toggle="#password-field"
+                                    class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                            </div>
+                            <div class="form-group my-2">
+                                <button type="submit" class="form-control btn btn-primary submit px-3">Submit</button>
+                            </div>
+                            <div class="form-group d-md-flex my-2">
+                                <div class="w-50">
+                                    <label class="checkbox-wrap checkbox-primary">Remember Me
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="w-50">
+                                    <a href="#" class="w-100" style="color: #fff">
+                                        <p class="text-end">Already have an account?</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="container-div" class="container-div">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script defer>
+        function removeWhiteSpace(value) { return value.replace(/\s/g, ""); }
+
+        function isCharactersOnly(elem) { return /^[a-zA-Z]+$/.test(removeWhiteSpace(elem.value)) ? true : false; }
+
+        function isDigitsOnly(elem) { return /^[0-9]+$/.test(removeWhiteSpace(elem.value)) ? true : false; }
+
+        function checkifEmpty(elem) {
+            return removeWhiteSpace(elem.value) === "" ? alert(elem.id + " is required.") : false;
+        }
+
+        function checkIfString(elem) {
+            return isCharactersOnly(elem) == false ? alert(elem.id + " must be string.") : false;
+        }
+
+        function checkIfNumeric(elem) {
+            return isDigitsOnly(elem) == false ? alert(elem.id + " must be numeric. Remove spaces.") : false;
+        }
+
+        function checkContactNumber(elem) {
+            const size = 11;
+            if (checkIfNumeric(elem) !== false) return "error";
+
+            return elem.value.length < size ? alert(elem.id + " must be " + size + " digits.") : false;
+        }
+
+        function checkPassword(elem, elemConfirm) {
+            const size = 8;
+            if (elem.value.length < 8) return alert(elem.id + " must be " + size + " characters.");
+
+            if (elem.value !== elemConfirm.value) return alert("Password doesn't match");
+
+            return false;
+        }
+
+        function calculateAge(elem) {
+            var today = new Date();
+            var birthDate = new Date(elem.value);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+
+            return age;
+        }
+
+        const full_name = document.getElementById('full_name'),
+            user_name = document.getElementById('user_name'),
+            email_address = document.getElementById('email_address'),
+            address = document.getElementById('address'),
+            birth_date = document.getElementById('birth_date'),
+            contact_number = document.getElementById('contact_number'),
+            password = document.getElementById('password-field')
+            password_confirm = document.getElementById('confirm-password-field');
+
+        document.querySelector('#sign_up_form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            //Task 1
+            const value = "full name: " + full_name.value + "\u000ausername: " + user_name.value + "\u000aaddress: " + address.value + "\u000abirthdate: " + birth_date.value 
+                + "\u000acontact number: " + contact_number.value + "\u000aAge: " + calculateAge(birth_date) + "\u000aSubmitted: " + new Date();
+            console.log(value);
+            const div_container = document.getElementById("container-div");
+            div_container.innerHTML = "";
+
+            const p = document.createElement("p");
+            var text = document.createTextNode(value);
+            p.appendChild(text);
+            p.style = "white-space: pre;";
+
+            if (checkifEmpty(full_name) !== false) return;
+
+            if (checkIfString(full_name) !== false) return;
+
+            if (checkifEmpty(user_name) !== false) return;
+
+            if (checkifEmpty(address) !== false) return;
+
+            if (checkifEmpty(birth_date) !== false) return;
+
+            if (checkifEmpty(contact_number) !== false) return;
+            if (checkContactNumber(contact_number) !== false) return;
+
+            if (checkifEmpty(password) !== false) return;
+            if (checkPassword(password, password_confirm) !== false) return;
+
+            alert("Your Age is: " + calculateAge(birth_date));
+
+            div_container.appendChild(p);
+
+            //Task 2
+            const inputsArray = [
+                full_name.value,
+                user_name.value,
+                address.value,
+                birth_date.value,
+                contact_number.value,
+                password.value,
+            ];
+
+            console.log("This is an array from user inputs: " + inputsArray);
+            console.log("Length: " + inputsArray.length );
+
+            //Task 2 save input through array and object
+            const arr = new Array();
+            const obj = new Object();
+
+            inputsArray.forEach((element, index) => {
+                arr.push(element); 
+                obj[index] = element;
+            });
+
+            console.log(arr, obj);
+        });
+    </script>
+
+    <!-- Example of diffrent type of arrays in Javascript -->
+    <script src="../day-2/js/array.js" defer></script>
+</body>
+
+</html>
