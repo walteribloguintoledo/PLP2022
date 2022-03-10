@@ -41,10 +41,10 @@
             <input type="text" name="email" id="email" placeholder="Email"/>
           </div>
           <div>
-            <input type="password" name="password" placeholder="Password"  />
+            <input type="password" id="password" placeholder="Password"  />
           </div>
           <div>
-            <input type="password" name="password2" placeholder="Re-type Password"  />
+            <input type="password" id="password2" placeholder="Re-type Password"  />
           </div>
           <div>
             <input type="text" name="firstname" id="firstname" placeholder="First Name" />
@@ -58,7 +58,7 @@
           <div>
             <textarea type="text" name="name" id="address" placeholder="Address"></textarea>
           </div>
-          <input type="button" class="btnlogin" onclick="showDiv()" value="DisplayDiv" />
+          <input type="button" class="btnlogin" id="btnShow" value="DisplayDiv" />
  <br>
           <p>_________________________________________________________________________________________________</p>
         </form>
@@ -75,10 +75,6 @@
       <p> Age: <span id = "display_age"></span></p>   
       <p> Address: <span id = "display_address"></span></p>               
     </div>
-    <div id="msg">
-        <span><pre></pre></span>
-    </div>
-
   <div class="container">
       <div class="title_container">
         <h2>Please open console for reference</h2>
@@ -91,7 +87,7 @@
           <div>
             <input type="number" name="loc2" id="loc2" value="" placeholder="0"  />
           </div>
-          <input type="button" class="btnlogin" onclick="display()" value="Search" />          
+          <input type="button" class="btnlogin" id="btnS" value="Search" />          
       </div>
   </div>
 <style type="text/css">
@@ -120,11 +116,14 @@
       }
 </style>     
     <script type="text/JavaScript">
+//SignUp Page
+
       //Create a container DIV that will show input values on form submit
-      function showDiv(){
-         if( document.myForm.email.value == "" ) {
+      $(document).ready(function(){
+          $("#btnShow").click(function(){
+            if( $('#email').val() == "" ) {
             alert( "Please provide your email!" );
-            document.myForm.email.focus() ;
+            $('#email').focus() ;
             return false;
          }
          if( document.myForm.password.value == "" ) {
@@ -138,67 +137,82 @@
             document.myForm.password2.focus() ;
             return false;
          }
-         if( document.myForm.firstname.value == "" ) {
+         if( $('#firstname').val() == "" ) {
             alert( "Please provide your First name!" );
-            document.myForm.fastname.focus() ;
+            $('#firstname').focus() ;
             return false;
          }
 
-         if( document.myForm.lastname.value == "" ) {
+         if( $('#lastname').val() == "" ) {
             alert( "Please provide your Last Name!" );
-            document.myForm.lastname.focus() ;
+            $('#lastname').focus() ;
             return false;
          }
-         if( document.myForm.DOB.value == "" ) {
+         if( $('#DOB').val() == "" ) {
             alert( "Please provide your birthday!" );
-            document.myForm.DOB.focus() ;
+            $('#DOB').focus() ;
             return false;
          }
-         if( document.myForm.address.value == "" ) {
+         if( $('#address').val() == "" ) {
             alert( "Please provide your Address!" );
-            document.myForm.address.focus() ;
+            $('#address').focus() ;
             return false;
          }else{
           alert("you succesfuly Validated")
          }
 
-        var email = document.getElementById("email").value;
-        var lastname = document.getElementById("lastname").value;
-        var firstname = document.getElementById("firstname").value;
-        var bday = document.getElementById("DOB").value;
+        var email = $('#email').val();
+        var password = document.myForm.password.value;
+        var lastname = $('#lastname').val();
+        var firstname = $('#firstname').val();
+        var bday = $('#DOB').val();
         var age = calculateAge(bday)
-        var address = document.getElementById("address").value;
+        var address = $('#address').val();
+ //       document.forms[0].reset();
         submitted(email,lastname,firstname,bday,address);
-        document.forms[0].reset();
-        store(email,lastname,firstname,age,address);
-      }
+        store(email,password,lastname,firstname,age,address);
+      
+          });
+          // Get value on button click and show alert
+      });
+
+
+ //     function showDiv(){
+         
 //display the selected index value of array
-      function display(){
-        var ind1 = document.getElementById("loc1").value;
-        var ind2 = document.getElementById("loc2").value;
-        for(var i = 0; i < registerPerson.length; i++) {
-          for (var j = 0;j < registerPerson[i].length; j++){
-            var x = registerPerson[i][j];
-            if(ind1 == i && ind2 == j){
-              alert("The value is: " + x);
-              break;
+
+       $(document).ready(function(){
+          $("#btnS").click(function(){
+            var ind1 = $('#loc1').val();
+            var ind2 = $('#loc2').val();
+            for(var i = 0; i < registerPerson.length; i++) {
+              for (var j = 0;j < registerPerson[i].length; j++){
+                var x = registerPerson[i][j];
+                if(ind1 == i && ind2 == j){
+                  alert("The value is: " + x);
+                  break;
+                }
+              }
             }
-          }
-        }
-                  
-      }
+
+          });
+          // Get value on button click and show alert
+      });
 
     var registerPerson = [];
-    function store(email,lastname,firstname,age,address){
+    function store(email,password,lastname,firstname,age,address){
 
         var ems = email;
+        var pass=password;
         var last = lastname;
         var first = firstname;
         var ag = age;
         var add = address;
 
-        registerPerson.push([ems,last,first,ag,add]);
-        console.table(registerPerson);
+        registerPerson.push([ems,pass,last,first,ag,add]);
+        localStorage.setItem("my_person", JSON.stringify(registerPerson));
+        alert("added to localStorage");
+ //       var storedFile = JSON.parse(localStorage.getItem("my_person"));
     }
       //calculate Age
       function calculateAge(date){
@@ -224,40 +238,26 @@
          var age = document.getElementById("display_age").innerHTML =  
                   " " + age + " years old";
           return age;
-    }
+      }
 
     //submitted input
     function submitted(a,b,c,d,e){
-
-       var email = $(a).val();
+       var email = a;
          display_email.innerHTML= email;
-       var firstname = $(b).val();
+       var firstname = b;
          display_firstname.innerHTML= firstname;
 
-       var lastname = $(c).val();
+       var lastname = c;
          display_lastname.innerHTML= lastname;
 
-       var age = $(d).val();
+       var age = d;
          display_age.innerHTML= age;
 
-       var address = $(e).val();
+       var address = e;
          display_address.innerHTML=address;
-       return email,lastname,firstname,age,address;
-/*
-        var email = a;
-        display_email.innerHTML= email;
-        var lastname = b;
-        display_lastname.innerHTML= lastname;
-        var firstname = c;
-        display_firstname.innerHTML= firstname;
-        var bday = d;
-        var age = calculateAge(bday);
-        var address = e;
-        display_address.innerHTML= address;
-        return email,lastname,firstname,age,address;
-*/
-    };
 
+       return email,lastname,firstname,age,address;
+     }
     </script>
         <br>
         <br>
