@@ -16,9 +16,7 @@
 				</div>
 				<div class="col-md-4 p-3">
 					<ul class="nav_link">
-						<li><a href="index.html">HOME PAGE</a></li>
-						<li><a href="login.html">LOGIN</a></li>
-						<li><a href="signup.html">SIGNUP</a></li>
+						<li><a href="index.html" id="logout">Logout</a></li>
 					</ul>
 				</div>
 			</div>
@@ -34,8 +32,8 @@
 		<div class="container-md">
 			<div class="col-md-4">
 				<span>
-				<h2>Good Day Every One</h2>
-				<p>I am Rico Jay. Today we are creating first task in our On-the-Job Traning in the Avasia Information System Inc.</p>
+				<h2>Hi User</h2>
+				<p></p>
 			    </span>
 			</div>
 			<div class="col-md-4">
@@ -45,5 +43,18 @@
 		</div>
 
 	</section>
+
+</div>
 </body>
+<script type="text/javascript">
+/*
+	$(document).ready(function(){
+          $("#logout").click(function(){
+          	if()
+
+          });
+      });
+
+*/
+</script>
 </html>

@@ -16,9 +16,9 @@
         </div>
         <div class="col-md-4 p-3">
           <ul class="nav_link">
-            <li><a href="index.html">HOME PAGE</a></li>
-            <li><a href="login.html">LOGIN</a></li>
-            <li><a href="signup.html">SIGNUP</a></li>
+            <li><a href="index.php">HOME PAGE</a></li>
+            <li><a href="login.php">LOGIN</a></li>
+            <li><a href="signup.php">SIGNUP</a></li>
           </ul>
         </div>
       </div>
@@ -28,7 +28,6 @@
   <br><br><br><br>
   <hr>
 </head>
-
 <body class="bods">
   <div class="form_container" id="login">
     <div class="title_container">
@@ -36,30 +35,32 @@
     </div>
     <div class="row">
       <div>
-        <form name="myForm">
+        <form name="myForm" method="post" action="db/query.php">
           <div>
-            <input type="text" name="email" id="email" placeholder="Email"/>
+            <input type="text" name="emaill" id="email" placeholder="Email"/>
           </div>
           <div>
-            <input type="password" id="password" placeholder="Password"  />
+            <input type="password" name="passwordd" id="password" placeholder="Password"  />
           </div>
           <div>
             <input type="password" id="password2" placeholder="Re-type Password"  />
           </div>
           <div>
-            <input type="text" name="firstname" id="firstname" placeholder="First Name" />
+            <input type="text" name="firstnamee" id="firstname" placeholder="First Name" />
           </div>
           <div>
-            <input type="text" name="lastname" id="lastname" placeholder="Last Name"  />
+            <input type="text" name="lastnamee" id="lastname" placeholder="Last Name"  />
           </div>
           <div>
-              <input type=date id = DOB>
+              <input type="date" name="DOBB" id = "DOB">
           </div>
           <div>
-            <textarea type="text" name="name" id="address" placeholder="Address"></textarea>
+            <textarea type="text" name="addresss" id="address" placeholder="Address"></textarea>
           </div>
-          <input type="button" class="btnlogin" id="btnShow" value="DisplayDiv" />
- <br>
+          <input type="submit" class="btnlogin" id="btnShow" value="DisplayDiv" />
+          <br>
+          <h2>
+          </h2>
           <p>_________________________________________________________________________________________________</p>
         </form>
       </div>
@@ -173,11 +174,8 @@
         store(email,password,lastname,firstname,age,address);
       
           });
-          // Get value on button click and show alert
+
       });
-
-
- //     function showDiv(){
          
 //display the selected index value of array
 
@@ -196,7 +194,6 @@
             }
 
           });
-          // Get value on button click and show alert
       });
 
     var registerPerson = [];
@@ -213,7 +210,6 @@
         localStorage.setItem("my_person", JSON.stringify(registerPerson));
         alert("added to localStorage");
  //       var storedFile = JSON.parse(localStorage.getItem("my_person"));
-        console.table(registerPerson);
     }
       //calculate Age
       function calculateAge(date){

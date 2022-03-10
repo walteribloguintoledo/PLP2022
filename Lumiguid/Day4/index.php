@@ -16,9 +16,9 @@
 				</div>
 				<div class="col-md-4 p-3">
 					<ul class="nav_link">
-						<li><a href="index.html">HOME PAGE</a></li>
-						<li><a href="login.html">LOGIN</a></li>
-						<li><a href="signup.html">SIGNUP</a></li>
+						<li><a href="index.php">HOME PAGE</a></li>
+						<li><a href="login.php">LOGIN</a></li>
+						<li><a href="signup.php">SIGNUP</a></li>
 					</ul>
 				</div>
 			</div>
@@ -33,17 +33,14 @@
 	<section>
 		<div class="container-md">
 			<div class="col-md-4">
-				<span>
 				<h2>Good Day Every One</h2>
-				<p>I am Rico Jay. Today we are creating first task in our On-the-Job Traning in the Avasia Information System Inc.</p>
-			    </span>
+				<p>I am Rico Jay. Today we are creating first task in our On-the-Job Traning in the Avasia Information System Inc.</p>	
 			</div>
 			<div class="col-md-4">
 				<img src="../pictures/random.jpg">				
 			</div>
 
 		</div>
-
 	</section>
 </body>
 </html>
