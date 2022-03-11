@@ -3,6 +3,7 @@ const password = document.querySelector("#password");
 const contactNo = document.querySelector("#contactNo");
 const birthdate = document.querySelector("#birthdate");
 const myForm = document.querySelector("#myForm");
+const inputs = document.querySelectorAll("input[name]")
 let getValues = document.querySelector("#getvalue");
 let getDate = document.querySelector("#getDate");
 
@@ -88,30 +89,26 @@ myForm.addEventListener('submit', (e)=> {
    /* Task - Form arrays, objects and function -----------------------------*/
 
    let userData = [];
-   // store data in array with properties
-   userData["username"] = username.value;
-   userData["password"] = password.value;
-   userData["contact"] = contactNo.value;
-   userData["birthdate"] = birthdate.value;
+    // store data in array with properties
+   inputs.forEach((data, index) => {
+       userData[index] = data.value;
+   });
 
-   // concat and display properties in userData
-   let myArrayProperties = "";
-   for (const user in userData) {
-    myArrayProperties = `${myArrayProperties}|${user}`;
-  }
-  console.log(`My array properties are: ${myArrayProperties}|`);
+   // access array properties
+   console.log(userData.length);
 
-  // Save multiple users with properties in Array and Object
-  usersArray.push(userData);
-  usersObject[userData.username] = userData;
-  console.log("Array: ", usersArray);
-  console.log("Object: ", usersObject);
+   // Save multiple users in Array and Object
+   usersArray.push(userData);
+   // use username as object key for uniqueness
+   usersObject[userData[0]] = userData;
 
   // clear form
   username.value = "";
   password.value = "";
   contactNo.value = "";
   birthdate.value = "";
+
+  welcomeUser(userData[0]);
 });
 
 /* FUNCTIONS --------------------------- */
@@ -120,4 +117,8 @@ function calculateAge(birthdate) {
     var formateBirthdate = new Date(birthdate);
 
     return dateToday.getFullYear() - formateBirthdate.getFullYear();
+}
+
+function welcomeUser (name) {
+    return alert("Welcome " + name);
 }
