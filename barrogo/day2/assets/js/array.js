@@ -1,6 +1,6 @@
 // indexed array
 const fruits = ["banana", "apple", "cherry"];
-console.log(fruits[2]);
+//console.log(fruits[2]);
 
 // associative array
 const person = [];
@@ -18,4 +18,4 @@ var salary = [
   ["EFG", 31, 28000],
 ];
 
-console.log(salary[3][0]);
+//console.log(salary[3][0]);

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" href="./assets/css/style.css" /> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>MustacheJS</title>
+  </head>
+  <body>
+    <div id="target">Loading...</div>
+
+    <script src="jquery.mustache.js"></script>
+    <script src="mustache-0.7.2.js"></script>
+    <script src="path.min.js"></script>
+    <script>
+      $.Mustache.options.warnOnMissingTemplates = true;
+
+      $.Mustache.load("template.html").done(function () {
+        Path.map("#/users").to(function () {
+          var temp = {
+            name: "Luke",
+          };
+
+          $("#target").html("").append($.Mustache.render("template", temp));
+        });
+
+        Path.map("#/login").to(function () {
+          $("#target").html("").append($.Mustache.render("login"));
+        });
+
+        Path.root("#/");
+
+        Path.listen();
+      });
+    </script>
+  </body>
+</html>
