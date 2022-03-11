@@ -32,7 +32,7 @@
 		<div class="container-md">
 			<div class="col-md-4">
 				<span>
-				<h2>Hi User</h2>
+				<h2>Hi</h2>
 				<p></p>
 			    </span>
 			</div>

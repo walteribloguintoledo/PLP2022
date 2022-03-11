@@ -6,7 +6,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<link rel="stylesheet" type="text/javascript" href="js/java.js">
+  <script src="js/java.js"></script>
 	<title>Login</title>
 	 <div class="header">
 	 	<div class="inner_header">
@@ -27,7 +27,7 @@
 	 	</div>
 	 </div>
 		<br><br><br><br>
-
+</head>
 	<hr>
 <body class="bods">
 <form action="action_page.php" method="post" class="formlogin">
@@ -46,46 +46,6 @@
     <p id="result"></p>
 </form>
 <script type="text/javascript">
-//LogIn Page
-
-  function loginFunc(){
-
-    var email = $("#uname").val();
-    var password = $("#psw").val();
-    var result = $("#result").val();
-
-    var user= localStorage.getItem("my_person");
-    var data = JSON.parse(user);
-   /*
-    if(user == null){
-     result = result.innerHTML = "wrong email";
-     alert("wrong email");
-    }else if(email == data[0][0] && password==data[0][1]){
-      result = result.innerHTML = 'Logged In';
-      alert("logged In");
-    }else{
-      result = result.innerHTML = "wrongpassword";
-      alert("wrongpassword");
-    }
-   */
-     for(var i = 0; i < data.length; i++) {
-       for (var j = 0;j < 1; j++){
-         var em = data[i][0];
-         var pas = data[i][1];
-         if(email == em && password == pas){
-         		alert("Logged In");
-         		window.location.replace("userProfile.html");
-         		break;
-         	}
-  			}
-			}
-			if (email =! em ){
-				alert("wrong email")
-			}else if(password!=pas){
-				alert("wrongpassword");
-			}
-	}
-		
 </script>
 </body>
 </html>

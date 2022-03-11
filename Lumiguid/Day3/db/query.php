@@ -7,7 +7,7 @@
         $last_name = $_POST['lastnamee'];
         $first_name =  $_POST['firstnamee'];
         $age =  $_POST['DOBB'];
-        $address = $_POST['addresss'];
+        $address = "sample";
 
           
         // Performing insert query execution
