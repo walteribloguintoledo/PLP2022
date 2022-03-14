@@ -5,9 +5,9 @@ let usersObject = new Object();
 
 let userList = [];
 
-if (localStorage.getItem("currentUser") != null) {
-    window.location.replace("./index.html");
-}
+// if (localStorage.getItem("currentUser") != null) {
+//     window.location.replace("./index.html");
+// }
 
 $("#form").submit(function (e) {
     e.preventDefault();
@@ -103,7 +103,7 @@ $("#form").submit(function (e) {
     localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
     // redirect user to login page after signing up
-    window.location.replace("./login.html");
+    // window.location.replace("./login.html");
 });
 
 
