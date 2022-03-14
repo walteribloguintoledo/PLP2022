@@ -95,10 +95,10 @@
     -->   
       <div><h5>Choose element to access:</h5></div>
           <div>
-            <input type="number" name="loc1" id="loc1" value="" placeholder="0"/>
+            <input type="text" name="loc1" id="loc1" value="" placeholder="0"/>
           </div>
           <div>
-            <input type="number" name="loc2" id="loc2" value="" placeholder="0"  />
+ <!--           <input type="number" name="loc2" id="loc2" value="" placeholder="0"  /> -->
           </div>
           <input type="button" class="btnlogin" onclick="display()" value="Search" />          
       </div>
@@ -167,8 +167,6 @@
             alert( "Please provide your Address!" );
             document.myForm.address.focus() ;
             return false;
-         }else{
-          alert("you succesfuly Validated")
          }
 
         var email = document.getElementById("email").value;
@@ -177,26 +175,38 @@
         var bday = document.getElementById("DOB").value;
         var age = calculateAge(bday)
         var address = document.getElementById("address").value;
-        submitted(email,lastname,firstname,bday,address);
+  //      submitted(email,lastname,firstname,bday,address);
  //       registerPerson.push([email,lastname,firstname,age,address]);  
       //  document.forms[0].reset();
         store(email,lastname,firstname,age,address);
       }
 
 
-      function display(){
+      function display(){        
         var ind1 = document.getElementById("loc1").value;
-        var ind2 = document.getElementById("loc2").value;
+  //      var ind2 = document.getElementById("loc2").value;
         for(var i = 0; i < registerPerson.length; i++) {
           for (var j = 0;j < registerPerson[i].length; j++){
-            var x = registerPerson[i][j];
-            if(ind1 == i && ind2 == j){
-              alert("The value is: " + x);
-              break;
+            var x = registerPerson[i][0];
+            if(ind1 == x){
+              alert("Your Email is " + x);
+              var email = registerPerson[i][0];
+              display_email.innerHTML= email;
+              var lastname = registerPerson[i][1];
+              display_lastname.innerHTML= lastname;
+              var firstname = registerPerson[i][2];
+              display_firstname.innerHTML= firstname;
+              var age = registerPerson[i][3];
+              display_age.innerHTML= age;  
+              var address = registerPerson[i][4];
+              display_address.innerHTML= address;
+              return;              
             }
           }
-        }
-                  
+        }   
+        if(ind1 !=x){
+          alert("not yer registered");
+        }               
       }
 
     var registerPerson = [];
@@ -207,6 +217,17 @@
         var first = firstname;
         var ag = age;
         var add = address;
+
+
+        for(var i = 0; i < registerPerson.length; i++) {
+          for (var j = 0;j < registerPerson[i].length; j++){
+            if(ems == registerPerson[i][j]){
+                alert("the username is already registered");
+                document.myForm.email.focus();
+                return;
+            }
+          }
+        }
 
         registerPerson.push([ems,last,first,ag,add]);
         console.table(registerPerson);
@@ -239,13 +260,14 @@
                //now calculate the age of the user
                var age = Math.abs(year - 1970);
             }
-
+/*
          var age = document.getElementById("display_age").innerHTML =  
                   " " + age + " years old";
+*/
           return age;
     }
 
-
+/*
     function submitted(a,b,c,d,e){
         var email = a;
         display_email.innerHTML= email;
@@ -259,7 +281,7 @@
         display_address.innerHTML= address;
         return email,lastname,firstname,age,address;
     };
-
+*/
     </script>
         <br>
         <br>

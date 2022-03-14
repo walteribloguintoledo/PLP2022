@@ -116,6 +116,7 @@
     $('.dataItem').append(Mustache.render(template,item));
     });
     }
+
       //calculate Age
       function calculateAge(date){
         var dob = new Date(date);
@@ -201,24 +202,4 @@
         }
       }
   }
-
-    function login(){
-        var path = require('path');
-        var filename = path.basename('xampp\htdocs\PLP2022\Lumiguid\Day3\login.html');
-        console.log(filename);
-    }
-    function signup(){
-        var path = require('path');
-        var filename = path.basename('xampp\htdocs\PLP2022\Lumiguid\Day3\signup.html');
-        console.log(filename);
-    }
-    function index(){
-        var path = require('path');
-        var filename = path.basename('xampp\htdocs\PLP2022\Lumiguid\Day3\index.html');
-        console.log(filename);
-    }
-    function userprofile(){
-        var path = require('path');
-        var filename = path.basename('xampp\htdocs\PLP2022\Lumiguid\Day3\index.html');
-        console.log(filename);
-    }
+  

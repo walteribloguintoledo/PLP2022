@@ -16,7 +16,7 @@
 				</div>
 				<div class="col-md-4 p-3">
 					<ul class="nav_link">
-						<li><a href="index.html" id="logout">Logout</a></li>
+						<li><a href="index.php" id="logout">Logout</a></li>
 					</ul>
 				</div>
 			</div>

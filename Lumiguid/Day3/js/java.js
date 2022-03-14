@@ -87,19 +87,19 @@
 
     var registerPerson = [];
     function store(email,password,lastname,firstname,age,address){
-      var ems = email;
-      var pas =password;
-      var last = lastname;
-      var first =firstname;
-      var ag = age;
-      var add = address;
+      var email = email;
+      var password =password;
+      var lastname = lastname;
+      var firstname =firstname;
+      var age = age;
+      var address = address;
       var user = {
-         Email: ems,
-         Password: pas,
-         Lastname: last,
-         Firstname: first,
-         Age: ag,
-         Address: add
+         Email: email,
+         Password: password,
+         Lastname: lastname,
+         Firstname: firstname,
+         Age: age,
+         Address: address
         }
         registerPerson.push(user);
         localStorage.setItem("my_person", JSON.stringify(registerPerson));
@@ -167,7 +167,7 @@
 
     var email = $("#uname").val();
     var password = $("#psw").val();
-
+    var currentLogin = [];
     var user= localStorage.getItem("my_person");
     var data = JSON.parse(user);
    /*
@@ -183,22 +183,30 @@
     }
   */      
      for(var i = 0; i < data.length; i++) {
-         var em = data[i].Email;
-         var pas = data[i].Password; 
-         console.log(em)   
-        if (email != em ){
+         var emails = data[i].Email;
+         var passwords = data[i].Password; 
+         console.log(emails)   
+        if (email != emails ){
           alert("not registered email");
           exit();
-        }else if(password!=pas){
+        }else if(password!=passwords){
           alert("wrongpassword"); 
           exit();
-        }else if(email == em && password == pas){
+        }else if(email == emails && password == passwords){
             alert("Logged In");
-            window.location.replace("userProfile.html");
+//            window.location.replace("userProfile.html");
+
+            var users = {
+              Email:emails,
+              Password: passwords
+            }
+            currentLogin.push(users);
+            sessionStorage.setItem("currentLogin",currentLogin);
             break;
             exit();
 
         }
       }
+
   }
     

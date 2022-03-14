@@ -45,5 +45,27 @@
 		</div>
 
 	</section>
+	<script type="text/javascript">
+
+		function clearPanel(){
+		    // You can put some code in here to do fancy DOM transitions, such as fade-out or slide-in.
+		}
+
+		Path.map("#index.php").to(function(){
+		    alert("Users!");
+		});
+
+		Path.map("#login.php").to(function(){
+		    alert("Comments!");
+		}).enter(clearPanel);
+
+		Path.map("#signup.php").to(function(){
+		    alert("Posts!");
+		}).enter(clearPanel);
+
+		Path.root("#/index.php");
+
+		Path.listen();
+	</script>
 </body>
 </html>
