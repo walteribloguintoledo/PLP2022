@@ -1,0 +1,242 @@
+<script id="home" type="text/template">
+  <header class="p-3 mb-2 bg-dark">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a href="home.html"><img src="./assets/img/logo.svg" alt="Logo" /></a>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link text-warning" href="home.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-warning" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-warning" href="#">Contact</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section>
+      <div
+        class="p-3 mt-lg-5 container d-flex justify-content-between align-items-center"
+      >
+        <div>
+          <h1 class="display-1 text-black">Title Here</h1>
+          <p class="mb-4 fs-5">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi,
+            fugiat!
+          </p>
+          <a class="btn btn-primary" href="#">Button Here</a>
+        </div>
+        <div>
+          <img
+            class="img-fluid"
+            src="./assets/img/hero-img.svg"
+            alt="Hero Image"
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+</script>
+
+// login page
+<script id="login" type="text/template">
+  <style>
+    .login {
+      min-height: 100vh;
+    }
+
+    .bg-image {
+      background-image: url("./assets/img/login.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+  <div class="container-fluid ps-md-0">
+    <div class="row g-0">
+      <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+      <div class="col-md-8 col-lg-6">
+        <div class="login d-flex align-items-center py-5">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-9 col-lg-8 mx-auto">
+                <h3 class="mb-4 display-3">Login</h3>
+                <p class="fs-5 mb-4">
+                  Don't have an account?
+                  <span><a href="#/signUp">Click Here</a></span>
+                </p>
+                <!-- Sign In Form -->
+                <form id="loginForm">
+                  <div class="form-floating mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="loginUserName"
+                      placeholder="Username"
+                    />
+                    <label for="userName">Username</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="loginPassword"
+                      placeholder="Password"
+                    />
+                    <label for="password">Password</label>
+                  </div>
+                  <div class="form-check mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="rememberPasswordCheck"
+                    />
+                    <label
+                      class="form-check-label"
+                      for="rememberPasswordCheck"
+                    >
+                      Remember password
+                    </label>
+                  </div>
+                  <div class="d-grid">
+                    <button
+                      id="loginBtn"
+                      class="btn btn-lg btn-primary mb-2"
+                      type="submit"
+                    >
+                      Login
+                    </button>
+                    <div class="text-center">
+                      <a class="small" href="#">Forgot password?</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/js/index.js"></script>
+</script>
+
+// sign up page
+<script id="signUp" type="text/template">
+  <style>
+    .login {
+      min-height: 100vh;
+    }
+
+    .bg-image {
+      background-image: url("./assets/img/signup.jpg");
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+  <div class="container-fluid ps-md-0">
+    <div class="row g-0">
+      <div class="col-md-8 col-lg-6">
+        <div class="login d-flex align-items-center py-5">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-9 col-lg-8 mx-auto">
+                <h3 class="mb-4 display-3">Sign Up</h3>
+                <p class="fs-5 mb-4">
+                  Already have an account?
+                  <span><a href="#/login">Login</a></span>
+                </p>
+                <!-- Sign Up Form -->
+                <form id="signUpForm">
+                  <div class="form-floating mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fullName"
+                      placeholder="Full Name"
+                    />
+                    <label for="fullName">Full Name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="userName"
+                      placeholder="Username"
+                    />
+                    <label for="userName">Username</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      placeholder="Email Address"
+                    />
+                    <label for="email">Email Address</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="address"
+                      placeholder="Address"
+                    />
+                    <label for="address">Address</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="bDay"
+                      placeholder="Birthday"
+                    />
+                    <label for="bDay">Birthday</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="contact"
+                      placeholder="Contact"
+                    />
+                    <label for="contact">Contact No.</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      placeholder="Password"
+                    />
+                    <label for="password">Password</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="confirmPassword"
+                      placeholder="Confirm Password"
+                    />
+                    <label for="confirmPassword">Confirm Password</label>
+                  </div>
+                  <div class="d-grid">
+                    <button class="btn btn-lg btn-primary" type="submit">
+                      Sign Up
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+    </div>
+  </div>
+  <script src="./assets/js/index.js"></script>
+</script>
