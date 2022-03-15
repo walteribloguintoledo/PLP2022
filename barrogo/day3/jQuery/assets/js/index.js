@@ -2,7 +2,6 @@
 var loginForm = $("#loginForm");
 var loginUserName = $("#loginUserName");
 var loginPassword = $("#loginPassword");
-let attempts = 3;
 
 // sign up
 var signUpForm = $("#signUpForm");
@@ -18,6 +17,7 @@ var accounts = [];
 
 // signup form
 if (signUpForm) {
+  checkLogs();
   signUpForm.submit(function (e) {
     e.preventDefault();
 
@@ -114,8 +114,9 @@ function checkEmail(emails) {
 }
 
 // login form
-
 if (loginForm) {
+  let attempts = 3;
+  checkLogs();
   loginForm.submit(function (e) {
     e.preventDefault();
     if (loginUserName.val() == "") {
@@ -123,47 +124,63 @@ if (loginForm) {
     } else if (loginPassword.val() == "") {
       alert("Please input Password.");
     } else {
-      login(loginUserName.val(), loginPassword.val());
+      let userStorage = localStorage.getItem("usersInfo");
+      userStorage = JSON.parse(userStorage);
+      var loggedUsername = "",
+        loggedPassword = "";
+
+      if (userStorage !== null) {
+        // check username and password in the local storage
+        for (let i = 0; i < userStorage.length; i++) {
+          if (userStorage[i][1] == loginUserName.val()) {
+            loggedUsername = userStorage[i][1];
+            if (userStorage[i][6] == loginPassword.val()) {
+              loggedPassword = userStorage[i][6];
+            }
+          }
+        }
+        // check if username is not found
+        if (loggedUsername == null || loggedUsername == "") {
+          alert("Invalid Username.");
+          // login attempts
+          attempts--;
+          if (attempts == 0 || attempts < 0) {
+            alert("Login attempts has been exceeded");
+            $("#loginBtn").attr("disabled", true);
+            return false;
+          } else {
+            alert("You only have " + attempts + " tries attempt");
+          }
+          // check if password is not found
+        } else if (loggedPassword == null || loggedPassword == "") {
+          alert("Invalid Password.");
+          // login attempts
+          attempts--;
+          if (attempts == 0 || attempts < 0) {
+            alert("Login attempts has been exceeded");
+            $("#loginBtn").attr("disabled", true);
+            return false;
+          } else {
+            alert("You only have " + attempts + " tries attempt");
+          }
+          // if username and password is match proceed to homepage
+        } else {
+          localStorage.setItem("userLogs", JSON.stringify(loggedUsername));
+          window.location.href = "index.html";
+        }
+      } else {
+        alert("Invalid Username or Password.");
+      }
     }
   });
 }
 
-// login
-function login(loggedUserName, loggedPassword, attempt) {
-  let userStorage = localStorage.getItem("usersInfo");
-  userStorage = JSON.parse(userStorage);
-
-  if (userStorage !== null) {
-    for (let i = 0; i < userStorage.length; i++) {
-      for (let j = 0; j < userStorage[i].length; j++) {
-        // check if the username is correct
-        if (userStorage[i][j] == loggedUserName) {
-          // /check if the password is correct
-          if (userStorage[i][6] == loggedPassword) {
-            localStorage.setItem("userLogs", JSON.stringify(loggedUserName));
-            window.location.href = "index.html";
-          } else {
-            alert("Invalid Username or Password."),
-              // check attempts
-              attempts--;
-            if (attempts == 0 || attempts < 0) {
-              alert("Login attempts has been exceeded");
-              $("#loginBtn").attr("disabled", true);
-              return false;
-            } else {
-              return alert("You only have " + attempts + " tries attempt");
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 // check if the user is logged in
-let userLog = localStorage.getItem("userLogs");
-userLog = JSON.parse(userLog);
+function checkLogs() {
+  let userLog = localStorage.getItem("userLogs");
+  userLog = JSON.parse(userLog);
 
-if (userLog !== null) {
-  window.location.href = "index.html";
+  if (userLog !== null) {
+    window.location.href = "index.html";
+  }
 }
