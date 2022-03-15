@@ -5,9 +5,12 @@ let usersObject = new Object();
 
 let userList = [];
 
-// if (localStorage.getItem("currentUser") != null) {
-//     window.location.replace("./index.html");
-// }
+// get usersInfo if null leave empty array
+let previousList = JSON.parse(localStorage.getItem("usersInfo")) || [];
+
+if (localStorage.getItem("currentUser") != null) {
+    window.location.replace("./index.html");
+}
 
 $("#form").submit(function (e) {
     e.preventDefault();
@@ -97,17 +100,16 @@ $("#form").submit(function (e) {
 
     currentUser["username"] = userData.username;
     currentUser["password"] = userData.password;
-
-    userList.push(userData);
-    localStorage.setItem("usersInfo", JSON.stringify(userList));
     localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
+    previousList.push(userData);
+
+    // set the updated user list
+    localStorage.setItem("usersInfo", JSON.stringify(previousList));
+    
     // redirect user to login page after signing up
-    // window.location.replace("./login.html");
+    window.location.replace("./login.html");
 });
-
-
-
 
 /* REUSABLE FUNCTIONS */
 function isNumeric(text) {
