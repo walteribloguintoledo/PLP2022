@@ -145,7 +145,7 @@ if (loginForm) {
           // login attempts
           attempts--;
           if (attempts == 0 || attempts < 0) {
-            alert("Login attempts has been exceeded");
+            alert("Login attempts has been exceeded.");
             $("#loginBtn").attr("disabled", true);
             return false;
           } else {
@@ -157,7 +157,7 @@ if (loginForm) {
           // login attempts
           attempts--;
           if (attempts == 0 || attempts < 0) {
-            alert("Login attempts has been exceeded");
+            alert("Login attempts has been exceeded.");
             $("#loginBtn").attr("disabled", true);
             return false;
           } else {
