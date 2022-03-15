@@ -25,7 +25,7 @@ function grantAccess(usernameElem, passwordElem) {
     return retrievedUser === null ? alert('Wrong Credentials!') : false;
 }
 
-document.querySelector('#login-form').addEventListener('submit', function (e) {
+$("#login-form").on('submit', function (e) {
     e.preventDefault();
 
     var password = $('#password-field'), username = $('#username');
