@@ -1,0 +1,104 @@
+<script type="text/template" id="homepage">
+  <section>
+  	<div class="container-md">
+  		<div class="col-md-4">
+  			<span>
+  			<h2>Good Day Every One</h2>
+  			<p>I am Rico Jay. Today we are creating first task in our On-the-Job Traning in the Avasia Information System Inc.</p>
+  		    </span>
+  		</div>
+  		<div class="col-md-4">
+  			<img src="../../pictures/random.jpg">
+  		</div>
+
+  	</div>
+  </section>
+</script>
+<script type="text/template" id="navigation">
+  	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  	<span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+  	<ul class="navbar-nav">
+
+
+  			<li class="nav-item notLogin">
+  				<a class="nav-link active" href="#/login">Login</a>
+  			</li>
+  			<li class="nav-item notLogin">
+  				<a class="nav-link active"  href="#/signup">Signup</a>
+  			</li>
+
+
+  			<li class="nav-item currentlogin" hidden>
+  				<a class="nav-link" id="btnLogout" href="#/login">logout</a>
+  			</li>
+  	</ul>
+    </div>
+  </div>
+   </nav>
+</script>
+
+<script type="text/template" id="login">
+  <div>
+      <form action="action_page.php" method="post" class="formlogin">
+          <div class="imgcontainer">
+            <img src="../../pictures/signup.png" alt="Avatar" class="avatar">
+          </div>
+
+          <div class="container" id="login">
+            <label><b>Username</b></label>
+            <input type="text" placeholder="Enter Email" class="username" id="uname" required><br>
+            <label><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="psw" required><br>
+
+            <button type="button" class="btnlogin" id="btnLogin">Login</button>
+            <button type="button" class="btnlogin">Cancel</button>
+            <p id="result"></p>
+          </div>
+        </form>
+  </div>
+</script>
+
+<script type="text/template" id="signup">
+  <div class="form_container" id="login">
+      <div class="title_container">
+        <h2>Please Enter Credentials to SignUp</h2>
+      </div>
+      <div class="row">
+        <div>
+          <form name="myForm" id="myForm" method="post" action="phpfiles/methods.php">
+            <div>
+              <input type="text" name="email" id="email" placeholder="Email"/>
+            </div>
+            <div>
+              <input type="password" name="password" id="password" placeholder="Password"  />
+            </div>
+            <div>
+              <input type="password" id="password2" placeholder="Re-type Password"  />
+            </div>
+            <div>
+              <input type="text" name="firstname" id="firstname" placeholder="First Name" />
+            </div>
+            <div>
+              <input type="text" name="lastname" id="lastname" placeholder="Last Name"  />
+            </div>
+            <div>
+                <input type=date id = DOB>
+            </div>
+            <div>
+              <textarea type="text" name="name" id="address" placeholder="Address"></textarea>
+            </div>
+            <input type="submit" class="btnlogin" id="btnShow" value="SignUp" />
+   <br>
+            <p>_________________________________________________________________________________________________</p>
+          </form>
+        </div>
+      </div>
+    </div>
+          <br>
+          <br>
+          <br>
+</script>

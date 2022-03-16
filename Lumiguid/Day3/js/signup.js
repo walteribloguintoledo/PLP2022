@@ -1,50 +1,49 @@
 //SignUp Page
+let previousList = JSON.parse(localStorage.getItem("my_person")) || [];
 
-        let previousList = JSON.parse(localStorage.getItem("my_person")) || [];
-
-        if (localStorage.getItem("currentLogin") != null) {
-          window.location.replace("./index.html");
+if (localStorage.getItem("currentLogin") != null) {
+  window.location.replace("./index.html");
+}
+//Create a container DIV that will show input values on form submit
+$(document).ready(function(){
+  $("#btnShow").click(function (e) {
+    e.preventDefault();
+      if (isEmpty($("#email").val())) {
+        alert("Email is required");
+        $('#email').focus() ;
+        return;
         }
-      //Create a container DIV that will show input values on form submit
-      $(document).ready(function(){
-        $("#btnShow").click(function (e) {
-          e.preventDefault();
-          if (isEmpty($("#email").val())) {
-              alert("Email is required");
-              $('#email').focus() ;
-              return;
-          }
-          if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($("#email").val())){
-              alert("You have entered an invalid email address!");
-              return;
-          }
-          if (isEmpty($("#password").val())) {
-              alert("Password is required");
-              return;
-          } else if (!isNumeric($("#password").val()) || !isAlpha($("#password").val())) {
-              alert("Password must be alphanumeric");
-              return;
-          }else if( $("#password2").val()!= $("#password").val()){
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($("#email").val())){
+          alert("You have entered an invalid email address!");
+          return;
+      }
+      if (isEmpty($("#password").val())) {
+          alert("Password is required");
+          return;
+        } else if (!isNumeric($("#password").val()) || !isAlpha($("#password").val())) {
+            alert("Password must be alphanumeric");
+            return;
+            }else if( $("#password2").val()!= $("#password").val()){
               alert("password does not match!");
               return;
-          }
-          if (isEmpty($('#firstname').val())) {
-              alert("Firstname is required");
-              return;
-          }
-          if (isEmpty($("#lastname").val())) {
-              alert("Lastname is required");
-              return;
-          }
+            }
+      if (isEmpty($('#firstname').val())) {
+        alert("Firstname is required");
+        return;
+      }
+      if (isEmpty($("#lastname").val())) {
+        alert("Lastname is required");
+        return;
+      }
       
-          if (isEmpty($("#DOB").val())) {
-              alert("Birthdate is required");
-              return;
-          }
-          if (isEmpty($("#address").val())) {
-              alert("address is required");
-              return;
-          }
+      if (isEmpty($("#DOB").val())) {
+        alert("Birthdate is required");
+        return;
+        }
+      if (isEmpty($("#address").val())) {
+        alert("address is required");
+        return;
+      }
 
 
         var email = $('#email').val();
@@ -100,21 +99,14 @@
           for(var i = 0; i < data.length; i++) {
             var emails = data[i].Email;
             console.log(emails)   
-           if (email != emails ){
+           if (email == emails ){
             console.table(previousList);
             previousList.push(user);
             localStorage.setItem("my_person", JSON.stringify(previousList)); 
-            alert("added to localStorage");   
-            var currentUser =[];
-              var users = {
-                Email:email,
-                Password: password
-              }
-              currentUser.push(users);
-              localStorage.setItem("currentLogin", JSON.stringify(currentUser));
-              window.location.replace("index.html");
-              alert("congratualation you have an account!");
-              exit();
+            alert("added to localStorage wewe");   
+              window.location.replace("login.html");
+              alert("congratualation you have an account!wewew");
+              return;
            }else{
             alert("Email is already registered");
             return;
@@ -124,22 +116,14 @@
             previousList.push(user);
             localStorage.setItem("my_person", JSON.stringify(previousList));
             alert("added to localStorage else");   
-            var currentUser =[];
-              var users = {
-                Email:email,
-                Password: passwords
-              }
-              currentUser.push(users);
-              localStorage.setItem("currentLogin", JSON.stringify(currentUser));
               alert("congratualation you have an account!");
-              window.location.replace("./index.html");
+              window.location.replace("login.html");
       }
   
     }
 
       function display(){        
         var ind1 = document.getElementById("loc1").value;
-  //      var ind2 = document.getElementById("loc2").value;
         for(var i = 0; i < registerPerson.length; i++) {
           for (var j = 0;j < registerPerson[i].length; j++){
             var x = registerPerson[i][0];
