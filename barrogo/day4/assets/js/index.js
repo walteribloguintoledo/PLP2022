@@ -12,7 +12,7 @@ $(document).ready(function () {
       if (logout) {
         logout.click(function () {
           localStorage.removeItem("userLogs");
-          window.location.href = "#/login";
+          window.location.reload();
         });
       }
 
