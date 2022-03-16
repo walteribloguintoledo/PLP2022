@@ -1,6 +1,31 @@
 <?php
 include '../database.inc.php';
 
+function checkUsernameOrEmailDuplicate($conn, string $username = '', string $email = '')
+{
+    $msg = '';
+    $result = mysqli_query($conn, "SELECT id, email, username FROM users WHERE ( username='$username' OR email = '$email')");
+
+    if(mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_array($result)) {
+            if ($row['username'] == $username) {
+                $msg = 'This username is already taken.';
+                break;
+            } else if ($row['email'] == $email) {
+                $msg = 'This email is already taken.';
+                break;
+            } 
+        }
+    }
+
+    if (! empty($msg)) {
+        mysqli_close($conn);
+        throw new Exception($msg);
+    };
+
+    return;
+}
+
 function create(
     $conn,
     string $name = '',
@@ -14,17 +39,7 @@ function create(
     try {
         $msg = '';
 
-        $usernameExist = mysqli_query($conn, "SELECT * FROM users WHERE username = '" . $username . "'");
-
-        if (mysqli_num_rows($usernameExist)) {
-            throw new Exception('This username is already taken.');
-        }
-
-        $emailExist = mysqli_query($conn, "SELECT * FROM users WHERE email = '" . $email . "'");
-
-        if (mysqli_num_rows($emailExist)) {
-            throw new Exception('This email is already taken.');
-        }
+        checkUsernameOrEmailDuplicate($conn, $username, $email);
 
         $sqlStatement = "INSERT INTO `users`( `name`, `email`, `username`, `address`, `contact_number`, `birth_date`, `password`) 
             VALUES ('$name','$email','$username','$address', '$contactNumber', '$birthDate', '$password')";
@@ -92,6 +107,8 @@ function update(
     string $birthDate,
 ) {
     try {
+        checkUsernameOrEmailDuplicate($conn, $username, $email);
+
         $sqlStatement = "UPDATE `users` SET `name`='$name',`email`='$email',`username`='$username',`address`='$address',`contact_number`='$contactNumber',`birth_date`='$birthDate' WHERE id=$id";
 
         if (!mysqli_query($conn, $sqlStatement)) {
@@ -118,52 +135,33 @@ function update(
     }
 }
 
-// function retreiveAll($conn, ?string $page = null)
-// {
-//     $totalRecordsPerPage = 10;
-//     $offset = 0;
-//     $sqlStatement = '';
-
-//     if (is_null($page)) {
-//     } else {
-//         $offset = ($page - 1) * $totalRecordsPerPage;
-//     }
-
-//     $count = mysqli_query($conn, "SELECT COUNT(*) AS totalRecords FROM `users`");
-//     $totalRecords = mysqli_fetch_array($count);
-//     $totalRecords = $totalRecords['totalRecords'];
-
-//     $result = mysqli_query($conn, "SELECT `id`, `name`, `email`, `username`, `address`, `contact_number`, `birth_date` FROM `users` LIMIT $offset, $totalRecordsPerPage");
-
-//     return json_encode([]);
-// }
-
 if (isset($_GET['action']) && !empty(isset($_GET['action']))) {
     $action = $_GET['action'];
 
     switch ($action) {
         case "signup": {
                 echo create($conn, $_POST['name'], $_POST['email'], $_POST['username'], $_POST['address'], $_POST['contact_number'], $_POST['birth_date'], $_POST['password']);
+
+                return;
             }
             break;
 
         case "login": {
                 echo retrieve($conn, $_POST['username'], $_POST['password']);
+
+                return;
             }
             break;
 
         case "update": {
                 echo update($conn, $_POST['id'], $_POST['name'], $_POST['email'], $_POST['username'], $_POST['address'], $_POST['contact_number'], $_POST['birth_date']);
+
+                return;
             }
             break;
 
-        // case "get": {
-        //         echo retreiveAll($conn, $_POST['page']);
-        //     }
-        //     break;
-
         default: {
-                echo 'somethin went wrong!';
+                return 'somethin went wrong!';
             }
     }
 }
