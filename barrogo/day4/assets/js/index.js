@@ -274,7 +274,7 @@ $(document).ready(function () {
       }
     });
 
-    Path.root("#/");
+    Path.root("#/home");
 
     Path.listen();
   });
