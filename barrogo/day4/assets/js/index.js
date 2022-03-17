@@ -83,7 +83,7 @@ $(document).ready(function () {
           ) {
             $.ajax({
               type: "POST",
-              url: "update.php",
+              url: "src/update.php",
               dataType: "json",
               data: {
                 fullName: $("#fullName").val(),
@@ -112,7 +112,7 @@ $(document).ready(function () {
           } else {
             $.ajax({
               type: "POST",
-              url: "update.php",
+              url: "src/update.php",
               dataType: "json",
               data: {
                 fullName: $("#fullName").val(),
@@ -171,7 +171,7 @@ $(document).ready(function () {
           } else {
             $.ajax({
               type: "POST",
-              url: "login.php",
+              url: "src/login.php",
               dataType: "json",
               data: {
                 username: loginUserName.val(),
@@ -246,7 +246,7 @@ $(document).ready(function () {
           } else {
             $.ajax({
               type: "POST",
-              url: "signup.php",
+              url: "src/signup.php",
               dataType: "json",
               data: {
                 fullName: fullName.val(),

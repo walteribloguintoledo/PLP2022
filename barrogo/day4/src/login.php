@@ -1,5 +1,5 @@
 <?php
-  require('./config/db_connection.php');
+  require('../config/db_connection.php');
   
   if(isset($_POST['username'])){
     $user_name = $_POST['username'];
