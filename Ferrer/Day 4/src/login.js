@@ -9,28 +9,25 @@ $(document).ready(function () {
 	$("#form").submit(function (e) {
 		e.preventDefault();
 
-		if (userList != null) {
-			userList.forEach((user) => {
-				if (
-					user.username == $("#username").val() &&
-					user.password == $("#password").val()
-				) {
-					// store the new login user to currentUser local storage
-					createNewCurrentUser["username"] = $("#username").val();
-					createNewCurrentUser["password"] = $("#password").val();
-
-					localStorage.setItem(
-						"currentUser",
-						JSON.stringify(createNewCurrentUser)
-					);
-
-					window.location.replace("#/home");
-				} else {
-					$(".error-message").removeClass("hide");
-				}
-			});
-		} else {
-			$(".error-message").removeClass("hide");
-		}
+		$.ajax({
+			type: "POST",
+			url: "auth/process_user.php?action=login",
+			data: {
+				username: $("#username").val(),
+				password: $("#password").val(),
+			},
+			dataType: "json",
+			success: function (response) {
+				// save to the current user to local storage
+				createNewCurrentUser["username"] = $("#username").val();
+				createNewCurrentUser["password"] = $("#password").val();
+				localStorage.setItem(
+					"currentUser",
+					JSON.stringify(createNewCurrentUser)
+				);
+				$(".error-message").addClass("hide");
+				window.location.href = "#/home";
+			},
+		});
 	});
 });
