@@ -94,9 +94,6 @@ $(document).ready(function () {
           //now calculate the age of the user
           var age = Math.abs(year - 1970);
         }
-
-        var age = (document.getElementById("display_age").innerHTML =
-          " " + age + " years old");
         return age;
       }
       function storage(email, password, lastname, firstname, age, address) {
@@ -123,7 +120,7 @@ $(document).ready(function () {
               return;
             } else {
               alert("Email is already registered");
-              return;
+              $("#email").focus();
             }
           }
         } else {
@@ -136,41 +133,41 @@ $(document).ready(function () {
           var str = $("myForm").serialize();
 
           $.ajax({
-            method: "POST",
-            url: "some.php",
+            method: "GET",
+            url: "phpfiles/methods.php",
             dataType: "json",
             data: str,
-          }).done(function (msg) {
-            alert("Data Saved: " + msg);
+          }).done(function (data) {
+            alert("Data Saved: " + data);
           });
         }
       }
 
-      function display() {
-        var ind1 = document.getElementById("loc1").value;
-        for (var i = 0; i < registerPerson.length; i++) {
-          for (var j = 0; j < registerPerson[i].length; j++) {
-            var x = registerPerson[i][0];
-            if (ind1 == x) {
-              alert("Your Email is " + x);
-              var email = registerPerson[i][0];
-              display_email.innerHTML = email;
-              var lastname = registerPerson[i][1];
-              display_lastname.innerHTML = lastname;
-              var firstname = registerPerson[i][2];
-              display_firstname.innerHTML = firstname;
-              var age = registerPerson[i][3];
-              display_age.innerHTML = age;
-              var address = registerPerson[i][4];
-              display_address.innerHTML = address;
-              return;
-            }
-          }
-        }
-        if (ind1 != x) {
-          alert("not yet registered");
-        }
-      }
+      // function display() {
+      //   var ind1 = document.getElementById("loc1").value;
+      //   for (var i = 0; i < registerPerson.length; i++) {
+      //     for (var j = 0; j < registerPerson[i].length; j++) {
+      //       var x = registerPerson[i][0];
+      //       if (ind1 == x) {
+      //         alert("Your Email is " + x);
+      //         var email = registerPerson[i][0];
+      //         display_email.innerHTML = email;
+      //         var lastname = registerPerson[i][1];
+      //         display_lastname.innerHTML = lastname;
+      //         var firstname = registerPerson[i][2];
+      //         display_firstname.innerHTML = firstname;
+      //         var age = registerPerson[i][3];
+      //         display_age.innerHTML = age;
+      //         var address = registerPerson[i][4];
+      //         display_address.innerHTML = address;
+      //         return;
+      //       }
+      //     }
+      //   }
+      //   if (ind1 != x) {
+      //     alert("not yet registered");
+      //   }
+      // }
 
       function isNumeric(text) {
         var hasNumber = /[0-9]/g;

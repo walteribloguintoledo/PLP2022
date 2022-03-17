@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400&display=swap");
+
+:root {
+  --primary: #6c63ff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  font-family: "Roboto", sans-serif;
+}
+
+/* GLOBAL */
+
+.primary-color {
+  color: var(--primary);
+}
+
+.primary-btn,
+.secondary-btn {
+  padding: 1rem 2rem;
+  border: 2px solid var(--primary);
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 150ms linear;
+}
+
+.primary-btn:hover,
+.secondary-btn:hover {
+  border-radius: 16px;
+}
+
+.primary-btn {
+  background-color: var(--primary);
+  color: #ffffff;
+}
+
+ul li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+input,
+textarea {
+  padding: 0.5rem 0.3rem;
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  border: 2px solid var(--primary);
+}
+
+#homepage,
+#loginpage,
+#signup {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8rem;
+  gap: 5rem;
+}
+
+.image {
+  width: 600px;
+  height: 400px;
+}
+
+/* Navigation */
+
+nav {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  height: 0;
+  z-index: 2;
+  background-color: #ffffff;
+  padding: 2rem 4rem;
+}
+
+nav .nav-icon {
+  font-size: 1.5rem;
+  font-weight: bolder;
+}
+
+nav .nav-menu {
+  display: flex;
+  gap: 3.5rem;
+}
+
+nav .nav-link:hover {
+  color: var(--primary);
+}
+
+/* Home Page */
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.intro h1 {
+  font-size: 4rem;
+}
+
+.intro p {
+  width: 80%;
+}
+
+.intro div {
+  margin-top: 2rem;
+}
+
+.intro .primary-btn {
+  margin-right: 1.5rem;
+}
+
+/* Login and Sign up form */
+
+#loginpage .left-side,
+#signup .left-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 30%;
+}
+
+.myform {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+@media only screen and (max-width: 1214px) {
+  #homepage,
+  #loginpage,
+  #signup {
+    margin-top: 5rem;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 4rem;
+  }
+
+  .image {
+    display: none;
+  }
+
+  #loginpage .left-side,
+  #signup .left-side {
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  #loginpage .left-side,
+  #signup .left-side {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  #loginpage .left-side,
+  #signup .left-side {
+    width: 100%;
+  }
+}

@@ -2,7 +2,8 @@ if (localStorage.getItem("currentLogin") != null) {
   window.location.replace("./index.html");
 }
 
-function loginFunction(){
+$("#btnLogin").click(function (e) {
+  e.preventDefault();
   var email = $("#uname").val();
   var password = $("#psw").val();
   var currentUser = [];
@@ -38,4 +39,5 @@ function loginFunction(){
   }else{
     alert("no registered email");
   }
-}
+
+});

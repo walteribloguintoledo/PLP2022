@@ -66,12 +66,12 @@
             </div>
         </div>
         <button id="print" type="button" class="btn btn-primary" onclick="showData()">Register</button>
+        <button id="search" type="button" class="btn btn-primary">Search</button>
         <div class=" signup_link">
             Already have an account? <a href="login.html">Login</a>
         </div>
 
         <div id="display"></div>
-        <div id="array"></div>
     </form>
 
 
@@ -79,15 +79,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
 
-        var letters = /^[A-Za-z]+$/g;//letters only
+
+
+        //input ids
+        var FirstName = document.getElementById("fname");
+        var LastName = document.getElementById("lname");
+        var UserName = document.getElementById("uname");
+        var Email = document.getElementById("email");
+        var Password = document.getElementById("password");
+        var ConfirmPassword = document.getElementById("cpassword");
+        var Birthdate = document.getElementById("birthdate");
+        var Contact = document.getElementById("contact");
+
+
+        var letters = /^[A-Za-z]+$/;//letters only
 
         var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;//valid email
 
-        var numbers = /^[0-9]+$/g;//numbers only
+        var numbers = /^[0-9]+$/;//numbers only
 
-        var signup = null; //print users in div
+        var mixed = /^[0-9a-zA-Z]+$/ //letters and numbers
 
-        var users = new Array(); //array for users
+        // var signup = null; //print users in div
+
+        var userInput = new Array(); //array of user input
 
         function showData() {
             inputValidation();
@@ -96,56 +111,54 @@
         //input validation
         function inputValidation() {
 
-            if (fname.value == "") {
+            if (FirstName.value == "") {
                 alert("Firstname is empty.");
                 return false;
-            } else if (!fname.value.match(letters)) {
+            } else if (!FirstName.value.match(letters)) {
                 alert("Firstname should be letters only.");
                 return false;
             }
-            if (lname.value == "") {
+            if (LastName.value == "") {
                 alert("Lastname is empty.");
                 return false;
-            } else if (!lname.value.match(letters)) {
+            } else if (!LastName.value.match(letters)) {
                 alert("Lastname should be letters only.");
                 return false;
-            }
-            if (uname.value == "") {
-                alert("Username is empty.");
+            } else if (UserName.value.length < 4 || UserName.value.length > 10) {
+                alert("Username must be 4 character to 10 characters long.");
                 return false;
-            } else if (uname.value.length < 2 || uname.value.length > 6) {
-                alert("Username must be 2 character to 6 characters long.");
-                return false;
+            } else if (userNameTaken(uname) !== false) {
+                return UserName.value = "";
             }
-            if (email.value == "") {
+            if (Email.value == "") {
                 alert("Email is empty.");
                 return false;
-            } else if (!email.value.match(mailformat)) {
+            } else if (!Email.value.match(mailformat)) {
                 alert("Email is invalid.");
                 return false;
             }
-            if (password.value == "") {
+            if (Password.value == "") {
                 alert("Password is empty.");
                 return false;
-            } else if (password.value.length < 6 || password.value.length > 12) {
+            } else if (Password.value.length < 6 || Password.value.length > 12) {
                 alert("Password must be 6 character to 12 characters long.");
                 return false;
             }
-            if (cpassword.value == "") {
+            if (ConfirmPassword.value == "") {
                 alert("Confirm Password is empty.");
                 return false;
-            } else if (password.value != cpassword.value) {
+            } else if (Password.value != ConfirmPassword.value) {
                 alert("Password does not match.");
                 return false;
             }
-            if (birthdate.value == "") {
+            if (Birthdate.value == "") {
                 alert("Birthdate is empty.");
                 return false;
             }
-            if (contact.value == "") {
+            if (Contact.value == "") {
                 alert("Contact is empty.");
                 return false;
-            } else if (!contact.value.match(numbers)) {
+            } else if (!Contact.value.match(numbers)) {
                 alert("Contact is invalid.");
                 return false;
             }
@@ -154,78 +167,144 @@
             }
         }
 
-        //print user input
-        function registerUser() {
-
-            //get value of user input
-            var FirstName = document.getElementById("fname").value;
-            var LastName = document.getElementById("lname").value;
-            var UserName = document.getElementById("uname").value;
-            var Email = document.getElementById("email").value;
-            var Password = document.getElementById("password").value;
-            var ConfirmPassword = document.getElementById("cpassword").value;
-            var Birthdate = document.getElementById("birthdate").value;
-            var Contact = document.getElementById("contact").value;
-
+        //age function
+        function getAge() {
             //get age using date
-            var bday = new Date(Birthdate);
-            if (Birthdate == null || Birthdate == '') {
+            var bday = new Date(Birthdate.value);
+            if (Birthdate.value == null || Birthdate.value == '') {
                 return false;
             } else {
 
-                //calculate month difference from current date in time
-                var month_diff = Date.now() - bday.getTime();
+                //milliseconds since jan 1, 1970 up to current date minus milliseconds from jan 1, 1970 to date given
+                var monthDifference = Date.now() - bday.getTime();
 
-                //convert the calculated difference in date format
-                var age_dt = new Date(month_diff);
+                //converts the calculated difference in date format 
+                var newDate = new Date(monthDifference);
 
-                //extract year from date    
-                var year = age_dt.getUTCFullYear();
+                //get year from date
+                var getYear = newDate.getUTCFullYear();
 
-                //now calculate the age of the user
-                var Age = Math.abs(year - 1970);
+                //now calculate the absoltue value of age
+                var Age = Math.abs(getYear - 1970);
+
+                return Age;
             }
+        }
 
-            //get time on form submission
-            var date = new Date(),
-                hours = (date.getHours() < 10 ? '0' : '') + date.getHours(),
-                minutes = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()
-            Time = hours + ':' + minutes;
+        //save user array
+        function saveUser() {
 
-            //display
-            signup = "First name: " + FirstName + "<br>" + "Last Name: " + LastName + "<br>" + "Username: " + UserName + "<br>" + "Email: " + Email + "<br>" + "Password: " + Password + "<br>" + "Confirm Password: " + ConfirmPassword + "<br>" + "Birthdate: " + Birthdate + "<br>" + "Age: " + Age + "yrs old" + "<br>" + "Contact: " + Contact + "<br>" + "Time: " + Time;
-
-            document.getElementById("display").innerHTML = signup;
-
-            console.log("First name: " + FirstName);
-            console.log("Last name: " + LastName);
-            console.log("Username: " + UserName);
-            console.log("Email: " + Email);
-            console.log("Password: " + Password);
-            console.log("Confirm Password: " + ConfirmPassword);
-            console.log("Birthdate: " + Birthdate);
-            console.log("Age: " + Age + "yrs old");
-            console.log("Contact: " + Contact);
-            console.log("Time: " + Time);
+            //get current date and time
+            var timeDate = new Date();
 
             //array of user data
-            var userData = [FirstName, LastName, UserName, Email, Password, ConfirmPassword, Birthdate, Age, Contact, Time];
+            var userData = [FirstName.value, LastName.value, UserName.value, Email.value, Password.value, ConfirmPassword.value, getAge() + "yrs old", Birthdate.value, Contact.value, timeDate];
 
-            users.push(userData);
-            console.log(users);
+            userInput.push(userData);
+            console.log(userInput);
 
-            FirstName = "";
-            LastName = "";
-            UserName = "";
-            Email = "";
-            Password = "";
-            ConfirmPassword = "";
-            Birthdate = "";
-            Age = "";
-            Contact = "";
-            Time = "";
+            FirstName.value = "";
+            LastName.value = "";
+            UserName.value = "";
+            Email.value = "";
+            Password.value = "";
+            ConfirmPassword.value = "";
+            Birthdate.value = "";
+            Contact.value = "";
+            timeDate = "";
+            document.getElementById("display").innerHTML = "";
 
             alert("Successfully Registered!");
+            return userData;
+        }
+
+        //username alredy exists
+        function userNameTaken(dataValue) {
+            if (userInput === undefined) {
+                return false;
+            }
+
+            var user = null;
+
+            userInput.forEach(index => {
+                if (dataValue.value === index[2])
+                    user = index;
+            });
+
+            if (user !== null) {
+                alert('Please choose another username.');
+            } else {
+                return false;
+            }
+        }
+
+        //search user using username
+        function searchUser() {
+            var output = null;
+            var findData = document.getElementById("uname").value;
+
+            for (let i = 0; i < userInput.length; i++) {
+                if (userInput[i][2] === findData) {
+                    output = userInput[i];
+                    // console.log(output);
+                    // document.getElementById("display").innerHTML = output;
+                    break;
+                }
+            }
+
+            return output;
+
+        }
+
+        document.getElementById("search").addEventListener("click", function () {
+            var displayResult = searchUser();
+            // for (var i = 0; i < displayResult.length; i++) {
+            //     console.log(displayResult[i]);
+            //     document.getElementById("display").innerHTML = displayResult;
+            // }
+            var fname = "Firstname: " + displayResult[0] + "<br>";
+            var lname = "Lastname: " + displayResult[1] + "<br>";
+            var uname = "Username: " + displayResult[2] + "<br>";
+            var email = "Email: " + displayResult[3] + "<br>";
+            var password = "Password: " + displayResult[4] + "<br>";
+            var cpassword = "Confirm Password: " + displayResult[5] + "<br>";
+            var age = "Age: " + displayResult[6] + "<br>";
+            var bday = "Birthdate: " + displayResult[7] + "<br>";
+            var contact = "Contact: " + displayResult[8] + "<br>";
+            var dateTime = "Time and Date: " + displayResult[9] + "<br>";
+            var output = fname + lname + uname + email + password + cpassword + age + bday + contact + dateTime;
+
+            var abc = null;
+            abc += "";
+
+            document.getElementById("display").innerHTML = output;
+        });
+
+        //print user input
+        function registerUser() {
+
+            //get current date and time
+            var timeDate = new Date();
+
+            // display
+            // signup = "First name: " + FirstName.value + "<br>" + "Last Name: " + LastName.value + "<br>" + "Username: " + UserName.value + "<br>" + "Email: " + Email.value + "<br>" + "Password: " + Password.value + "<br>" + "Confirm Password: " + ConfirmPassword.value + "<br>" + "Birthdate: " + Birthdate.value + "<br>" + "Age: " + getAge() + "yrs old" + "<br>" + "Contact: " + Contact.value + "<br>" + "Time and Date: " + timeDate;
+
+            // signup = searchUser();
+
+            console.log("First name: " + FirstName.value);
+            console.log("Last name: " + LastName.value);
+            console.log("Username: " + UserName.value);
+            console.log("Email: " + Email.value);
+            console.log("Password: " + Password.value);
+            console.log("Confirm Password: " + ConfirmPassword.value);
+            console.log("Birthdate: " + Birthdate.value);
+            console.log("Age: " + getAge() + "yrs old");
+            console.log("Contact: " + Contact.value);
+            console.log("Time and Date: " + timeDate);
+
+            saveUser();
+
+            // document.getElementById("display").innerHTML = searchUser();
         }
     </script>
 </body>

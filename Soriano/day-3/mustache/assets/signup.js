@@ -60,7 +60,7 @@ function emailAlreadyExists(elem) {
     return retrievedUser !== null ? alert('email already taken!') : false;
 }
 
-document.querySelector('#sign_up_form').addEventListener('submit', function (e) {
+$("#sign_up_form").on('submit', function (e) {
     e.preventDefault();
 
     // validations
