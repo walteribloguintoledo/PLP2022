@@ -1,7 +1,7 @@
 $(document).ready(function () {
   $.Mustache.options.warnOnMissingTemplates = true;
 
-  $.Mustache.load("template.html").done(function () {
+  $.Mustache.load("template/template.html").done(function () {
     Path.map("#/home").to(function () {
       $("#target").html("").append($.Mustache.render("home"));
 
