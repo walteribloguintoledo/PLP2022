@@ -111,12 +111,16 @@ $(document).ready(function () {
                     url: "../api/signup",
                     dataType: "json",
                     success: function (data) {
-                        if (data.error) {
-                            return alert(JSON.stringify(data.error.msg));
+                        if (data.verified == 0) {
+                            return alert('error');
                         }
 
-                        user = (({ name, email, username, address, birth_date, contact_number }) => ({ name, email, username, address, birth_date, contact_number }))(user);
-                        user["id"] = data.result.id;
+                        // if (data.error) {
+                        //     return alert(JSON.stringify(data.error.msg));
+                        // }
+
+                        // user = (({ name, email, username, address, birth_date, contact_number }) => ({ name, email, username, address, birth_date, contact_number }))(user);
+                        // user["id"] = data.result.id;
                         localStorage.setItem('user', JSON.stringify(user));
                         window.location.href = paths.home;
                     }
