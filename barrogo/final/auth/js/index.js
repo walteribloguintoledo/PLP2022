@@ -1,7 +1,7 @@
 $(document).ready(function () {
   $.Mustache.options.warnOnMissingTemplates = true;
 
-  $.Mustache.load("template/template.html").done(function () {
+  $.Mustache.load("app/template/template.html").done(function () {
     Path.map("#/home").to(function () {
       $("#target").html("").append($.Mustache.render("home"));
 
@@ -26,6 +26,7 @@ $(document).ready(function () {
         logout.show();
         $("#signup").hide();
         $("#login").hide();
+
         $("#fullName").val(userLog[0]);
         $("#userName").val(userLog[1]);
         $("#email").val(userLog[2]);
@@ -95,18 +96,8 @@ $(document).ready(function () {
               },
             }).done(function (data) {
               if (parseInt(data.verified) === 1) {
-                if (data.info == 1) {
-                  var updatedUser = new Array(
-                    $("#fullName").val(),
-                    $("#userName").val(),
-                    $("#email").val(),
-                    $("#address").val(),
-                    $("#bDay").val(),
-                    $("#contact").val()
-                  );
-                  localStorage.setItem("userLogs", JSON.stringify(updatedUser));
-                  window.location.reload();
-                }
+                localStorage.setItem("userLogs", JSON.stringify(data.info));
+                window.location.reload();
               }
             });
           } else {
@@ -125,19 +116,8 @@ $(document).ready(function () {
               },
             }).done(function (data) {
               if (parseInt(data.verified) === 1) {
-                if (data.info == 1) {
-                  var updatedUser = new Array(
-                    $("#fullName").val(),
-                    $("#userName").val(),
-                    $("#email").val(),
-                    $("#address").val(),
-                    $("#bDay").val(),
-                    $("#contact").val(),
-                    $("#password").val()
-                  );
-                  localStorage.setItem("userLogs", JSON.stringify(updatedUser));
-                  window.location.reload();
-                }
+                localStorage.setItem("userLogs", JSON.stringify(data.info));
+                window.location.reload();
               }
             });
           }
@@ -178,21 +158,19 @@ $(document).ready(function () {
                 password: loginPassword.val(),
               },
             }).done(function (data) {
-              if (parseInt(data.verified) === 1) {
-                if (data.info == 0) {
-                  alert("Invalid Username or Password.");
-                  attempts--;
-                  if (attempts == 0 || attempts < 0) {
-                    alert("Login attempts has been exceeded");
-                    $("#loginBtn").attr("disabled", true);
-                    return false;
-                  } else {
-                    alert("You only have " + attempts + " tries attempt");
-                  }
+              if (parseInt(data.verified) === 0) {
+                alert("Invalid Username or Password.");
+                attempts--;
+                if (attempts == 0 || attempts < 0) {
+                  alert("Login attempts has been exceeded");
+                  $("#loginBtn").attr("disabled", true);
+                  return false;
                 } else {
-                  localStorage.setItem("userLogs", JSON.stringify(data.info));
-                  window.location.href = "#/home";
+                  alert("You only have " + attempts + " tries attempt");
                 }
+              } else {
+                localStorage.setItem("userLogs", JSON.stringify(data.info));
+                window.location.href = "#/home";
               }
             });
           }
@@ -259,14 +237,11 @@ $(document).ready(function () {
               },
             }).done(function (data) {
               if (parseInt(data.verified) === 1) {
-                if (data.user == 1) {
-                  alert("Username already exists.");
-                } else if (data.email == 1) {
-                  alert("Email address already exists.");
-                } else {
-                  alert(data.info);
-                  window.location.href = "#/login";
-                }
+                window.location.href = "#/login";
+              } else if (data.user == 1) {
+                alert("Username already exists.");
+              } else if (data.email == 1) {
+                alert("Email address already exists.");
               }
             });
           }
