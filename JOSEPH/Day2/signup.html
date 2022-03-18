@@ -65,7 +65,7 @@
                     maxlength="11">
             </div>
         </div>
-        <button id="print" type="button" class="btn btn-primary" onclick="showData()">Register</button>
+        <button id="print" type="button" class="btn btn-primary">Register</button>
         <button id="search" type="button" class="btn btn-primary">Search</button>
         <div class=" signup_link">
             Already have an account? <a href="login.html">Login</a>
@@ -78,8 +78,6 @@
     <!-- --------------------------------------------------------javascript---------------------------------------------- -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript">
-
-
 
         //input ids
         var FirstName = document.getElementById("fname");
@@ -104,6 +102,10 @@
 
         var userInput = new Array(); //array of user input
 
+
+        document.getElementById("print").addEventListener("click", function () {
+            showData();
+        });
         function showData() {
             inputValidation();
         }
@@ -238,7 +240,7 @@
             }
         }
 
-        //search user using username
+        //search fucntion
         function searchUser() {
             var output = null;
             var findData = document.getElementById("uname").value;
@@ -256,28 +258,38 @@
 
         }
 
+        //search click function
         document.getElementById("search").addEventListener("click", function () {
             var displayResult = searchUser();
             // for (var i = 0; i < displayResult.length; i++) {
             //     console.log(displayResult[i]);
             //     document.getElementById("display").innerHTML = displayResult;
             // }
+
+            var output = "";
             var fname = "Firstname: " + displayResult[0] + "<br>";
+            output += fname;
             var lname = "Lastname: " + displayResult[1] + "<br>";
+            output += lname;
             var uname = "Username: " + displayResult[2] + "<br>";
+            output += uname;
             var email = "Email: " + displayResult[3] + "<br>";
+            output += email;
             var password = "Password: " + displayResult[4] + "<br>";
+            output += password;
             var cpassword = "Confirm Password: " + displayResult[5] + "<br>";
+            output += cpassword;
             var age = "Age: " + displayResult[6] + "<br>";
+            output += age;
             var bday = "Birthdate: " + displayResult[7] + "<br>";
+            output += bday;
             var contact = "Contact: " + displayResult[8] + "<br>";
+            output += contact;
             var dateTime = "Time and Date: " + displayResult[9] + "<br>";
-            var output = fname + lname + uname + email + password + cpassword + age + bday + contact + dateTime;
-
-            var abc = null;
-            abc += "";
-
+            output += dateTime;
             document.getElementById("display").innerHTML = output;
+            // var abc = null;
+            // abc += "";
         });
 
         //print user input

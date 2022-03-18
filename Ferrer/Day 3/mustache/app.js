@@ -188,16 +188,6 @@ $(document).ready(function () {
 
 					// redirect user to login page after signing up
 					window.location.href = "#/login";
-
-					$.ajax({
-						method: "POST",
-						url: "some.php",
-						dataType: "json",
-						data: { name: "John", location: "Boston" },
-					}).success(function (msg) {
-						alert("Data Saved: " + msg);
-						window.location.href = "#/login";
-					});
 				}
 			});
 
