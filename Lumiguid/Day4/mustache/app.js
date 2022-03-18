@@ -114,32 +114,74 @@ $(document).ready(function () {
             if (email != emails) {
               previousList.push(user);
               localStorage.setItem("my_person", JSON.stringify(previousList));
-              alert("added to localStorage wewe");
-              window.location.replace("#/login");
+              //              window.location.replace("#/login");
               alert("congratualation you have an account!wewew");
+              //             var users = $("myForm").serialize();
+              $.ajax({
+                type: "GET",
+                url: "methods.php",
+                dataType: "json",
+                data: user,
+              }).then(
+                // resolve/success callback
+                function (response) {
+                  // user is logged in successfully in the back-end
+                  // let's redirect
+                  if (response.success == "1") {
+                    window.location.replace("#/login");
+                  } else {
+                    alert("Invalid Credentials!");
+                  }
+                },
+                // reject/failure callback
+                function () {
+                  alert("There was some error!");
+                }
+              );
+
               return;
             } else {
               alert("Email is already registered");
               $("#email").focus();
+              return;
             }
           }
         } else {
           previousList.push(user);
           localStorage.setItem("my_person", JSON.stringify(previousList));
-          alert("added to localStorage else");
           alert("congratualation you have an account!");
-          window.location.replace("#/login");
-
-          var str = $("myForm").serialize();
-
+          //        window.location.replace("#/login");
           $.ajax({
-            method: "GET",
-            url: "phpfiles/methods.php",
+            type: "GET",
+            url: "methods.php",
             dataType: "json",
-            data: str,
-          }).done(function (data) {
-            alert("Data Saved: " + data);
-          });
+            data: user,
+          }).then(
+            // resolve/success callback
+            function (response) {
+              // user is logged in successfully in the back-end
+              // let's redirect
+              if (response.success == "1") {
+                window.location.replace("#/login");
+              } else {
+                alert("Invalid Credentials!");
+              }
+            },
+            // reject/failure callback
+            function () {
+              alert("There was some error!");
+            }
+          );
+
+          // var str = $("myForm").serialize();
+          // $.ajax({
+          //   method: "GET",
+          //   url: "/phpfiles/methods.php",
+          //   dataType: "json",
+          //   data: users,
+          // }).done(function (data) {
+          //   alert("Data Saved: " + data);
+          // });
         }
       }
 
@@ -257,7 +299,7 @@ $(document).ready(function () {
         // sign out the user
         $("#btnLogout").click(function () {
           localStorage.removeItem("currentLogin");
-          window.location.replace("#/login");
+          window.location.reload();
         });
       });
     });
