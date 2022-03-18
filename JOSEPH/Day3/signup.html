@@ -76,7 +76,7 @@
     </form>
 
 
-    <!-- --------------------------------------------------------javascript---------------------------------------------- -->
+    <!-- ------------------------------------------------------javascript---------------------------------------------- -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
 
@@ -102,7 +102,9 @@
         var mixed = /^[0-9a-zA-Z]+$/ //letters and numbers
 
         // var signup = null; //print users in div
-        //validation
+
+
+        //validations
         $(document).ready(function () {
             $("#print").click(function (e) {
                 e.preventDefault();
@@ -137,6 +139,9 @@
                     return false;
                 } else if (!$("#email").val().match(mailformat)) {
                     alert("Email is invalid.");
+                    $("#email").focus();
+                    return Email.val('');
+                } else if (emailTaken(Email) !== false) {
                     $("#email").focus();
                     return Email.val('');
                 }
@@ -187,6 +192,48 @@
             }
         }
 
+        //username alredy exists
+        function userNameTaken(inputData) {
+            if (userInput === undefined) {
+                return false;
+            }
+
+            var userInfo = null;
+
+            userInput.forEach(user => {
+                if (inputData.val() === user.username) {
+                    userInfo = user;
+                }
+            });
+
+            if (userInfo !== null) {
+                alert('Please choose another username.');
+            } else {
+                return false;
+            }
+        }
+
+        //email alredy exists
+        function emailTaken(inputData) {
+            if (userInput === undefined) {
+                return false;
+            }
+
+            var userInfo = null;
+
+            userInput.forEach(user => {
+                if (inputData.val() === user.email) {
+                    userInfo = user;
+                }
+            });
+
+            if (userInfo !== null) {
+                alert('Please choose another email.');
+            } else {
+                return false;
+            }
+        }
+
         //age function
         function getAge() {
             //get age using date
@@ -211,10 +258,6 @@
             }
         }
 
-        //array of user input
-        var userInput = JSON.parse(localStorage.getItem('userInput')) ?? new Array();
-        console.log(userInput);
-
         //save user array
         function registerUser() {
 
@@ -234,8 +277,7 @@
             console.log("Contact: " + Contact.val());
             console.log("Time and Date: " + timeDate);
 
-            // saveUser();
-
+            // local storage
             var userData = {
                 firstname: FirstName.val(),
                 lastname: LastName.val(),
@@ -265,87 +307,72 @@
             $("#contact").val('');
             $("#display").innerHTML = "";
 
+            var routeHome = "http://ernanie.com/Day3/blog.html";
             alert("Successfully Registered!");
+            window.location.replace(routeHome);
             // return userData;
 
             // document.getElementById("display").innerHTML = searchUser();
         }
 
-        //username alredy exists
-        function userNameTaken(inputData) {
-            if (userInput === undefined) {
-                return false;
-            }
+        //array of user input
+        var userInput = JSON.parse(localStorage.getItem('userInput')) ?? new Array();
+        var userInfo = null;
+        console.log(userInput);
 
-            var userInfo = null;
+        var currentUser = JSON.parse(localStorage.getItem('userData'));
+        if (currentUser !== null) window.location.replace("http://ernanie.com/Day3/blog.html");
 
-            userInput.forEach(user => {
-                if (inputData.val() === user.username) {
-                    userInfo = user;
+        function usernameIsValid(usernameElem) {
+            if (userInput === undefined) return false;
+
+            userInput.forEach(userData => {
+                if (usernameElem.val() === userData.username) {
+                    userInfo = userData;
                 }
             });
 
-            if (userInfo !== null) {
-                alert('Please choose another username.');
-            } else {
-                return false;
-            }
+            return userInfo === null ? alert('No such username.') : false;
         }
 
         //search fucntion
-        function searchUser() {
-            var output = null;
-            var findData = $("#uname").val();
-
-            for (let i = 0; i < userInput.length; i++) {
-                if (userInput[i][2] === findData) {
-                    output = userInput[i];
-                    // console.log(output);
-                    // document.getElementById("display").innerHTML = output;
-                    break;
-                }
-            }
-
-            return output;
-
-        }
-
-        //search click function
         $(document).ready(function () {
             $("#search").click(function (e) {
                 e.preventDefault();
-                var displayResult = searchUser();
-                // for (var i = 0; i < displayResult.length; i++) {
-                //     console.log(displayResult[i]);
-                //     document.getElementById("display").innerHTML = displayResult;
-                // }
 
-                var output = "";
-                var fname = "Firstname: " + "<br>";
-                output += fname;
-                var lname = "Lastname: " + "<br>";
-                output += lname;
-                var uname = "Username: " + "<br>";
-                output += uname;
-                var email = "Email: " + "<br>";
-                output += email;
-                var password = "Password: " + "<br>";
-                output += password;
-                var cpassword = "Confirm Password: " + "<br>";
-                output += cpassword;
-                var age = "Age: " + "<br>";
-                output += age;
-                var bday = "Birthdate: " + "<br>";
-                output += bday;
-                var contact = "Contact: " + "<br>";
-                output += contact;
-                var dateTime = "Time and Date: " + "<br>";
-                output += dateTime;
-                $("#display").html(output);
+                var username = $("#uname");
 
-                // console.log(output);
-                // var abc = null;
-                // abc += "";
+                if (isEmpty(username) !== false) return;
+
+                if (usernameIsValid(username) !== false) {
+                    username.val('');
+                    username.focus();
+
+                    return false;
+                } else {
+                    var result = "";
+                    var fname = "First name: " + currentUser.firstname + "<br>";
+                    result += fname;
+                    var lname = "Last name: " + currentUser.lastname + "<br>";
+                    result += lname
+                    var uname = "Username: " + currentUser.username + "<br>";
+                    result += uname
+                    var email = "Email: " + currentUser.email + "<br>";
+                    result += email
+                    var password = "Password: " + currentUser.password + "<br>";
+                    result += password
+                    var cpassword = "Confirm Password: " + currentUser.confirm + "<br>";
+                    result += cpassword
+                    var birthday = "Birthdate: " + currentUser.birthdate + "<br>";
+                    result += birthday
+                    var age = "Age: " + currentUser.age + "<br>";
+                    result += age
+                    var contact = "Contact: " + currentUser.contact + "<br>";
+                    result += contact
+                    var timendate = "Time and Date: " + currentUser.timendate + "<br>";
+                    result += timendate
+                    document.getElementById("display").innerHTML = result;
+                }
             });
         });
     </script>

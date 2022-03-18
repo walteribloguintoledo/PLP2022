@@ -1,9 +1,6 @@
 $(document).ready(function () {
   $.Mustache.options.warnOnMissingTemplates = true;
   $.Mustache.load("template.html").done(function () {
-    var info = {
-      name: "luke",
-    };
 
     function clearPanel() {
       // You can put some code in here to do fancy DOM transitions, such as fade-out or slide-in.
