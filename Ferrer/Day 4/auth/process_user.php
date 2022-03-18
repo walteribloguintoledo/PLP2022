@@ -6,7 +6,7 @@ if (isset($_REQUEST['action']) && !empty(isset($_REQUEST['action']))) {
 
   $action = $_REQUEST['action'];
 
-  if($action == 'signup') {
+  if ($action == 'signup') {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $full_name = $_POST['fullName'];
@@ -14,11 +14,11 @@ if (isset($_REQUEST['action']) && !empty(isset($_REQUEST['action']))) {
     $birthdate = $_POST['birthdate'];
     $contact_no = $_POST['contactNo'];
 
-    $searchsql = "SELECT * FROM users WHERE 'username'=$username";
-    
-    if ($search_result = $conn->num_rows == 1) {
-      echo "Username name is already taken!";
-      $conn->close();
+    $search_sql = "SELECT * FROM `users` WHERE username='$username'";
+    $result = $conn->query($search_sql);
+
+    if($result->num_rows > 0) {
+      echo json_encode(array('userIsExist' => true));
       exit();
     }
 
@@ -26,24 +26,22 @@ if (isset($_REQUEST['action']) && !empty(isset($_REQUEST['action']))) {
     VALUES ('$username','$password','$full_name','$address','$birthdate','$contact_no')";
 
     if ($conn->query($sql) === TRUE) {
-      echo "New record created successfully";
-      return;
+      echo json_encode(array('success' => true));
     } else {
-      echo "Error: " . $sql . "<br>" . $conn->error;
-      return;
+      echo json_encode(array('success' => false));
     }
-  // } elseif ($action == 'login') {
-  //   $username = $_POST['username'];
-  //   $password = $_POST['password'];
+  } elseif ($action == 'login') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-  //   $sql = "SELECT * FROM `users` WHERE `username`='$username' AND `password`='$password'";
-  //   $result = $conn->query($sql);
+    $sql = "SELECT * FROM `users` WHERE `username`='$username' AND `password`='$password'";
+    $result = $conn->query($sql);
 
-  //   if ($result->num_rows == 0) {
-  //     exit("false");
-  //   } else {
-  //     exit("true");
-  //   }
+    if ($result->num_rows > 0) {
+      echo json_encode(array('isValid' => true));
+    } else {
+      echo json_encode(array('isValid' => false));
+    }
   }
 }
 
