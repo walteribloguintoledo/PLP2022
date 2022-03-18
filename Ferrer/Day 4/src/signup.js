@@ -17,7 +17,7 @@ const months = [
 let usernameExist = false;
 
 if (localStorage.getItem("currentUser") != null) {
-	window.location.href = "#/home";
+	window.location.href = routes.home;
 }
 
 $("#form").on("submit", function (e) {
@@ -81,22 +81,27 @@ $("#form").on("submit", function (e) {
 			type: "POST",
 			url: `auth/process_user.php?action=signup`,
 			data: userData,
-			success: function (msg) {
-				alert("Success");
+			dataType: "json",
+			success: function (response) {
+				if (response.userIsExist) {
+					alert(`${userData.username} is already taken!`);
+					return;
+				}
+
+				if (response.success) {
+					alert("New user is created!");
+					$("#form")[0].reset();
+					let currentUser = new Object();
+					currentUser["username"] = userData.username;
+					currentUser["password"] = userData.password;
+					localStorage.setItem("currentUser", JSON.stringify(currentUser));
+					window.location.assign(routes.home);
+					return;
+				} else {
+					alert("Something went wrong");
+				}
 			},
 		});
-
-		// Clear forms
-		$("#form")[0].reset();
-
-		// save the current user to local storage
-		let currentUser = new Object();
-
-		currentUser["username"] = userData.username;
-		currentUser["password"] = userData.password;
-		localStorage.setItem("currentUser", JSON.stringify(currentUser));
-
-		window.location.href = "#/login";
 	}
 });
 

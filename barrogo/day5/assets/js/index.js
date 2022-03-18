@@ -259,14 +259,11 @@ $(document).ready(function () {
               },
             }).done(function (data) {
               if (parseInt(data.verified) === 1) {
-                if (data.user == 1) {
-                  alert("Username already exists.");
-                } else if (data.email == 1) {
-                  alert("Email address already exists.");
-                } else {
-                  alert(data.info);
-                  window.location.href = "#/login";
-                }
+                window.location.href = "#/login";
+              } else if (data.user == 1) {
+                alert("Username already exists.");
+              } else if (data.email == 1) {
+                alert("Email address already exists.");
               }
             });
           }

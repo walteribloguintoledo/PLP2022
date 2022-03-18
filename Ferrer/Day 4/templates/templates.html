@@ -14,7 +14,7 @@
 			  <label for="exampleInputPassword1" class="form-label">Password</label>
 			  <input type="password" class="form-control" id="password" name="password">
 			</div>
-			<p class="error-message hide" style="color: #e74c3c">
+			<p class=" hide" style="color: #e74c3c">
 				Username or Password is incorrect
 			</p>
 			<button type="submit" class="btn btn-secondary cs-bg-primary">Login</button>
@@ -81,11 +81,59 @@
 						<a href="#/login" class="btn btn-primary">Login In</a>
 						<a href="#/signup" class="btn btn-outline-secondary">Sign Up</a>
 					</div>
-					<div id="btnCurrentUser" class="hidden">
+					<div class="btnCurrentUser hide">
 						<button id="logoutBtn" class="btn btn-outline-secondary">Logout</button>
 					</div>
 				</div>
 			</div>
 		</section>
-	</main>;
+		<section class="btnCurrentUser hide container">
+			<div class="d-flex flex-column gap-4">
+				<button id="logoutBtn" class="btn btn-primary align-self-start">Add post</button>
+				<div class="row">
+					<div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+					  <img
+						src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
+						class="w-100 shadow-1-strong rounded mb-4"
+						alt="Boat on Calm Water"
+					  />
+
+					  <img
+						src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain1.webp"
+						class="w-100 shadow-1-strong rounded mb-4"
+						alt="Wintry Mountain Landscape"
+					  />
+					</div>
+
+					<div class="col-lg-4 mb-4 mb-lg-0">
+					  <img
+						src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain2.webp"
+						class="w-100 shadow-1-strong rounded mb-4"
+						alt="Mountains in the Clouds"
+					  />
+
+					  <img
+						src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp"
+						class="w-100 shadow-1-strong rounded mb-4"
+						alt="Boat on Calm Water"
+					  />
+					</div>
+
+					<div class="col-lg-4 mb-4 mb-lg-0">
+					  <img
+						src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(18).webp"
+						class="w-100 shadow-1-strong rounded mb-4"
+						alt="Waves at Sea"
+					  />
+
+					  <img
+						src="https://mdbcdn.b-cdn.net/img/Photos/Vertical/mountain3.webp"
+						class="w-100 shadow-1-strong rounded mb-4"
+						alt="Yosemite National Park"
+					  />
+					</div>
+				  </div>
+			</div>
+		</section>
+	</main>
 </script>
