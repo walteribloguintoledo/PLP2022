@@ -8,7 +8,7 @@ if (isset($_REQUEST['action']) && !empty(isset($_REQUEST['action']))) {
 
   if ($action == 'signup') {
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $password = str_replace(' ', '', $_POST['password']); // remove spaces
     $full_name = $_POST['fullName'];
     $address = $_POST['address'];
     $birthdate = $_POST['birthdate'];

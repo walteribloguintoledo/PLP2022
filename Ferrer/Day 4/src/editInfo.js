@@ -1,8 +1,16 @@
-if (localStorage.getItem("currentUser") != null) {
-	window.location.href = routes.home;
-}
+$("#editInfo").click(function (e) {
+	$(this).addClass("hide");
+	$("#saveInfo").removeClass("hide");
+	$(".editable").removeAttr("disabled");
+});
 
-$("#form").on("submit", function (e) {
+$("#closeModal").click(function (e) {
+	$(".editable").attr("disabled", true);
+	$("#editInfo").removeClass("hide");
+	$("#saveInfo").addClass("hide");
+});
+
+$("#myInfo").on("submit", function (e) {
 	e.preventDefault();
 
 	let usernameExist = false;
@@ -57,46 +65,19 @@ $("#form").on("submit", function (e) {
 		return alert("Contact No. must be 11 length long");
 	}
 
-	if (!usernameExist) {
-		successSubmit();
-	}
+	$.ajax({
+		type: "POST",
+		url: "auth/update_user.php",
+		data: $(this).serialize(),
+		dataType: "json",
+		success: function (response) {
+			if (response.success) {
+				alert(response.message);
+			}
+		},
+	});
 
-	function successSubmit() {
-		let userData = {};
-		// MANUAL ASSIGN
-		userData["username"] = $("#username").val();
-		userData["password"] = $("#password").val();
-		userData["fullName"] = $("#fullName").val();
-		userData["address"] = $("#address").val();
-		userData["birthdate"] = $("#birthdate").val();
-		userData["contactNo"] = $("#contactNo").val();
-
-		// send to php
-		$.ajax({
-			type: "POST",
-			url: `auth/auth_user.php?action=signup`,
-			data: userData,
-			dataType: "json",
-			success: function (response) {
-				if (response.userIsExist) {
-					alert(`${userData.username} is already taken!`);
-					$("#username").focus();
-					return;
-				}
-
-				if (response.success) {
-					alert("New user is created!");
-					$("#form")[0].reset();
-					let currentUser = new Object();
-					currentUser["username"] = userData.username;
-					currentUser["password"] = userData.password;
-					localStorage.setItem("currentUser", JSON.stringify(currentUser));
-					window.location.assign(routes.home);
-					return;
-				} else {
-					alert("Something went wrong");
-				}
-			},
-		});
-	}
+	$("#editInfo").removeClass("hide");
+	$("#saveInfo").addClass("hide");
+	$(".editable").attr("disabled", true);
 });
