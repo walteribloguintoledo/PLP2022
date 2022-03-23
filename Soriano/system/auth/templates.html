@@ -1,0 +1,754 @@
+<script id="login" type="text/html">
+    <div id="auth">
+
+        <div class="row h-100">
+            <div class="col-lg-5 col-12">
+                <div id="auth-left">
+                    <div class="auth-logo">
+                        <p class="h5">System</p>
+                    </div>
+                    <h1 class="auth-title">Log in.</h1>
+                    <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
+
+                    <div id="alert" class="d-none alert alert-danger d-flex align-items-center mb-4" role="alert">
+                        <div class="form-control-icon d-flex align-items-center">
+                            <i class="bi bi-exclamation-circle-fill d-inline"></i>
+                            <span id="alert-message" class="d-inline px-2"></span>
+                        </div>
+                    </div>
+
+                    <form id="login-form" action="#" class="signin-form">
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="username" type="text" class="form-control form-control-xl" placeholder="Username" autocomplete="off" role="presentation" required>
+                            <label for="username" class="text-sm form-label">Username</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="username"></div>
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="password-field" type="password" class="form-control form-control-xl" placeholder="Password" autocomplete="off" role="presentation" required>
+                            <label for="password-field" class="text-sm form-label">Password</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="password-field"></div>
+
+                        <div class="form-check form-check-lg d-flex align-items-end">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label text-gray-600" for="flexCheckDefault">
+                                Keep me logged in
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
+                    </form>
+                    <div class="text-center mt-5 text-lg fs-4">
+                        <p class="text-gray-600">Don't have an account? <a href="#/signup"
+                                class="font-bold">Sign
+                                up</a>.</p>
+                        <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 d-none d-lg-block">
+                <div id="auth-right">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+<script id="signup" type="text/template">
+    <div id="auth">
+        <div class="row h-100">
+            <div class="col-lg-5 col-12">
+                <div id="auth-left">
+                    <div class="auth-logo">
+                        <p class="h5">System</p>
+                    </div>
+                    <h1 class="auth-title">Sign Up</h1>
+                    <p class="auth-subtitle mb-5">Input your data to register to our website.</p>
+
+                    <!-- Button trigger modal -->
+                    <div id="my_photo_booth">
+                         <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Take Picture</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="my_camera" style=""></div>
+                                </div>
+                                <div class="modal-footer">
+                                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                                <input type=button value="Cancel &gt;" onClick="cancel_preview()" style="font-weight:bold;">
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <!-- A button for taking snaps -->
+                        <form>
+                            <div id="pre_take_buttons">
+                                <!-- This button is shown before the user takes a snapshot -->
+                                <input id="take-snapshot" type=button value="Take Snapshot" onClick="preview_snapshot()" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            </div>
+                            <div id="post_take_buttons" style="display:none">
+                                <!-- These buttons are shown after a snapshot is taken -->
+                                <input type=button value="Save Photo &gt;" onClick="save_photo()" style="font-weight:bold;">
+                                <!-- <input type=button value="Cancel &gt;" onClick="cancel_preview()" style="font-weight:bold;"> -->
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="results" style="display:none">
+                        <!-- Your captured image will appear here... -->
+                    </div>
+
+                    <form id="sign_up_form" class="signin-form" autocomplete="off">
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="full-name" type="text" class="form-control form-control-xl" placeholder="Fullname" autocomplete="off" role="presentation">
+                            <label for="full-name" class="text-sm form-label">Fullname</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="full-name"></div>
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="user-name" type="text" class="form-control form-control-xl" placeholder="Username" autocomplete="off" role="presentation" required>
+                            <label for="user-name" class="text-sm form-label">Username</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="user-name"></div>
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="email-address" type="email" class="form-control form-control-xl" placeholder="Email" autocomplete="off" role="presentation" required>
+                            <label for="email-address" class="text-sm form-label">Email</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                        </div>
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="address" type="text" class="form-control form-control-xl" placeholder="Home Address" autocomplete="off" role="presentation" required>
+                            <label for="address" class="text-sm form-label">Home Address</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="address"></div>
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="birth-date" type="date" class="form-control form-control-xl" placeholder="Birth Date" autocomplete="off" role="presentation" required>
+                            <label for="birth-date" class="text-sm form-label">Birth Date</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-calendar"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="birth-date"></div>
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="contact-number" type="tel" pattern="[0-9]*" name="tel" class="form-control form-control-xl" placeholder="Mobile No. (09xxxxxxxxx)" autocomplete="off" role="presentation" required>
+                            <label for="contact-number" class="text-sm form-label">Contact No.</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-phone"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="contact-number"></div>
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="password-field" type="password" class="form-control form-control-xl" placeholder="Password" autocomplete="off" role="presentation" required>
+                            <label for="assword-field" class="text-sm form-label">Password</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="password-field"></div>
+
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <input id="confirm-password-field" type="password" class="form-control form-control-xl" placeholder="Confirm Password" autocomplete="off" role="presentation" required>
+                            <label for="confirm-password-field" class="text-sm form-label">Confirm Password</label>
+                            <div class="form-control-icon">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Sign Up</button>
+                    </form>
+                    <div class="text-center mt-5 text-lg fs-4">
+                        <p class='text-gray-600'>Already have an account? <a href="#/login"
+                                class="font-bold">Log
+                                in</a>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 d-none d-lg-block">
+                <div id="auth-right">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+  <!-- <section class="login-container d-flex align-items-center justify-content-center text-white" style="background-image:url(../../../day-1/images/login.jpg); background-repeat: no-repeat; background-size: cover;">
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-md-6 text-center mb-5">
+                  <h2 class="heading-section">Blog Site</h2>
+              </div>
+          </div>
+          <div class="row justify-content-center">
+              <div class="col-md-6 col-lg-4">
+                  <div class="login-wrap p-0">
+                      <h3 class="mb-4 text-center">Create an account</h3>
+                      <form id="sign_up_form" class="signin-form">
+                          <div class="form-group my-2">
+                              <input id="full-name" type="text" class="form-control" placeholder="Fullname" required>
+                          </div>
+                          <div class="form-group my-2">
+                              <input id="user-name" type="text" class="form-control" placeholder="Username" required>
+                          </div>
+                          <div class="form-group my-2">
+                              <input id="email-address" type="email" class="form-control" placeholder="Email Address" required>
+                          </div>
+                          <div class="form-group my-2">
+                              <input id="address" type="text" class="form-control" placeholder="Address" required>
+                          </div>
+                          <div class="form-group my-2">
+                              <input id="birth-date" type="date" class="form-control" placeholder="Birthdate"
+                                  required>
+                          </div>
+                          <div class="form-group my-2">
+                              <input id="contact-number" type="text" name="tel" class="tel form-control" placeholder="Contact No."
+                                  required>
+                          </div>
+                          <div class="form-group my-2">
+                              <input id="password-field" type="password" class="form-control" placeholder="Password"
+                                  required>
+                              <span toggle="#password-field"
+                                  class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                          </div>
+                          <div class="form-group my-2">
+                              <input id="confirm-password-field" type="password" class="form-control"
+                                  placeholder="Re-type Password" required>
+                              <span toggle="#password-field"
+                                  class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                          </div>
+                          <div class="form-group my-2">
+                              <button type="submit" id="signup-btn" class="form-control btn btn-primary submit px-3">Submit</button>
+                          </div>
+                          <div class="form-group d-md-flex my-2">
+                              <div class="w-100">
+                                  <a href="#" class="w-100" style="color: #fff">
+                                      <p class="text-center">
+                                          <a href="#/login" class="text-white">Already have an account?</a>
+                                      </p>
+                                  </a>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section> -->
+</script>
+
+<script id="profile" type="text/template">
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <div class="d-flex justify-content-between">
+                        <div class="logo">
+                            <a href="#/profile"><p class="h5">System</p></a>
+                        </div>
+                        <div class="toggler">
+                            <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+                        <li class="sidebar-title">Menu</li>
+
+                        <li class="sidebar-item  ">
+                            <a href="index.html" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="#/profile" class='sidebar-link'>
+                                <i class="bi bi-person-fill"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-stack"></i>
+                                <span>Components</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="component-alert.html">Alert</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-badge.html">Badge</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-breadcrumb.html">Breadcrumb</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-button.html">Button</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-card.html">Card</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-carousel.html">Carousel</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-dropdown.html">Dropdown</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-list-group.html">List Group</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-modal.html">Modal</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-navs.html">Navs</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-pagination.html">Pagination</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-progress.html">Progress</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-spinner.html">Spinner</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="component-tooltip.html">Tooltip</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-collection-fill"></i>
+                                <span>Extra Components</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="extra-component-avatar.html">Avatar</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-sweetalert.html">Sweet Alert</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-toastify.html">Toastify</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-rating.html">Rating</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="extra-component-divider.html">Divider</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>Layouts</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="layout-default.html">Default Layout</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="layout-vertical-1-column.html">1 Column</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="layout-vertical-navbar.html">Vertical with Navbar</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="layout-horizontal.html">Horizontal Menu</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item active ">
+                            <a href="form-layout.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-medical-fill"></i>
+                                <span>Form Layout</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-pen-fill"></i>
+                                <span>Form Editor</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="form-editor-quill.html">Quill</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-editor-ckeditor.html">CKEditor</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-editor-summernote.html">Summernote</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="form-editor-tinymce.html">TinyMCE</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="table.html" class='sidebar-link'>
+                                <i class="bi bi-grid-1x2-fill"></i>
+                                <span>Table</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="table-datatable.html" class='sidebar-link'>
+                                <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+                                <span>Datatable</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-egg-fill"></i>
+                                <span>Icons</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="ui-icons-bootstrap-icons.html">Bootstrap Icons </a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-icons-fontawesome.html">Fontawesome</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-icons-dripicons.html">Dripicons</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-bar-chart-fill"></i>
+                                <span>Charts</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item ">
+                                    <a href="ui-chart-chartjs.html">ChartJS</a>
+                                </li>
+                                <li class="submenu-item ">
+                                    <a href="ui-chart-apexcharts.html">Apexcharts</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a id="logout" href="#/login" class='sidebar-link'>
+                                <i class="bi bi-arrow-left-circle-fill"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+
+            <div class="page-heading">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3>Profile</h3>
+                            <p class="text-subtitle text-muted">Please fill out the needed information.</p>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Basic Horizontal form layout section start -->
+                <section id="basic-horizontal-layouts">
+                    <div class="row match-height">
+                        <div class="col-md-6 col-12">
+                            <div id="upload-profile-picture-submit" class="card d-none">
+                                <div class="card-header">
+                                    <h4 class="card-title">Profile Picture</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 form-group">
+                                                        <input type="file" class="my-pond" name="filepond" id="my-pond"/>
+                                                    </div>
+                                                    <div id="filepond-progress-submit" class="col-md-12 form-group d-none">
+                                                        <div class="progress">
+                                                            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1" id="profile-picture-submit" disabled>Submit</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1 d-none" id="profile-picture-reset">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="display-profile-picture" class="card d-none">
+                                <div class="card-header">
+                                    <h4 class="card-title">Profile Picture</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-12 form-group text-center">
+                                                        <img id="profile-picture" src="" class="img-thumbnail img-fluid rounded-circle" style="width: 250px; height: 250px;" alt="profile picture">
+                                                    </div>
+                                                    <div class="col-md-12 d-flex justify-content-end">
+                                                        <button type="destroy"
+                                                            class="btn btn-light-secondary me-1 mb-1" id="profile-picture-delete">Delete Photo</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Qr Code</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Name</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="form-group has-icon-left">
+                                                            <div class="position-relative">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Name" id="first-name-icon">
+                                                                <div class="form-control-icon">
+                                                                    <i class="bi bi-person"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Email</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="form-group has-icon-left">
+                                                            <div class="position-relative">
+                                                                <input type="email" class="form-control"
+                                                                    placeholder="Email" id="first-name-icon">
+                                                                <div class="form-control-icon">
+                                                                    <i class="bi bi-envelope"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Mobile</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="form-group has-icon-left">
+                                                            <div class="position-relative">
+                                                                <input type="number" class="form-control"
+                                                                    placeholder="Mobile">
+                                                                <div class="form-control-icon">
+                                                                    <i class="bi bi-phone"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Password</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="form-group has-icon-left">
+                                                            <div class="position-relative">
+                                                                <input type="password" class="form-control"
+                                                                    placeholder="Password">
+                                                                <div class="form-control-icon">
+                                                                    <i class="bi bi-lock"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-8 offset-md-4">
+                                                        <div class='form-check'>
+                                                            <div class="checkbox">
+                                                                <input type="checkbox" id="checkbox2"
+                                                                    class='form-check-input' checked>
+                                                                <label for="checkbox2">Remember Me</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-end">
+                                                        <button type="submit"
+                                                            class="btn btn-primary me-1 mb-1">Submit</button>
+                                                        <button type="reset"
+                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- // Basic Horizontal form layout section end -->
+
+                <!-- // Basic multiple Column Form section start -->
+                <section id="multiple-column-form">
+                    <div class="row match-height">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Multiple Column</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form">
+                                            <div class="row">
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="first-name-column">First Name</label>
+                                                        <input type="text" id="first-name-column" class="form-control"
+                                                            placeholder="First Name" name="fname-column">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="last-name-column">Last Name</label>
+                                                        <input type="text" id="last-name-column" class="form-control"
+                                                            placeholder="Last Name" name="lname-column">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="city-column">City</label>
+                                                        <input type="text" id="city-column" class="form-control"
+                                                            placeholder="City" name="city-column">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="country-floating">Country</label>
+                                                        <input type="text" id="country-floating" class="form-control"
+                                                            name="country-floating" placeholder="Country">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="company-column">Company</label>
+                                                        <input type="text" id="company-column" class="form-control"
+                                                            name="company-column" placeholder="Company">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12">
+                                                    <div class="form-group">
+                                                        <label for="email-id-column">Email</label>
+                                                        <input type="email" id="email-id-column" class="form-control"
+                                                            name="email-id-column" placeholder="Email">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-12">
+                                                    <div class='form-check'>
+                                                        <div class="checkbox">
+                                                            <input type="checkbox" id="checkbox5"
+                                                                class='form-check-input' checked>
+                                                            <label for="checkbox5">Remember Me</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-end">
+                                                    <button type="submit"
+                                                        class="btn btn-primary me-1 mb-1">Submit</button>
+                                                    <button type="reset"
+                                                        class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- // Basic multiple Column Form section end -->
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-start">
+                        <p>2021 &copy; Mazer</p>
+                    </div>
+                    <div class="float-end">
+                        <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
+                                href="http://ahmadsaugi.com">A. Saugi</a></p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</script>
