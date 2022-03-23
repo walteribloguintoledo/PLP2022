@@ -1,0 +1,144 @@
+<script type="text/template" id="login">
+	<div class="container py-5 my-5 text col-10 col-xl-4 shadow border rounded">
+		<h2>Please <span class="cs-text-primary">login</span> your account</h2>
+		<p  class="mb-4">
+			Doesn't have an account yet?
+			<a class="primary-color" href="#/signup">Sign up</a>
+		</p>
+		<form id="form">
+			<div class="mb-3">
+			  <label for="exampleInputEmail1" class="form-label">Username</label>
+			  <input type="text" class="form-control" id="username" name="username">
+			</div>
+			<div class="mb-3">
+			  <label for="exampleInputPassword1" class="form-label">Password</label>
+			  <input type="password" class="form-control" id="password" name="password">
+			</div>
+			<p class="incorrect-login hide" style="color: #e74c3c">
+				Username or Password is incorrect
+			</p>
+			<button type="submit" class="btn btn-secondary cs-bg-primary">Login</button>
+		</form>
+	</div>
+</script>
+
+<script type="text/template" id="signup">
+	<div class="container py-4 my-4 text col-10 col-xl-4 shadow border rounded">
+		<h2 class="mb-3"><span class="cs-text-primary">Create</span> your account</h2>
+		<form id="form" method="POST">
+			<div class="mb-3">
+			  <label for="exampleInputEmail1" class="form-label">Username</label>
+			  <input type="text" class="form-control" id="username" name="username">
+			</div>
+			<div class="mb-3">
+			  <label for="exampleInputPassword1" class="form-label">Password</label>
+			  <input type="password" class="form-control" id="password" name="password">
+			</div>
+			<div class="mb-3">
+			  <label for="exampleInputPassword1" class="form-label">Full Name</label>
+			  <input type="text" class="form-control" id="fullName" name="fullName">
+			</div>
+			<div class="mb-3">
+			  <label for="exampleInputPassword1" class="form-label">Address</label>
+			  <input type="text" class="form-control" id="address" name="address">
+			</div>
+			<div class="mb-3">
+			  <label for="exampleInputPassword1" class="form-label">Birthdate</label>
+			  <input type="date" class="form-control" id="birthdate" name="birthdate">
+			</div>
+			<div class="mb-3">
+			  <label for="exampleInputPassword1" class="form-label">Contact No.</label>
+			  <input type="number" class="form-control" id="contactNo" name="contactNo">
+			</div>
+			<p>
+				Already have an account?
+				<a href="#/login">Login</a>
+			</p>
+			<input type="submit" class="btn btn-secondary cs-bg-primary"/>
+		</form>
+	</div>
+</script>
+
+<script type="text/template" id="home">
+	<header>
+		<div class="navbar navbar-white shadow-sm cs-bg-primary">
+		  <div class="container text-white">
+				<strong class="navbar-brand d-flex align-items-center">@Blog</strong>
+		  </div>
+		</div>
+	</header>
+	<main>
+		<section class="py-5 text-center container">
+			<div class="row py-lg-5">
+				<div class="col-lg-6 col-md-8 mx-auto">
+					<h1 class="fw-light">Travel Blog</h1>
+					<p class="lead text-muted">
+						Something short and leading about the collection below—its contents,
+						the creator, etc. Make it short and sweet, but not too short so
+						folks don’t simply skip over it entirely.
+					</p>
+					<div id="btnNotCurrentUser">
+						<a href="#/login" class="btn btn-primary cs-bg-primary">Login In</a>
+						<a href="#/signup" class="btn btn-outline-secondary">Sign Up</a>
+					</div>
+					<div class="btnCurrentUser hide">
+						<button id="logoutBtn" class="btn btn-outline-secondary">Logout</button>
+					</div>
+				</div>
+			</div>
+		</section>
+		<section class="btnCurrentUser hide container">
+			<div class="d-flex flex-column gap-4">
+				<!-- ACTION BUTTONS -->
+				<div>
+					<button id="viewMyData" type="button" class="btn btn-primary cs-bg-primary align-self-start" data-toggle="modal" data-target="#viewData">View my info</button>
+					<button id="deleteAcc" name="deleteAccount" type="button" class="btn btn-danger align-self-start">Delete Account</button>
+				</div>
+
+				<!-- VIEW MY INFO -->
+				<div class="modal fade" id="viewData" tabindex="-1" role="dialog" aria-labelledby="viewData" aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<form id="myInfo">
+							<div class="modal-content">
+								<div class="modal-header">
+								  	<h5 class="modal-title">My personal Information</h5>
+								</div>
+								<div class="modal-body d-flex flex-column">
+									<div class="mb-3">
+										<label class="form-label">Username</label>
+										<input readonly type="text" class="form-control" id="username" name="username" value="">
+									</div>
+									<div class="mb-3">
+										<label class="form-label">Password</label>
+										<input disabled type="text" class="editable form-control" id="password" name="password" value="">
+									</div>
+									<div class="mb-3">
+										<label class="form-label" >Full Name</label>
+										<input disabled type="text" class="editable form-control" id="fullName" name="fullName" value="">
+									</div>
+									<div class="mb-3">
+										<label class="form-label" >Address</label>
+										<textarea disabled class="editable form-control" id="address" name="address" value=""></textarea>
+									</div>
+									<div class="mb-3">
+										<label class="form-label" >Birthdate</label>
+										<input type="date" disabled class="editable form-control" id="birthdate" name="birthdate" value=""></input>
+									</div>
+									<div class="mb-3">
+										<label class="form-label" >Contact No.</label>
+										<input disabled type="text" class="editable form-control" id="contactNo" name="contactNo" value="">
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" id="editInfo" class="btn btn-primary cs-bg-primary">Edit</button>
+									<input type="submit" id="saveInfo" name="submit" class="hide btn btn-primary cs-bg-primary" value="Save Changes"/>
+									<button type="button" id="closeModal" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+</script>

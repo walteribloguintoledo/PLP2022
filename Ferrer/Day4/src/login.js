@@ -1,5 +1,4 @@
 $(document).ready(function () {
-	let userList = JSON.parse(localStorage.getItem("usersInfo"));
 	let createNewCurrentUser = new Object();
 
 	if (localStorage.getItem("currentUser") != null) {
@@ -11,7 +10,7 @@ $(document).ready(function () {
 
 		$.ajax({
 			type: "POST",
-			url: "auth/process_user.php?action=login",
+			url: "auth/auth_user.php?action=login",
 			data: {
 				username: $("#username").val(),
 				password: $("#password").val(),

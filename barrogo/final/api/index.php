@@ -6,7 +6,7 @@
   $app->post('/login',function() {
     if(isset($_POST['username'])){
       $user_name = $_POST['username'];
-      $password = $_POST['password'];
+      $password = md5($_POST['password']);
       $verified = 0;
   
       // function for login
@@ -36,7 +36,7 @@
       $address = $_POST['address'];
       $birthday = $_POST['birthday'];
       $contact = $_POST['contact'];
-      $password = $_POST['password'];
+      $password = md5($_POST['password']);
       $verified = 0;
   
       $user_exists = checkUsername($user_name);
