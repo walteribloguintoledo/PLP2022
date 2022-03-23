@@ -1,0 +1,124 @@
+<!-- login page -->
+<script id="login" type="text/template">
+  <div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+      <div class="authentication-inner">
+        <!-- Register -->
+        <div class="card">
+          <div class="card-body">
+            <h4 class="mb-2">Welcome! 👋</h4>
+            <p class="mb-4">Please scan your QR Code</p>
+            <div class="mb-3">
+              <button class="btn btn-primary d-grid w-100" type="submit">Scan QR Code</button>
+            </div>
+            <p class="text-center">
+              <span>New on our platform?</span>
+              <a href="#/register">
+                <span>Create an account</span>
+              </a>
+            </p>
+          </div>
+        </div>
+        <!-- /Register -->
+      </div>
+    </div>
+  </div>
+</script>
+
+<!-- register page -->
+<script id="register" type="text/template">
+  <div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+      <div class="authentication-inner">
+        <!-- Register Card -->
+        <div class="card">
+          <div class="card-body">
+            <h4 class="mb-2">Adventure starts here 🚀</h4>
+            <p class="mb-4">
+              <span>Already have an account?</span>
+              <a href="#/login">
+                <span>Sign in instead</span>
+              </a>
+            </p>
+            <form id="formAuthentication" enctype="multipart/form-data" class="mb-3">
+              <div class="mb-3">
+                <label for="profileImg" class="form-label">Profile Image</label>
+                <div id="my_camera" class="mx-auto"></div>
+                <div id="cameraBtns" style="display:none;">
+                  <button type="button" id="takeImg" class="btn btn-primary">Take Snapshot</button>
+                  <button type="button" id="saveBtn" class="btn btn-sm btn-success" style="display:none;">Save Image</button>
+                  <button type="button" id="takeAnotherBtn" class="btn btn-sm btn-secondary" style="display:none;">Take Another</button>
+                  <button type="button" id="cancelBtn" class="btn btn-outline-secondary">Cancel</button>
+                </div>
+                <button type="button" id="snapshotBtn" class="btn btn-outline-primary d-grid w-100">Take Photo</button>
+              </div>
+              <input type="hidden" id="profileImg">
+              <hr>
+              <div class="mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fullName"
+                  placeholder="Enter your Full Name"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  placeholder="Enter your Username"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your Email Address" />
+              </div>
+              <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" placeholder="Enter your Address" />
+              </div>
+              <div class="mb-3">
+                <label for="bDay" class="form-label">Birthday</label>
+                <input type="date" class="form-control" id="bDay" placeholder="Enter your Birthday" />
+              </div>
+              <div class="mb-3">
+                <label for="contact" class="form-label">Contact No.</label>
+                <input type="tel" id="contact" class="form-control" placeholder="Enter your Contact No.">
+              </div>
+              <div class="mb-3 form-password-toggle">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-group input-group-merge">
+                  <input
+                    type="password"
+                    id="password"
+                    class="form-control"
+                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                    aria-describedby="password"
+                  />
+                  <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                </div>
+              </div>
+              <div class="mb-3 form-password-toggle">
+                <label class="form-label" for="confirmPassword">Confirm Password</label>
+                <div class="input-group input-group-merge">
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    class="form-control"
+                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                    aria-describedby="password"
+                  />
+                  <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                </div>
+              </div>
+              <button class="btn btn-primary d-grid w-100">Register</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
