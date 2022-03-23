@@ -75,46 +75,47 @@
                     <h1 class="auth-title">Sign Up</h1>
                     <p class="auth-subtitle mb-5">Input your data to register to our website.</p>
 
-                    <!-- Button trigger modal -->
-                    <div id="my_photo_booth">
-                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Take Picture</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div id="my_camera" style=""></div>
-                                </div>
-                                <div class="modal-footer">
-                                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                                <input type=button value="Cancel &gt;" onClick="cancel_preview()" style="font-weight:bold;">
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                            </div>
-                        </div>
-                        <!-- A button for taking snaps -->
-                        <form>
-                            <div id="pre_take_buttons">
-                                <!-- This button is shown before the user takes a snapshot -->
-                                <input id="take-snapshot" type=button value="Take Snapshot" onClick="preview_snapshot()" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            </div>
-                            <div id="post_take_buttons" style="display:none">
-                                <!-- These buttons are shown after a snapshot is taken -->
-                                <input type=button value="Save Photo &gt;" onClick="save_photo()" style="font-weight:bold;">
-                                <!-- <input type=button value="Cancel &gt;" onClick="cancel_preview()" style="font-weight:bold;"> -->
-                            </div>
-                        </form>
-                    </div>
-
-                    <div id="results" style="display:none">
+                    <div id="results" class="" style="display:none">
                         <!-- Your captured image will appear here... -->
                     </div>
 
                     <form id="sign_up_form" class="signin-form" autocomplete="off">
+                        <div class="form-group position-relative has-icon-left mb-4">
+                            <div id="my_photo_booth">
+                                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Take Picture</h5>
+                                        <button type="button" class="btn-close" onClick="cancel_preview()" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="my_camera" class="img-fluid" style=""></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                        <input type=button value="Cancel" onClick="cancel_preview()" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <button type="button" class="btn btn-primary" onClick="save_photo()" data-bs-dismiss="modal">Save Photo</button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <!-- <form> -->
+                                    <div id="pre_take_buttons">
+                                        <button id="take-snapshot" type="button" class="btn btn-primary btn-block btn-lg d-flex align-items-start justify-content-center" onClick="preview_snapshot()" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <i class="bi bi-camera d-block mt-1 mx-2"></i>
+                                            <span class="d-block">Take Snapshot</span>
+                                        </button>
+                                        <!-- <input id="take-snapshot" class="btn btn-primary btn-block btn-lg shadow-lg" type=button value="Take Snapshot" onClick="preview_snapshot()" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
+                                    </div>
+                                    <div id="post_take_buttons" style="display:none">
+                                        <button class="btn btn-secondary btn-block btn-lg" disabled>Camera On</button>
+                                    </div>
+                                <!-- </form> -->
+                            </div>
+                        </div>
+
+                        <div class="text-danger mb-4 error-input-field" data-validation-id="input-photo"></div>
+
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input id="full-name" type="text" class="form-control form-control-xl" placeholder="Fullname" autocomplete="off" role="presentation">
                             <label for="full-name" class="text-sm form-label">Fullname</label>
@@ -544,10 +545,52 @@
                                 </div>
                             </div>
                             <div id="display-profile-picture" class="card d-none">
-                                <div class="card-header">
-                                    <h4 class="card-title">Profile Picture</h4>
+                                <div id="my_photo_booth">
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit Snapshot</h5>
+                                                <button type="button" class="btn-close" onClick="cancel_preview()" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id="my_camera" class="img-fluid" style="">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div id="pre_take_buttons">
+                                                        <input type=button value="Cancel" onClick="cancel_preview()" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                        <button id="take-snapshot" type="button" class="btn btn-primary" onClick="preview_snapshot()">
+                                                            Take Snapshot
+                                                        </button>
+                                                    </div>
+                                                    <div id="post_take_buttons" style="display:none">
+                                                        <button type="button" class="btn btn-primary" onClick="save_photo()" data-bs-dismiss="modal">Take Snapshot</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-content">
+
+                                <div class="card-header">
+                                    <div class="d-block d-sm-flex align-items-center">
+                                        <div class="">
+                                            <img id="profile-picture" src="" class="d-block img-thumbnail img-fluid rounded-circle" style="width: 100px; height: 100px;" alt="profile picture">
+                                        </div>
+                                        <div class="mt-2 mt-sm-0 mx-3 flex-grow-1">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h4 class="card-title d-block">{{ username }}</h4>
+                                                <button id="edit-snapshot" type="button" class="btn btn-primary d-flex align-items-start justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                    <i class="bi bi-camera d-block"></i>
+                                                    <!-- <span class="d-block"></span> -->
+                                                </button>
+                                            </div>
+                                            <p class="">email: {{ email }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="card-content">
                                     <div class="card-body">
                                         <form class="form form-horizontal">
                                             <div class="form-body">
@@ -563,7 +606,7 @@
                                             </div>
                                         </form>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                         <div class="col-md-6 col-12">

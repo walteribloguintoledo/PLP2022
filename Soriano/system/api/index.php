@@ -43,6 +43,7 @@ $app->post('/login', function () {
             "address" => $result->address,
             "birth_date" => $result->birth_date,
             "contact_number" => $result->contact_number,
+            // "photo" => $result->photo
             // "password" => decrypt($result->password),
         );
     } else {
@@ -69,7 +70,7 @@ $app->post('/signup', function () {
     if (array_key_exists('error', $result) && $result["error"]) {
         $appVariables->message = $result["message"];
     } else {
-        $person = create($_POST['name'], $username, $email, $_POST['address'], $_POST['birth_date'], $_POST['contact_number'], $_POST['password']);
+        $person = create($_POST['name'], $username, $email, $_POST['address'], $_POST['birth_date'], $_POST['contact_number'], $_POST['password'], $_POST['photo']);
 
         $appVariables->verified = 1;
         $appVariables->error = 0;

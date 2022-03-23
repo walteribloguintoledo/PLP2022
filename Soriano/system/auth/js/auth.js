@@ -79,9 +79,9 @@ $(document).ready(function () {
 
     $.Mustache.load("templates.html").done(function () {
         Path.map("#/login").to(function () {
-            $("#target").html("").append($.Mustache.render("login"));
-
             var currentUser = JSON.parse(localStorage.getItem('user'));
+
+            $("#target").html("").append($.Mustache.render("login"));
 
             if (currentUser !== null) window.location.href = paths.profile;
 
@@ -131,6 +131,17 @@ $(document).ready(function () {
             $("#sign_up_form").on('submit', function (event) {
                 event.preventDefault();
 
+                var photo = $("#input-photo");
+
+                if (photo.length === 0) {
+                    var input = $('<input/>');
+                    input.attr('id', 'input-photo');
+                    input.attr('placeholder', 'Snapshot');
+                    input.attr('value', '');
+
+                    if (checkifEmpty(input) !== false) return;
+                }
+
                 if (checkifEmpty(fullName) !== false) return;
 
                 if (checkifEmpty(userName) !== false) return;
@@ -146,6 +157,7 @@ $(document).ready(function () {
                 if (checkPassword(password, passwordConfirm) !== false) return;
 
                 var user = {
+                    "photo": photo.val(),
                     "name": fullName.val(),
                     "username": userName.val(),
                     "email": email.val(),
@@ -177,16 +189,16 @@ $(document).ready(function () {
             $("#take-snapshot").click(function () {
                 Webcam.set({
                     // live preview size
-                    width: 320,
-                    height: 240,
+                    width: 470,
+                    height: 440,
     
                     // device capture size
-                    dest_width: 640,
-                    dest_height: 480,
+                    dest_width: 320,
+                    dest_height: 240,
     
                     // final cropped size
-                    crop_width: 480,
-                    crop_height: 480,
+                    crop_width: 320,
+                    crop_height: 240,
     
                     // format and quality
                     image_format: 'jpeg',
@@ -200,14 +212,14 @@ $(document).ready(function () {
         });
 
         Path.map("#/profile").to(function () {
-            $("#target").html("").append($.Mustache.render("profile"));
-
             var currentUser = JSON.parse(localStorage.getItem('user'));
+
+            $("#target").html("").append($.Mustache.render("profile", currentUser));
 
             if ("photo" in currentUser && currentUser["photo"] !== null) {
                 $("div#display-profile-picture").removeClass("d-none");
 
-                $("img#profile-picture").attr('src', currentUser["photo"]["secure_url"]);
+                $("img#profile-picture").attr('src', currentUser["photo"]);
             } else {
                 $("div#upload-profile-picture-submit").removeClass("d-none");
             }
@@ -327,132 +339,37 @@ $(document).ready(function () {
             // Scroll into active sidebar
             document.querySelector('.sidebar-item.active').scrollIntoView(false);
 
-            // FilePond
-            $.fn.filepond.registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
+            $("#edit-snapshot").click(function() {
+                var img = $("<img class='img-fluid img-thumbnail w-100'/>");
 
-            $('.my-pond').filepond();
-            $('.my-pond').filepond('allowMultiple', false);
-            $('.my-pond').filepond('acceptedFileTypes', ["image/jpeg", "image/png"]);
+                img.attr("src", currentUser.photo);
 
-            var file = null,
-                profilePictureSubmitElem = $("#profile-picture-submit"),
-                profilePictureResetElem = $("#profile-picture-reset"),
-                profilePictureDeleteElem = $("#profile-picture-delete"),
-                cloudinaryUrl = "https://api.cloudinary.com/v1_1/ds2znjplk";
-
-            const cloudinaryUploadPreset = "ml_default";
-
-            function toggleFilePondButtons(file) {
-                if (file) {
-                    profilePictureSubmitElem.attr('disabled', false);
-                    profilePictureResetElem.removeClass("d-none");
-                } else {
-                    profilePictureSubmitElem.attr('disabled', true);
-                    profilePictureResetElem.addClass("d-none");
-                }
-            }
-
-            $('.my-pond').on('FilePond:addfile', function (e) {
-                file = e.detail.file.file;
-
-                toggleFilePondButtons(file);
-
-                if (!profilePictureResetElem.hasClass("d-none")) {
-                    profilePictureResetElem.click(function () {
-                        let filePond = FilePond.find(document.getElementById("my-pond"));
-                        if (filePond != null) {
-                            filePond.removeFiles();
-                            file = null;
-                            toggleFilePondButtons(file);
-                        }
-                    });
-                }
+                $("#my_camera").append(img);
             });
 
-            profilePictureSubmitElem.click(function (e) {
-                e.preventDefault();
-
-                toggleFilePondButtons(null);
-
-                var url = cloudinaryUrl + "/upload";
-                var formData = new FormData();
-
-                formData.append('file', file);
-                formData.append('folder', 'system');
-                formData.append('upload_preset', cloudinaryUploadPreset);
-
-                $.ajax({
-                    xhr: function () {
-                        var xhr = new window.XMLHttpRequest();
-                        var progress = $("#filepond-progress-submit");
-
-                        if (progress.hasClass("d-none")) progress.removeClass("d-none");
-
-                        xhr.upload.addEventListener("progress", function (evt) {
-                            function setValue(value) {
-                                var progressBar = $("#filepond-progress-submit .progress-bar");
-
-                                progressBar.attr('value', value);
-                                progressBar.css({ 'width': value + "%" });
-                                progressBar.html(value + "%");
-                            }
-
-                            if (evt.lengthComputable) {
-                                var percentComplete = evt.loaded / evt.total;
-                                var percentage = Math.round(percentComplete * 100);
-
-                                setValue(percentage);
-
-                                if (percentage >= 100) setTimeout(function () {
-                                    setValue(0);
-                                    progress.addClass("d-none");
-                                }, 2000);
-                            }
-                        }, false);
-
-                        return xhr;
-                    },
-                    method: 'post',
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-                    data: formData,
-                    enctype: 'multipart/form-data',
-                    url: url,
-                    success: function (data) {
-                        $.ajax({
-                            type: "POST",
-                            data: {
-                                'id': currentUser.id,
-                                'photo': data
-                            },
-                            url: "../api/user/profile-picture/update",
-                            dataType: "json"
-                        });
-
-                        currentUser["photo"] = data;
-                        localStorage.setItem('user', JSON.stringify(currentUser));
-                        location.reload();
-                    }
-                });
-            });
-
-            profilePictureDeleteElem.click(function (e) {
-                e.preventDefault();
-                var deleteToken = currentUser["photo"]["delete_token"];
-                const cloudinaryUrl = "https://api.cloudinary.com/v1_1/ds2znjplk/delete_by_token";
-
-                $.ajax({
-                    url: cloudinaryUrl,
-                    method: "POST",
-                    data: { token: deleteToken },
-                    headers: { "X-Requested-With": "XMLHttpRequest" },
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data);
-                    }
-                });
-            });
+            // $("#take-snapshot").click(function () {
+            //     Webcam.set({
+            //         // live preview size
+            //         width: 470,
+            //         height: 440,
+    
+            //         // device capture size
+            //         dest_width: 320,
+            //         dest_height: 240,
+    
+            //         // final cropped size
+            //         crop_width: 320,
+            //         crop_height: 240,
+    
+            //         // format and quality
+            //         image_format: 'jpeg',
+            //         jpeg_quality: 100,
+    
+            //         // flip horizontal (mirror mode)
+            //         flip_horiz: true
+            //     });
+            //     Webcam.attach('#my_camera');
+            // });
         });
 
         Path.root("#/");
