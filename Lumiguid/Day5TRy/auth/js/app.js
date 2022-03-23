@@ -51,7 +51,7 @@ $(document).ready(function () {
       var user = data;
       $.ajax({
         type: "POST",
-        url: "signup.php",
+        url: "api/signup",
         dataType: "json",
         data: user,
       }).then(
@@ -194,7 +194,7 @@ $(document).ready(function () {
         currentUser.push(user);
         $.ajax({
           type: "POST",
-          url: "login.php",
+          url: "api/login",
           data: user,
           dataType: "json",
         }).then(
@@ -340,7 +340,7 @@ $(document).ready(function () {
 
         $.ajax({
           type: "POST",
-          url: "view.php",
+          url: "api/view",
         }).then(
           function (response) {
             response = $.parseJSON(response);
@@ -358,7 +358,7 @@ $(document).ready(function () {
           $(document).on("click",'#modalDelete',function(){
             $.ajax({
               type: "POST",
-              url: "delete.php",
+              url: "api/delete",
               data:{del_Id:DeleteID},
             }).then(
               function (response) {
@@ -417,7 +417,7 @@ $(document).ready(function () {
 
           $.ajax({
             type: "POST",
-            url: "update.php",
+            url: "api/update",
             data:{U_Id:updateId,U_Email:updateEmail,U_Password:updatePassword,U_Lastname:updateLastname,U_Firstname:updateFirstname,U_Age:updateAge,U_Address:updateAddress},
           }).then(
             function (response) {
@@ -435,7 +435,7 @@ $(document).ready(function () {
         $(document).on('click','#btnEdit',function(){
           var ID = $(this).attr('data-id');
           $.ajax({
-            url: "getData.php",
+            url: "api/getData",
             type: "POST",
             data: {userID:ID},
             dataType: "JSON",
