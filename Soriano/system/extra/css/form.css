@@ -1,0 +1,28 @@
+.form-group {
+    position: relative;
+}
+
+.form-label {
+    position: absolute;
+    left: .8rem;
+    top: -.6rem;
+    padding: 0 .5rem;
+    background-color: #F2F7FF;
+    display: block;
+    opacity: 0;
+    height: 0px;
+    pointer-events: none;
+    transition: .2s opacity ease-in-out;
+}
+
+.form-control[type=text]:not(:placeholder-shown)  ~ .form-label, 
+.form-control[type=email]:not(:placeholder-shown) ~ .form-label,
+.form-control[type=tel]:not(:placeholder-shown) ~ .form-label,
+.form-control[type=password]:not(:placeholder-shown) ~ .form-label,
+.form-control[type=date]:valid~.form-label {
+    height: auto;
+    opacity: 1;
+    color: #25396F;
+}
+
+input[type="search"]::-webkit-search-cancel-button { display: none; }
