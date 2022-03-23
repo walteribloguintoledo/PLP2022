@@ -65,9 +65,11 @@ $("#myInfo").on("submit", function (e) {
 		return alert("Contact No. must be 11 length long");
 	}
 
+	var userData = JSON.parse(localStorage.getItem("currentUser"));
+
 	$.ajax({
 		type: "POST",
-		url: "auth/update_user.php",
+		url: `api/update/${userData.id}`,
 		data: $(this).serialize(),
 		dataType: "json",
 		success: function (response) {

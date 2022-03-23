@@ -74,7 +74,7 @@ $("#form").on("submit", function (e) {
 		// send to php
 		$.ajax({
 			type: "POST",
-			url: `auth/auth_user.php?action=signup`,
+			url: `api/signup`,
 			data: userData,
 			dataType: "json",
 			success: function (response) {
@@ -87,10 +87,7 @@ $("#form").on("submit", function (e) {
 				if (response.success) {
 					alert("New user is created!");
 					$("#form")[0].reset();
-					let currentUser = new Object();
-					currentUser["username"] = userData.username;
-					currentUser["password"] = userData.password;
-					localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
 					window.location.assign(routes.home);
 					return;
 				} else {

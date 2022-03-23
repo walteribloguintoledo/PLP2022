@@ -1,9 +1,7 @@
 <?php
-	function login($username, $password) {
-		$user = ORM::for_table('users')->find_one(array(
-			'username' => $username,
-			'password' => $password
-		));
+
+	function getData($id) {
+		$user = ORM::for_table('users')->where('id', $id)->find_many();
 
 		foreach ($user as $data) {
 			return $user_data = array(
@@ -15,6 +13,4 @@
 				$data->contact_no,
 			);
 		}
-
-		echo "TSK TSK";
 	}
