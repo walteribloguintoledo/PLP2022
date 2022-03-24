@@ -186,24 +186,46 @@ $(document).ready(function () {
                 })
             });
 
+            $('.modal').on('hidden.bs.modal', function () {
+                cancel_preview();
+            });
+
             $("#take-snapshot").click(function () {
+                var div = $("<div id='block' class='d-flex align-items-center justify-content-center' style='z-index: 10000; background-color: rgb(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; right: 0; bottom: 0;'>"
+                    + "<h4 class='text-white'>Getting Ready <span></span></h4>"
+                    + "</div>");
+                $('body').append(div);
+
+                var counter = 3;
+                var counterIntervalId = setInterval(function () {
+                    $("#block h4 span").empty();
+                    $("#block h4 span").append(counter);
+
+                    counter--;
+                }, 1000);
+
+                setTimeout(function () {
+                    $("#block").remove();
+                    clearInterval(counterIntervalId);
+                }, 3000);
+
                 Webcam.set({
                     // live preview size
                     width: 470,
                     height: 440,
-    
+
                     // device capture size
                     dest_width: 320,
                     dest_height: 240,
-    
+
                     // final cropped size
                     crop_width: 320,
                     crop_height: 240,
-    
+
                     // format and quality
                     image_format: 'jpeg',
                     jpeg_quality: 100,
-    
+
                     // flip horizontal (mirror mode)
                     flip_horiz: true
                 });
@@ -216,15 +238,44 @@ $(document).ready(function () {
 
             $("#target").html("").append($.Mustache.render("profile", currentUser));
 
-            if ("photo" in currentUser && currentUser["photo"] !== null) {
-                $("div#display-profile-picture").removeClass("d-none");
-
-                $("img#profile-picture").attr('src', currentUser["photo"]);
-            } else {
-                $("div#upload-profile-picture-submit").removeClass("d-none");
-            }
-
             if (currentUser == null) window.location.href = paths.login;
+
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: currentUser["id"],
+                width: 150,
+                height: 150,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            $("#qr-download-btn").click(function () {
+                $(this).hide();
+
+                html2canvas(document.querySelector("#capture")).then(canvas => {
+                    var image = canvas.toDataURL("image/png")
+                        .replace("image/png", "image/octet-stream");
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.onload = function () {
+                        var a = document.createElement('a');
+                        a.href = window.URL.createObjectURL(xhr.response);
+                        a.download = currentUser.name+'.png';
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    };
+                    xhr.open('GET', image);
+                    xhr.send();
+
+                });
+
+                setTimeout(function(){
+                    $("#qr-download-btn").show();
+                }, 1000);
+            });
 
             var fullName = $('#full-name'),
                 userName = $('#user-name'),
@@ -339,37 +390,114 @@ $(document).ready(function () {
             // Scroll into active sidebar
             document.querySelector('.sidebar-item.active').scrollIntoView(false);
 
-            $("#edit-snapshot").click(function() {
+            $('.modal').on('hidden.bs.modal', function () {
+                cancel_preview();
+
+                // remove snapshot result
+                $("#my_camera").attr("style", "");
+                $("#my_camera").html("Loading...");
+                $('#results').empty();
+                $('#results').attr("style", "display: none;");
+                $("#current_take_buttons").attr("style", "display: none");
+            });
+
+            $("#save-photo").click(function () {
+                $("#post_take_buttons").attr("style", "display: none");
+                $("#current_take_buttons").attr("style", "display: block");
+
+                var photo = $("#input-photo").val();
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        'id': currentUser.id,
+                        'photo': photo
+                    },
+                    url: "../api/user/profile-picture/update",
+                    dataType: "json",
+                    success: function (data) {
+
+                        if (!data.verified && data.error) {
+                            return alert(data.message);
+                        }
+
+                        $('#profile-picture').attr('src', photo);
+                        $('#qr-profile-picture').attr('src', photo);
+                        currentUser["photo"] = photo;
+                        localStorage.setItem('user', JSON.stringify(currentUser));
+                    }
+                });
+            });
+
+            $("#cancel-preview").click(function () {
+                $("#my_camera").attr("style", "");
+                $("#my_camera").html("Loading...");
+                $("#edit-snapshot").trigger("click");
+                $("#current_take_buttons").attr("style", "display: none");
+
+                var div = $("<div id='block' class='d-flex align-items-center justify-content-center' style='z-index: 10000; background-color: rgb(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; right: 0; bottom: 0;'>"
+                    + "<h4 class='text-white'><span>Please Wait...</span></h4>"
+                    + "</div>");
+                $('body').append(div);
+
+                setTimeout(function () {
+                    $("#block").remove();
+                }, 3000);
+            });
+
+            $("#edit-snapshot").click(function () {
                 var img = $("<img class='img-fluid img-thumbnail w-100'/>");
 
                 img.attr("src", currentUser.photo);
 
+                $("#my_camera").empty();
                 $("#my_camera").append(img);
             });
 
-            // $("#take-snapshot").click(function () {
-            //     Webcam.set({
-            //         // live preview size
-            //         width: 470,
-            //         height: 440,
-    
-            //         // device capture size
-            //         dest_width: 320,
-            //         dest_height: 240,
-    
-            //         // final cropped size
-            //         crop_width: 320,
-            //         crop_height: 240,
-    
-            //         // format and quality
-            //         image_format: 'jpeg',
-            //         jpeg_quality: 100,
-    
-            //         // flip horizontal (mirror mode)
-            //         flip_horiz: true
-            //     });
-            //     Webcam.attach('#my_camera');
-            // });
+            $("#take-snapshot").click(function () {
+                var div = $("<div id='block' class='d-flex align-items-center justify-content-center' style='z-index: 10000; background-color: rgb(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; right: 0; bottom: 0;'>"
+                    + "<h4 class='text-white'>Getting Ready <span></span></h4>"
+                    + "</div>");
+                $('body').append(div);
+
+                $("#current_take_buttons").attr("style", "display: none");
+
+                var counter = 3;
+                var counterIntervalId = setInterval(function () {
+                    $("#block h4 span").empty();
+                    $("#block h4 span").append(counter);
+
+                    counter--;
+                }, 1000);
+
+                setTimeout(function () {
+                    $("#block").remove();
+                    clearInterval(counterIntervalId);
+                }, 3000);
+
+                Webcam.set({
+                    // live preview size
+                    width: 470,
+                    height: 400,
+
+                    // device capture size
+                    dest_width: 320,
+                    dest_height: 240,
+
+                    // final cropped size
+                    crop_width: 320,
+                    crop_height: 240,
+
+                    // format and quality
+                    image_format: 'jpeg',
+                    jpeg_quality: 100,
+
+                    // flip horizontal (mirror mode)
+                    flip_horiz: true
+                });
+
+                Webcam.attach('#my_camera');
+            });
         });
 
         Path.root("#/");

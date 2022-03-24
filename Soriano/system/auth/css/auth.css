@@ -34,8 +34,54 @@
     height: 2rem
 }
 
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.qr-card {
+    background: url("../../api/uploads/images/bg/4853433.jpg"), linear-gradient(90deg, #2d499d, #3f5491);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.qr-code-container {
+    border-radius: 25px 25px 0 0;
+}
+
+#qr-profile-picture {
+    position: absolute;
+    top: -35px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 80px;
+    height: 70px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+
+#qr-download-btn {
+    background: #F2F7FF;
+    border: 0;
+    padding: 16px 32px;
+}
+
+#qr-download-btn:hover {
+    background: #d6dae0;
+}
+
 @media screen and (max-width:767px) {
     #auth #auth-left {
         padding: 5rem
+    }
+}
+
+@media screen and (min-width:1400px) {
+    .profile-picture {
+        width: 100% !important;
+        max-width: 100px;
     }
 }

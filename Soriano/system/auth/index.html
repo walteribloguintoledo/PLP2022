@@ -24,7 +24,6 @@
 
 <body>
     <section id="target"></section>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../app/js/app.js/jquery.mustache.js"></script>
     <script src="../app/js/app.js/mustache-0.7.2.js"></script>
@@ -37,11 +36,13 @@
 
         function preview_snapshot() {
             // play sound effect
-            try { shutter.currentTime = 0; } catch (e) { ; } // fails in IE
-            shutter.play();
+            // try { shutter.currentTime = 0; } catch (e) { ; } // fails in IE
+            // shutter.play();
 
             // freeze camera so user can preview current frame
-            Webcam.freeze();
+            // Webcam.freeze();
+
+            document.getElementById('my_photo_booth').style.display = 'block';
 
             // swap button sets
             document.getElementById('pre_take_buttons').style.display = 'none';
@@ -51,19 +52,25 @@
         function cancel_preview() {
             // cancel preview freeze and return to live camera view
             Webcam.unfreeze();
-            Webcam.reset();
+
+            if ($('#my_camera').children().length > 0) {
+                Webcam.reset();
+            }
 
             // swap buttons back to first set
-            document.getElementById('pre_take_buttons').style.display = '';
             document.getElementById('post_take_buttons').style.display = 'none';
+            document.getElementById('pre_take_buttons').style.display = '';
         }
 
         function save_photo() {
             // actually snap photo (from preview freeze) and display it
             Webcam.snap(function (data_uri) {
                 // display results in page
+                $('#my_camera').empty();
+                $('#my_camera').attr("style", "");
+
                 document.getElementById('results').innerHTML =
-                    '<img class="img-fluid img-thumbnail w-100 d-block" src="' + data_uri + '"/><br/></br>' +
+                    '<img class="img-fluid img-thumbnail w-100 d-block" style="object-fit: cover;" src="' + data_uri + '"/><br/></br>' +
                     '<input id="input-photo" type="hidden" value="' + data_uri + '" placeholder="Snapshot"/>' +
                     '<a href="' + data_uri + '" target="_blank">Open image in new window...</a>';
 
@@ -72,7 +79,7 @@
 
                 // show results, hide photo booth
                 document.getElementById('results').style.display = '';
-                document.getElementById('my_photo_booth').style.display = 'none';
+                document.getElementById('post_take_buttons').style.display = 'none';
             });
         }
     </script>
@@ -91,6 +98,12 @@
 
     <!-- First, include the Webcam.js JavaScript Library -->
     <script type="text/javascript" src="js/webcam.min.js"></script>
+
+    <!-- qr code -->
+    <script type="text/javascript" src="js/qrcode.min.js"></script>
+
+    <!-- canvas -->
+    <script type="text/javascript" src="js/html2canvas.min.js"></script>
 </body>
 
 </html>

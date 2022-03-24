@@ -94,7 +94,7 @@
                                         </div>
                                         <div class="modal-footer">
                                         <input type=button value="Cancel" onClick="cancel_preview()" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        <button type="button" class="btn btn-primary" onClick="save_photo()" data-bs-dismiss="modal">Save Photo</button>
+                                        <button id="save-photo"  type="button" class="btn btn-primary" onClick="save_photo()" data-bs-dismiss="modal">Save Photo</button>
                                         </div>
                                     </div>
                                     </div>
@@ -514,200 +514,126 @@
                 <!-- Basic Horizontal form layout section start -->
                 <section id="basic-horizontal-layouts">
                     <div class="row match-height">
-                        <div class="col-md-6 col-12">
-                            <div id="upload-profile-picture-submit" class="card d-none">
-                                <div class="card-header">
-                                    <h4 class="card-title">Profile Picture</h4>
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-body">
-                                        <form class="form form-horizontal">
-                                            <div class="form-body">
-                                                <div class="row">
-                                                    <div class="col-md-12 form-group">
-                                                        <input type="file" class="my-pond" name="filepond" id="my-pond"/>
-                                                    </div>
-                                                    <div id="filepond-progress-submit" class="col-md-12 form-group d-none">
-                                                        <div class="progress">
-                                                            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        <div class="col-12 col-md-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div id="upload-profile-picture-submit" class="card d-none">
+                                        <div class="card-header">
+                                            <h4 class="card-title">Profile Picture</h4>
+                                        </div>
+                                        <div class="card-content">
+                                            <div class="card-body">
+                                                <form class="form form-horizontal">
+                                                    <div class="form-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12 form-group">
+                                                                <input type="file" class="my-pond" name="filepond" id="my-pond"/>
+                                                            </div>
+                                                            <div id="filepond-progress-submit" class="col-md-12 form-group d-none">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12 d-flex justify-content-end">
+                                                                <button type="submit"
+                                                                    class="btn btn-primary me-1 mb-1" id="profile-picture-submit" disabled>Submit</button>
+                                                                <button type="reset"
+                                                                    class="btn btn-light-secondary me-1 mb-1 d-none" id="profile-picture-reset">Reset</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-12 d-flex justify-content-end">
-                                                        <button type="submit"
-                                                            class="btn btn-primary me-1 mb-1" id="profile-picture-submit" disabled>Submit</button>
-                                                        <button type="reset"
-                                                            class="btn btn-light-secondary me-1 mb-1 d-none" id="profile-picture-reset">Reset</button>
-                                                    </div>
-                                                </div>
+                                                </form>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div id="display-profile-picture" class="card d-none">
-                                <div id="my_photo_booth">
-                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Edit Snapshot</h5>
-                                                <button type="button" class="btn-close" onClick="cancel_preview()" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div id="my_camera" class="img-fluid" style="">
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div id="pre_take_buttons">
-                                                        <input type=button value="Cancel" onClick="cancel_preview()" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                        <button id="take-snapshot" type="button" class="btn btn-primary" onClick="preview_snapshot()">
-                                                            Take Snapshot
-                                                        </button>
-                                                    </div>
-                                                    <div id="post_take_buttons" style="display:none">
-                                                        <button type="button" class="btn btn-primary" onClick="save_photo()" data-bs-dismiss="modal">Take Snapshot</button>
+                                    <div id="display-profile-picture" class="card">
+                                        <div id="my_photo_booth">
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Edit Snapshot</h5>
+                                                        <button type="button" class="btn-close" onClick="cancel_preview()" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div id="my_camera" class="img-fluid" style="">
+                                                            </div>
+                                                            <div id="results" class="" style="display:none">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <div id="pre_take_buttons">
+                                                                <input type=button value="Cancel" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                                <button id="take-snapshot" type="button" class="btn btn-primary" onClick="preview_snapshot()">
+                                                                    Take Snapshot
+                                                                </button>
+                                                            </div>
+                                                            <div id="post_take_buttons" style="display:none">
+                                                                <input id="cancel-preview" type=button value="Back" onClick="cancel_preview()" class="btn btn-secondary">
+                                                                <button id="save-photo" type="button" class="btn btn-primary" onClick="save_photo()">Save Photo</button>
+                                                            </div>
+                                                            <div id="current_take_buttons" style="display:none">
+                                                                <input type=button value="Close" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="card-header">
-                                    <div class="d-block d-sm-flex align-items-center">
-                                        <div class="">
-                                            <img id="profile-picture" src="" class="d-block img-thumbnail img-fluid rounded-circle" style="width: 100px; height: 100px;" alt="profile picture">
-                                        </div>
-                                        <div class="mt-2 mt-sm-0 mx-3 flex-grow-1">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <h4 class="card-title d-block">{{ username }}</h4>
+        
+                                        <div class="card-header">
+                                            <div class="d-block d-sm-flex d-md-block d-xxl-flex align-items-center">
+                                                <div class="flex-shrink-0">
+                                                    <img id="profile-picture" src="{{ photo }}" class="d-block img-thumbnail img-fluid rounded-circle profile-picture" alt="profile picture">
+                                                </div>
+                                                <div class="mt-2 mt-sm-0 mt-md-2 mx-3 flex-grow-1">
+                                                    <div class="d-flex align-items-start justify-content-between">
+                                                        <div class="">
+                                                            <h4 class="card-title d-block">{{ username }}</h4>
+                                                            <p class="text-break">{{ email }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-end">
                                                 <button id="edit-snapshot" type="button" class="btn btn-primary d-flex align-items-start justify-content-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                     <i class="bi bi-camera d-block"></i>
-                                                    <!-- <span class="d-block"></span> -->
                                                 </button>
                                             </div>
-                                            <p class="">email: {{ email }}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="card-content">
-                                    <div class="card-body">
-                                        <form class="form form-horizontal">
-                                            <div class="form-body">
-                                                <div class="row">
-                                                    <div class="col-12 form-group text-center">
-                                                        <img id="profile-picture" src="" class="img-thumbnail img-fluid rounded-circle" style="width: 250px; height: 250px;" alt="profile picture">
+                                <div id="capture" class="col-12 position-relative">
+                                    <div class="card shadow-sm qr-card" style="border-radius: 0px;">
+                                        <div class="card-content">
+                                            <div class="card-body" style="padding: 0px">
+                                                <form class="form form-horizontal">
+                                                    <div class="form-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="qr-code-container bg-white d-flex flex-column align-items-center justify-content-center py-5" style="position: relative; margin-top: 80px;">
+                                                                    <img id="qr-profile-picture" src="{{ photo }}" class="d-block img-fluid shadow-sm" width="70" height="80" alt="profile picture">
+                                                                    <div id="qrcode" class="mt-5"></div>
+                                                                    <div class="mt-3 text-center">
+                                                                        <h3 class="mb-3">{{ name }}</h3>
+                                                                        <button id="qr-download-btn" class="rounded"><h5>Download Qr Code</h5></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-12 d-flex justify-content-end">
-                                                        <button type="destroy"
-                                                            class="btn btn-light-secondary me-1 mb-1" id="profile-picture-delete">Delete Photo</button>
-                                                    </div>
-                                                </div>
+                                                </form>
                                             </div>
-                                        </form>
-                                    </div>
-                                </div> -->
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">Qr Code</h4>
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-body">
-                                        <form class="form form-horizontal">
-                                            <div class="form-body">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <label>Name</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <div class="form-group has-icon-left">
-                                                            <div class="position-relative">
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Name" id="first-name-icon">
-                                                                <div class="form-control-icon">
-                                                                    <i class="bi bi-person"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Email</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <div class="form-group has-icon-left">
-                                                            <div class="position-relative">
-                                                                <input type="email" class="form-control"
-                                                                    placeholder="Email" id="first-name-icon">
-                                                                <div class="form-control-icon">
-                                                                    <i class="bi bi-envelope"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Mobile</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <div class="form-group has-icon-left">
-                                                            <div class="position-relative">
-                                                                <input type="number" class="form-control"
-                                                                    placeholder="Mobile">
-                                                                <div class="form-control-icon">
-                                                                    <i class="bi bi-phone"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label>Password</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <div class="form-group has-icon-left">
-                                                            <div class="position-relative">
-                                                                <input type="password" class="form-control"
-                                                                    placeholder="Password">
-                                                                <div class="form-control-icon">
-                                                                    <i class="bi bi-lock"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-group col-md-8 offset-md-4">
-                                                        <div class='form-check'>
-                                                            <div class="checkbox">
-                                                                <input type="checkbox" id="checkbox2"
-                                                                    class='form-check-input' checked>
-                                                                <label for="checkbox2">Remember Me</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 d-flex justify-content-end">
-                                                        <button type="submit"
-                                                            class="btn btn-primary me-1 mb-1">Submit</button>
-                                                        <button type="reset"
-                                                            class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-                <!-- // Basic Horizontal form layout section end -->
 
-                <!-- // Basic multiple Column Form section start -->
-                <section id="multiple-column-form">
-                    <div class="row match-height">
-                        <div class="col-12">
+                        <div class="col-12 col-md-8">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Multiple Column</h4>
+                                    <h4 class="card-title">Personal Information</h4>
                                 </div>
                                 <div class="card-content">
                                     <div class="card-body">
@@ -778,7 +704,6 @@
                         </div>
                     </div>
                 </section>
-                <!-- // Basic multiple Column Form section end -->
             </div>
 
             <footer>

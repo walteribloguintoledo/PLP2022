@@ -9,8 +9,10 @@ function updateProfilePicture($id, $photo)
 {
     $person = find('id', $id);
     
-    $person->set('photo', serialize($photo));
+    $person->set('photo', $photo);
     $person->save();
+
+    return $person;
 }
 
 function checkUsernameOrEmailDuplicate($username, $email)

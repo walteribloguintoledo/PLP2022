@@ -43,7 +43,7 @@ $app->post('/login', function () {
             "address" => $result->address,
             "birth_date" => $result->birth_date,
             "contact_number" => $result->contact_number,
-            // "photo" => $result->photo
+            "photo" => $result->photo
             // "password" => decrypt($result->password),
         );
     } else {
@@ -89,7 +89,25 @@ $app->post('/signup', function () {
 });
 
 $app->post('/user/profile-picture/update', function () {
-    updateProfilePicture($_POST['id'], $_POST['photo']);
+    $appVariables = new AppVariables();
+
+    $person = updateProfilePicture($_POST['id'], $_POST['photo']);
+
+    if ($person !== false) {
+        $appVariables->verified = 1;
+        $appVariables->error = 0;
+        $appVariables->message = "Successful";
+    } else {
+        $appVariables->message = "Error";
+    }
+
+    $response = array(
+        "verified" => $appVariables->verified,
+        "error" => $appVariables->error, 
+        "message" => $appVariables->message
+    );
+
+    echo json_encode($response);
 });
 
 $app->run();
