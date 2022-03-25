@@ -261,10 +261,9 @@
         //search click function
         document.getElementById("search").addEventListener("click", function () {
             var displayResult = searchUser();
-            // for (var i = 0; i < displayResult.length; i++) {
-            //     console.log(displayResult[i]);
-            //     document.getElementById("display").innerHTML = displayResult;
-            // }
+            for (var i = 0; i < displayResult.length; i++) {
+                console.log(displayResult[i]);
+            }
 
             var output = "";
             var fname = "Firstname: " + displayResult[0] + "<br>";

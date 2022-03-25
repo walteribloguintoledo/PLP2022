@@ -1,15 +1,13 @@
 body {
-    background-image: linear-gradient(to right, rgba(255,0,0,0), #2c3e50);   
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../../img/background.jpg);   
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 html, body {
     height: 50%;
     width: 100%;
-}
-
-html {
-    display: table;
-    margin: auto;
 }
 
 h5 {
@@ -20,6 +18,10 @@ h5 {
     background-color: #fff;
     border-radius: 20px;
     margin-bottom: 10px;
+}
+
+th{
+    color: #fff;
 }
 
 .anime {
@@ -81,9 +83,4 @@ form h2 {
   }
   .signup_link a:hover{
     text-decoration: underline;
-  }
-
-  input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button {
-    opacity: 1;
   }

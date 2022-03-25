@@ -18,7 +18,7 @@ $(document).ready(function () {
                     e.preventDefault();
 
                     var currentUser = JSON.parse(localStorage.getItem('userData'));
-                    // if (currentUser === null) window.location.replace("http://ernanie.com/Day3/login.html");
+                    if (currentUser === null) window.location.replace("http://ernanie.com/Day3/mustache/#/login");
                 });
             });
 
@@ -27,8 +27,8 @@ $(document).ready(function () {
                     e.preventDefault();
 
                     var currentUser = JSON.parse(localStorage.getItem('userData'));
-                    // if (currentUser === null) window.location.replace("http://ernanie.com/Day3/signup.html");
-                });
+                    if (currentUser === null) window.location.replace("http://ernanie.com/Day3/mustache/#/signup");
+                }); 0
             });
         });
 
@@ -263,7 +263,7 @@ $(document).ready(function () {
                 $("#contact").val('');
                 $("#display").innerHTML = "";
 
-                var routeHome = "http://ernanie.com/Day3/blog.html";
+                var routeHome = "http://ernanie.com/Day3//mustache/#/blog";
                 alert("Successfully Registered!");
                 window.location.replace(routeHome);
                 // return userData;
@@ -277,7 +277,10 @@ $(document).ready(function () {
             console.log(userInput);
 
             var currentUser = JSON.parse(localStorage.getItem('userData'));
-            if (currentUser !== null) window.location.replace("http://ernanie.com/Day3/blog.html");
+            if (currentUser !== null) {
+                alert("You have already logged in.");
+                window.location.replace("http://ernanie.com/Day3/mustache/#/blog");
+            }
 
             function usernameIsValid(usernameElem) {
                 if (userInput === undefined) return false;
@@ -296,42 +299,42 @@ $(document).ready(function () {
                 $("#search").click(function (e) {
                     e.preventDefault();
 
-                    var username = $("#uname");
+                    var username = $("#uname").val();
+                    var searchInput = JSON.parse(localStorage.getItem('userInput'));
+                    console.log(searchInput);
 
-                    if (isEmpty(username) !== false) return;
-
-                    if (usernameIsValid(username) !== false) {
-                        username.val('');
-                        username.focus();
-
-                        return false;
-                    } else {
-                        var result = "";
-                        var fname = "First name: " + currentUser.firstname + "<br>";
-                        result += fname;
-                        var lname = "Last name: " + currentUser.lastname + "<br>";
-                        result += lname
-                        var uname = "Username: " + currentUser.username + "<br>";
-                        result += uname
-                        var email = "Email: " + currentUser.email + "<br>";
-                        result += email
-                        var password = "Password: " + currentUser.password + "<br>";
-                        result += password
-                        var cpassword = "Confirm Password: " + currentUser.confirm + "<br>";
-                        result += cpassword
-                        var birthday = "Birthdate: " + currentUser.birthdate + "<br>";
-                        result += birthday
-                        var age = "Age: " + currentUser.age + "<br>";
-                        result += age
-                        var contact = "Contact: " + currentUser.contact + "<br>";
-                        result += contact
-                        var timendate = "Time and Date: " + currentUser.timendate + "<br>";
-                        result += timendate
-                        document.getElementById("display").innerHTML = result;
-                    }
+                    $.each(searchInput, function (i, item) {
+                        if (item.username === username) {
+                            var result = "";
+                            var fname = "First name: " + item.firstname + "<br>";
+                            result += fname;
+                            var lname = "Last name: " + item.lastname + "<br>";
+                            result += lname
+                            var uname = "Username: " + item.username + "<br>";
+                            result += uname
+                            var email = "Email: " + item.email + "<br>";
+                            result += email
+                            var password = "Password: " + item.password + "<br>";
+                            result += password
+                            var cpassword = "Confirm Password: " + item.confirm + "<br>";
+                            result += cpassword
+                            var birthday = "Birthdate: " + item.birthdate + "<br>";
+                            result += birthday
+                            var age = "Age: " + item.age + "<br>";
+                            result += age
+                            var contact = "Contact: " + item.contact + "<br>";
+                            result += contact
+                            var timendate = "Time and Date: " + item.timendate + "<br>";
+                            result += timendate
+                            document.getElementById("display").innerHTML = result;
+                            console.log(result);
+                        }
+                        else {
+                            alert("No such username");
+                        }
+                    });
                 });
             });
-
         });
 
         //login
@@ -339,30 +342,13 @@ $(document).ready(function () {
             $("#target").html("").append($.Mustache.render("login"));
 
             var currentUser = JSON.parse(localStorage.getItem('userData'));
-            if (currentUser !== null) window.location.replace("http://ernanie.com/Day3/blog.html");
+            if (currentUser !== null) {
+                alert("You have already logged in.");
+                window.location.replace("http://ernanie.com/Day3/mustache/#/blog");
+            }
 
-            var userInput = JSON.parse(localStorage.getItem('userInput')) = new Array(), userInfo = null;
+            var userInput = JSON.parse(localStorage.getItem('userInput')) ?? new Array(), userInfo = null;
             console.log(userInput);
-
-            function checkifEmpty(elem) {
-                if (elem === "") {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            function grantAccess(usernameElem, passwordElem) {
-                if (userInput === undefined) return false;
-
-                userInput.forEach(userData => {
-                    if (usernameElem.val() === userData.username && passwordElem.val() === userData.password) {
-                        userInfo = userData;
-                    }
-                });
-
-                return userInfo === null ? alert('Username or password is invalid.') : false;
-            }
 
             $(document).ready(function () {
                 $("#login").click(function (e) {
@@ -383,7 +369,7 @@ $(document).ready(function () {
 
                     localStorage.setItem('userData', JSON.stringify(userInfo));
                     alert("Welcome " + username.val());
-                    window.location.replace("http://ernanie.com/Day3/blog.html");
+                    window.location.replace("http://ernanie.com/Day3/mustache/#/blog");
                 });
             });
         });
@@ -408,7 +394,7 @@ $(document).ready(function () {
                     else {
                         localStorage.removeItem("userData");
                         alert("Logged out successfully.");
-                        window.location.replace("http://ernanie.com/Day3/home.html");
+                        window.location.replace("http://ernanie.com/Day3/mustache/#/home");
                     }
                 });
             });
