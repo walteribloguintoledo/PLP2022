@@ -1,9 +1,9 @@
 $(document).ready(function () {
   $.Mustache.options.warnOnMissingTemplates = true;
-  $.Mustache.load("template.html").done(function () {
-    var loginUser = localStorage.getItem("currentLogin");
-    var currentUser = localStorage.getItem("currentUser");
-    var currentLoginUser = JSON.parse(currentUser);
+  $.Mustache.load("app/template/template.html").done(function () {
+   // var loginUser = localStorage.getItem("currentLogin");
+   // var currentUser = localStorage.getItem("currentUser");
+    //var currentLoginUser = JSON.parse(currentUser);
     function isNumeric(text) {
       var hasNumber = /[0-9]/g;
       if (hasNumber.test(text)) {
@@ -58,14 +58,9 @@ $(document).ready(function () {
         function (response) {
           if (response.emailIsExist) {
             alert(`${data.Email} is already registered!`);
+            location.reload();
             return;
           }
-          // if (response.userIsExist) {
-          //   alert(`${data.Username} is already taken!`);
-          //   $("#username").focus();
-          //   return;
-          // }
-          // user is logged in successfully in the back-end
           if (response.success == "1") {
             // previousList.push(user);
             alert("congratualation you have an account!");
@@ -89,7 +84,7 @@ $(document).ready(function () {
         Age: age,
         Address: address,
       };
-      var email = email;
+      //var email = email;
       Ajax(user);
     }
     function clearPanel() {
@@ -159,7 +154,6 @@ $(document).ready(function () {
         var bday = $("#DOB").val();
         var age = calculateAge(bday);
         var address = $("#address").val();
-        //        document.forms[0].reset();
         storage(email, password, lastname, firstname, age, address);
       });
     });
@@ -227,6 +221,24 @@ $(document).ready(function () {
 
     // var user = localStorage.getItem("my_person");
     Path.map("#/homepage").to(function () {
+      // var person = localStorage.getItem("currentUser");
+      // var data = JSON.parse(person); 
+      // var resultList = [];
+      // $.each(data, function (index, item) {
+      //   var result = {
+      //     firstname: item.firstname,
+      //     lastname: item.lastname,
+      //     email: item.email,
+      //     age: item.age,
+      //     address: item.address
+      //   }
+      //   resultList.push(result);
+      // });
+
+      // var templateData = {
+      //   currentUser: resultList
+      // }
+      // console.log(resultList);
       $("#target").html("").append($.Mustache.render("homepage"));
       if( localStorage.getItem("currentLogin") == null){
         window.location.replace("#/login");
@@ -257,6 +269,7 @@ $(document).ready(function () {
           "{{address}}<br>";
         $("#userInfo").append(Mustache.render(html, item));
       });
+
       $(document).ready(function () {
         //hide the signup ang login navigation
         if (localStorage.getItem("currentLogin") != null) {
@@ -271,16 +284,16 @@ $(document).ready(function () {
       });
     });
 
+
     Path.map("#/admin").to(function () {
-      $("#target").html("").append($.Mustache.render("admin"));
+      $("#target").html("").append($.Mustache.render('admin'));
       if( localStorage.getItem("currentAdmin") == null){
         window.location.replace("#/login");
       }
       if( localStorage.getItem("currentLogin") != null){
         window.location.replace("#/homepage");
       }
-      insert_record();
-      function insert_record(){
+      //addnewuser
         $("#modalInsert").on("click", function (e) {
           e.preventDefault();
           if (isEmpty($("#email").val())) {
@@ -335,24 +348,39 @@ $(document).ready(function () {
           var address = $("#address").val();
           storage(email, password, lastname, firstname, age, address);
         });
-      }
 
-
+      //display all users
         $.ajax({
-          type: "POST",
+          type: "GET",
           url: "api/view",
-        }).then(
-          function (response) {
-            response = $.parseJSON(response);
+          dataType: "json",
+          success: function(response){
             if(response.status=='success'){
-              $('#table').html(response.html);
+            localStorage.setItem("allUser", JSON.stringify(response.html));
             }
-          },
-          function () {
-            alert("There was some error!");
           }
-        );
-      
+        });
+        //try lang 
+        var allUser = localStorage.getItem("allUser")
+        var allUsers = JSON.parse(allUser);
+        console.log({allUsers})
+        
+        $.each(allUsers, function (index, item) {
+          var html =""
+          +"<tr>"
+          + "<th scope='col'>{{id}}</th>"
+          +"<th scope='col'>{{email}}</th>"
+          +"<th scope='col'>{{lastname}}</th>"
+          +"<th scope='col'>{{firstname}}</th>"
+          +"<th scope='col'>{{age}}</th>"
+          +"<th scope='col'>{{address}}</th>"
+          +"<th scope='col'><button class='btn btn-success' data-bs-toggle='modal' data-bs-target='#Edit' id='btnEdit' data-id='{{id}}'><span>EDIT</span></button></th>"
+          +"<th scope='col'><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#Delete' id='btnDelete' data-id2='{{id}}'><span>Delete</span></button></th>"
+          +"</tr>";
+          +"</table>"
+          $("#tabledata").append(Mustache.render(html, item));
+        });
+
         $(document).on('click','#btnDelete',function(){
           var DeleteID = $(this).attr('data-id2');
           $(document).on("click",'#modalDelete',function(){
@@ -449,7 +477,7 @@ $(document).ready(function () {
               $('#edit_firstname').val(response[4]);
               $('#edit_DOB').val(response[5]);
               $('#edit_address').val(response[6]);
-
+              console.log(response);
             },
             function () {
               alert("There was some error!");
@@ -466,6 +494,7 @@ $(document).ready(function () {
       // sign out the user
       $("#btnLogout").click(function () {
         localStorage.removeItem("currentAdmin");
+        localStorage.removeItem("allUser");
         window.location.reload();
       });
     });

@@ -1,6 +1,6 @@
 <?php
-    ORM::configure('mysqli:host=localhost;db_name=lumiguidblog');
-    ORM::configure('uname', 'root');
+    ORM::configure('mysql:host=localhost;dbname=lumiguidblog');
+    ORM::configure('username', 'root');
     ORM::configure('password', '');
 
 

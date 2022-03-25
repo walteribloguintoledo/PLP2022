@@ -21,7 +21,7 @@
             </span>
           </div>
           <div class="col-md">
-            <img src="../../pictures/random.jpg" class="rounded mx-auto d-block">
+            <img src="app/img/random.jpg" class="rounded mx-auto d-block">
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@
   <div>
       <form class="formlogin">
           <div class="imgcontainer">
-            <img src="../../pictures/signup.png" alt="Avatar" class="avatar">
+            <img src="app/img/signup.png" alt="Avatar" class="avatar">
           </div>
 
           <div class="container" id="login">
@@ -158,7 +158,24 @@
 <script type="text/template" id="admin">
   <section>
     <button class="btn btn-outline-secondary text-light bg-dark"data-bs-toggle="modal" data-bs-target="#exampleModal">A D D</button>
-    <div id="table"> </div>
+    <div> 
+      <table class="table table-striped table-dark">
+        <thead>
+        <tr>
+        
+            <th scope="col">Id</th>
+            <th scope="col">Email</th>
+            <th scope="col">Lastname</th>
+            <th scope="col">Firstname</th>
+            <th scope="col">Age</th>
+            <th scope="col">Address</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody id="tabledata">
+        
+    </div>
   </section>
    <!-- Modal -->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
