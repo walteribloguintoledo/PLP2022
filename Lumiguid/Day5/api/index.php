@@ -15,14 +15,16 @@
     $updateFirstname = $_POST['U_Firstname'];
     $updateAge = $_POST['U_Age'];
     $updateAddress = $_POST['U_Address'];
-
+    $success = 0;
     // update user including the password
-    $user_update = updateDataWithPass($updateId, $updateEmail, $updateEmail, $updatePassword, $updateLastname, $updateLastname,  $updateFirstname, $updateAge,$updateAddress);
-    if($user_update != null){
-      echo json_encode('Your record has been Updated') ;
-    }else{
-        echo json_encode('Please Check Your Query') ;
+    $user_update = updateDataWithPass($updateId, $updateEmail, $updatePassword, $updateLastname,  $updateFirstname, $updateAge,$updateAddress);
+    if($user_update){
+      $success = 1;
     }
+    $response = array(
+      "success"=>$success
+    );
+    echo json_encode($response);
   });
 
   $app->post('/signup',function(){
@@ -60,7 +62,17 @@
     
     $UserId = $_POST['userID'];
     $data = getdata($UserId);
-    echo json_encode($data);
+  // echo var_dump($data);
+    $response = array(
+      "id"=> $data->id,
+      "email"=> $data->email,
+      "password"=>$data->password,
+      "lastname"=>$data->lastname,
+      "firstname"=>$data->firstname,
+      "age"=>$data->age,
+      "address"=>$data->address
+    );
+    echo json_encode($response);
   });
 
   $app->post('/delete',function(){
@@ -76,7 +88,6 @@
   
   $app->get('/view',function(){
     $viewdata = view();
-
     foreach($viewdata as $view) {
       $info[] = array(
         "id" => $view->id,
