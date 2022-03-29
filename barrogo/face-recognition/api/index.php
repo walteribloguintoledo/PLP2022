@@ -4,13 +4,12 @@
   $app = new Slim();
 
   $app->post('/login',function() {
-    if(isset($_POST['username'])){
-      $user_name = $_POST['username'];
-      $password = md5($_POST['password']);
+    if(isset($_POST['userID'])){
+      $user_id = $_POST['userID'];
       $verified = 0;
   
       // function for login
-      $data = login($user_name, $password);
+      $data = login($user_id);
 
       if($data == 0){
         $response = array(
@@ -45,7 +44,7 @@
       $email_exists = checkEmail($email);
   
       if($user_exists == 0 && $email_exists == 0){
-        $user_added = insertUser($user_id, $full_name, $user_name, $email, $address, $birthday, $contact, $password, $profile_img);
+        $user_added = insertUser($user_id, $full_name, $user_name, $email, $address, $birthday, $contact, $password);
         $verified = 1;
 
         $response = array(
@@ -54,6 +53,11 @@
           "email" => $email_exists,
           "verified" => $verified
         );
+        mkdir('./uploads/images/' . $user_id);
+
+        for($i = 1; $i <= count($profile_img); $i++){
+          file_put_contents('./uploads/images/'. $user_id . '/' . $user_id .$i.'.jpg', file_get_contents($profile_img[$i - 1]));
+        }
       }else{
         $response = array(
           "user" => $user_exists,

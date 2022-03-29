@@ -9,7 +9,8 @@
             <h4 class="mb-2">Welcome! 👋</h4>
             <p class="mb-4">Please scan your QR Code</p>
             <div class="mb-3">
-              <button class="btn btn-primary d-grid w-100" type="submit">Scan QR Code</button>
+              <button type="button" id="scanQR" class="btn btn-primary d-grid w-100">Scan QR Code</button>
+              <video id="preview" class="img-fluid rounded mt-2" style="display:none;"></video>
             </div>
             <p class="text-center">
               <span>New on our platform?</span>
@@ -27,112 +28,170 @@
 
 <!-- register page -->
 <script id="register" type="text/template">
-  <div class="container-xxl">
-    <div class="authentication-wrapper authentication-basic container-p-y">
-      <div class="authentication-inner">
-        <!-- Register Card -->
-        <div class="card">
-          <div class="card-body">
-            <h4 class="mb-2">Adventure starts here 🚀</h4>
-            <p class="mb-4">
-              <span>Already have an account?</span>
-              <a href="#/login">
-                <span>Sign in instead</span>
-              </a>
-            </p>
-            <form id="registerForm" enctype="multipart/form-data" class="mb-3">
+  <style>
+    .register {
+      min-height: 100vh;
+    }
+  </style>
+  <div class="container-fluid ps-md-0">
+    <div class="row g-0">
+      <div class="d-md-flex col-md-4 col-lg-6 mx-auto">
+        <div class="col-md-8 col-lg-6 mx-auto">
+          <div class="d-flex align-items-center py-5">
+            <div class="container">
               <div class="mb-3">
                 <label for="profileImg" class="form-label">Profile Image</label>
-                <div id="my_camera" class="mx-auto"></div>
-                <div id="resultImg" class="d-flex align-items-center justify-content-center" style="display:none;">
-                  <img class="img-fluid" src="" alt="">
-                </div>
+                <div id="my_camera" class="mx-auto mb-3"></div>
                 <div id="cameraBtns" style="display:none;">
-                  <button type="button" id="takeImg" class="btn btn-primary">Take Snapshot</button>
-                  <button type="button" id="saveBtn" class="btn btn-sm btn-success" style="display:none;">Save Image</button>
-                  <button type="button" id="retakeBtn" class="btn btn-sm btn-secondary" style="display:none;">Retake</button>
-                  <button type="button" id="cancelBtn" class="btn btn-outline-secondary">Cancel</button>
+                  <button type="button" id="saveBtn" class="btn btn-success d-grid w-100 mb-3">Save Image</button>
+                  <button type="button" id="retakeBtn" class="btn btn-outline-dark d-grid w-100">Retake</button>
                 </div>
-                <button type="button" id="snapshotBtn" class="btn btn-outline-primary d-grid w-100">Take Photo</button>
+                <button type="button" id="snapshotBtn" class="btn btn-primary d-grid w-100 mb-3">Take Photo</button>
+                <button type="button" id="resetBtn" class="btn btn-outline-dark d-grid w-100">Reset</button>
               </div>
-              <input type="hidden" id="profileImg">
-              <hr>
-              <div class="mb-3">
-                <label for="fullName" class="form-label">Full Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="fullName"
-                  placeholder="Enter your Full Name"
-                />
-                <div class="invalid-feedback">
-                  Please enter your Full Name.
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="userName"
-                  placeholder="Enter your Username"
-                />
-                <div id="unameFeedback" class="invalid-feedback"></div>
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your Email Address" />
-                <div id="emailFeedback" class="invalid-feedback"></div>
-              </div>
-              <div class="mb-3">
-                <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" id="address" placeholder="Enter your Address" />
-                <div class="invalid-feedback">
-                  Please enter your Address.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container mb-3">
+        <div class="mb-3">
+          <p class="fs-5">Results:</p>
+          <div class="row g-4">
+            <div class="col">
+              <div class="card">
+                <img id="img1" src="./app/img/gray-bg.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Image 1</p>
                 </div>
               </div>
-              <div class="mb-3">
-                <label for="bDay" class="form-label">Birthday</label>
-                <input type="date" class="form-control" id="bDay" placeholder="Enter your Birthday" />
-                <div class="invalid-feedback">
-                  Please enter your Birthday.
+            </div>
+            <div class="col">
+              <div class="card">
+                <img id="img2" src="./app/img/gray-bg.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Image 2</p>
                 </div>
               </div>
-              <div class="mb-3">
-                <label for="contact" class="form-label">Contact No.</label>
-                <input type="tel" id="contact" class="form-control" placeholder="Enter your Contact No.">
-                <div id="contactFeedback" class="invalid-feedback"></div>
-              </div>
-              <div class="mb-3 form-password-toggle">
-                <label class="form-label" for="password">Password</label>
-                <div class="input-group input-group-merge">
-                  <input
-                    type="password"
-                    id="password"
-                    class="form-control"
-                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                    aria-describedby="password"
-                  />
-                  <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                  <div id="passwordFeedback" class="invalid-feedback"></div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img id="img3" src="./app/img/gray-bg.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Image 3</p>
                 </div>
               </div>
-              <div class="mb-3 form-password-toggle">
-                <label class="form-label" for="confirmPassword">Confirm Password</label>
-                <div class="input-group input-group-merge">
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    class="form-control"
-                    placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                    aria-describedby="password"
-                  />
-                  <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                  <div id="confirmPasswordFeedback" class="invalid-feedback"></div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img id="img4" src="./app/img/gray-bg.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Image 4</p>
                 </div>
               </div>
-              <button class="btn btn-primary d-grid w-100">Register</button>
-            </form>
+            </div>
+            <div class="col">
+              <div class="card">
+                <img id="img5" src="./app/img/gray-bg.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <p class="card-text">Image 5</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="col-md-8 col-lg-6 mx-auto">
+        <div class="register d-flex align-items-center py-5">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-9 col-lg-8 mx-auto">
+                <h4 class="mb-2">Adventure starts here 🚀</h4>
+                <p class="mb-4">
+                  <span>Already have an account?</span>
+                  <a href="#/login">
+                    <span>Sign in instead</span>
+                  </a>
+                </p>
+                <form id="registerForm" enctype="multipart/form-data" class="mb-3">
+                  <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="fullName"
+                      placeholder="Enter your Full Name"
+                    />
+                    <div class="invalid-feedback">
+                      Please enter your Full Name.
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="userName"
+                      placeholder="Enter your Username"
+                    />
+                    <div id="unameFeedback" class="invalid-feedback"></div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your Email Address" />
+                    <div id="emailFeedback" class="invalid-feedback"></div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter your Address" />
+                    <div class="invalid-feedback">
+                      Please enter your Address.
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="bDay" class="form-label">Birthday</label>
+                    <input type="date" class="form-control" id="bDay" placeholder="Enter your Birthday" />
+                    <div class="invalid-feedback">
+                      Please enter your Birthday.
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="contact" class="form-label">Contact No.</label>
+                    <input type="tel" id="contact" class="form-control" placeholder="Enter your Contact No.">
+                    <div id="contactFeedback" class="invalid-feedback"></div>
+                  </div>
+                  <div class="mb-3 form-password-toggle">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-group input-group-merge">
+                      <input
+                        type="password"
+                        id="password"
+                        class="form-control"
+                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                        aria-describedby="password"
+                      />
+                      <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                      <div id="passwordFeedback" class="invalid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="mb-3 form-password-toggle">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <div class="input-group input-group-merge">
+                      <input
+                        type="password"
+                        id="confirmPassword"
+                        class="form-control"
+                        placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                        aria-describedby="password"
+                      />
+                      <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                      <div id="confirmPasswordFeedback" class="invalid-feedback"></div>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary d-grid w-100">Register</button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -151,6 +210,22 @@
             <div id="qrcode" class="d-flex justify-content-center align-items-center mb-3"></div>
             <p id="userFullName" class="card-text fs-2 text-uppercase fw-bolder"></p>
             <button type="button" id="downloadQR" class="btn btn-primary" data-html2canvas-ignore>Download QR Code</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<!-- result of scan qr code -->
+<script id="result" type="text/template">
+  <div class="container-xxl">
+    <div class="authentication-wrapper authentication-basic container-p-y">
+      <div class="authentication-inner">
+        <div id="videoContainer" class="card h-100 text-center">
+          <video id="video" class="card-img-top" width="400" height="300" autoplay muted></video>
+          <div class="card-body">
+            <p class="card-text fs-2 text-dark">Please scan your face</p>
           </div>
         </div>
       </div>
