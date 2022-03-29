@@ -7,27 +7,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../extra/css/bootstrap.css">
     <link rel="stylesheet" href="../extra/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../extra/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../extra/css/app.css">
     <link rel="stylesheet" href="../extra/css/form.css">
 
-    <!-- include filepond css -->
-    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-        rel="stylesheet" />
-
     <link rel="stylesheet" href="css/auth.css">
     <title>System</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
     <section id="target"></section>
+
+    <div class="alert-container p-2"
+        style="display: none; background: rgba(0, 0, 0, 0); position: absolute; top: 0; left: 0; right: 0;">
+        <div class="d-flex justify-content-end">
+            <div class="col-12 col-md-4">
+                <div class="alert alert-danger alert-dismissible show fade">
+                    <span>This is a danger alert.</span>
+                    <button type="button" class="btn-close btn-close-alert"></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../app/js/app.js/jquery.mustache.js"></script>
     <script src="../app/js/app.js/mustache-0.7.2.js"></script>
     <script src="../app/js/app.js/path.min.js"></script>
+    <script>
+        $('.btn-close-alert').click(function () {
+            $('.alert-container').hide();
+        });
+        // $('.alert').on('closed.bs.alert', function (e) {
+        //     $('.alert-container').attr('style', 'display: none');
+        // });
+    </script>
     <script>
         // preload shutter audio clip
         var shutter = new Audio();
@@ -63,24 +82,140 @@
         }
 
         function save_photo() {
-            // actually snap photo (from preview freeze) and display it
             Webcam.snap(function (data_uri) {
-                // display results in page
-                $('#my_camera').empty();
-                $('#my_camera').attr("style", "");
+                var items = $("#results .carousel-inner").children().length;
+                var active = items ? "" : "active";
 
-                document.getElementById('results').innerHTML =
-                    '<img class="img-fluid img-thumbnail w-100 d-block" style="object-fit: cover;" src="' + data_uri + '"/><br/></br>' +
-                    '<input id="input-photo" type="hidden" value="' + data_uri + '" placeholder="Snapshot"/>' +
-                    '<a href="' + data_uri + '" target="_blank">Open image in new window...</a>';
+                //displat indicators
+                var carouselndicators = $("<button type='button'"
+                    + "data-bs-target='#results'"
+                    + "data-bs-slide-to='" + items + "'"
+                    + "class='" + active + "'"
+                    + "aria-current='true'"
+                    + "aria-label='Slide " + items++ + "'"
+                    + "></button>");
 
-                // shut down camera, stop capturing
-                Webcam.reset();
+                $("#results .carousel-indicators").append(carouselndicators);
 
-                // show results, hide photo booth
-                document.getElementById('results').style.display = '';
-                document.getElementById('post_take_buttons').style.display = 'none';
+                //display photos
+                var carouselItem = $("<div class='carousel-item " + active + "'"
+                    + " style='height: 280px'>"
+                    + "<img src='" + data_uri + "'"
+                    + "class='d-block w-100 h-100'>"
+                    + "</div>");
+
+                $("#results .carousel-inner").append(carouselItem);
+
+                $("#results").show();
+
+                //input data uris
+                var input = $("<input class='snapshot'"
+                    + "type='hidden'"
+                    + "class='form-control form-control-xl'"
+                    + "value='" + data_uri + "'>");
+
+                $(".snapshots-container").append(input);
+
+                //close web camera
+                if (items == 5) {
+                    Webcam.reset();
+
+                    // swap buttons back to first set
+                    $("#post_take_buttons").hide();
+                    $("#pre_take_buttons").hide();
+                    $('.modal-backdrop').hide();
+                    $('.modal').hide();
+                }
             });
+        }
+
+        function single_photo() {
+            Webcam.snap(function (data_uri) {
+                //close web camera
+                Webcam.unfreeze();
+
+                if ($('#my_camera').children().length > 0) {
+                    Webcam.reset();
+                }
+
+                $('#my_camera').empty();
+                $('#my_camera').hide();
+
+                $('#result-container').show();
+                $('#result-container').prepend('<img id="result" src="' + data_uri + '" class="w-100" style="height: 400px"/>');
+            });
+
+            var currentUser = JSON.parse(localStorage.getItem('user'));
+
+            async function face() {
+
+                const MODEL_URL = 'js/weights'
+
+                await faceapi.loadSsdMobilenetv1Model(MODEL_URL)
+                await faceapi.loadFaceLandmarkModel(MODEL_URL) // model to detect face landmark
+                await faceapi.loadFaceRecognitionModel(MODEL_URL) //model to Recognise Face
+                // await faceapi.loadFaceExpressionModel(MODEL_URL) //model to detect face expression
+
+                const img = document.getElementById('result')
+                let faceDescriptions = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                // .withFaceExpressions()
+                if (! faceDescriptions) if(!alert('No face detected!')){window.location.reload();}
+
+                const canvas = $('#reflay').get(0)
+                faceapi.matchDimensions(canvas, img)
+
+                faceDescriptions = faceapi.resizeResults(faceDescriptions, img)
+                faceapi.draw.drawDetections(canvas, faceDescriptions)
+                // faceapi.draw.drawFaceLandmarks(canvas, faceDescriptions)
+                // faceapi.draw.drawFaceExpressions(canvas, faceDescriptions)
+
+                var labels = [];
+
+                for (let i = 1; i <= 5; i++) {
+                    labels.push(`${currentUser.name} ${i}`);
+                }
+
+                const labeledFaceDescriptors = await Promise.all(
+                    labels.map(async label => {
+
+                        const ext = ".png";
+                        const dir = `../api/uploads/images/${currentUser.id}/`;
+                        const imgUrl = `${dir}${label}${ext}`
+                        const img = await faceapi.fetchImage(imgUrl)
+                        console.log(imgUrl);
+                        const faceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+
+                        if (!faceDescription) {
+                            throw new Error(`no faces detected for ${label}`)
+                        }
+
+                        const faceDescriptors = [faceDescription.descriptor]
+                        return new faceapi.LabeledFaceDescriptors(label, faceDescriptors)
+                    })
+                );
+
+                const threshold = 0.6
+                const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, threshold)
+
+                // const results = faceDescriptions.map(fd => faceMatcher.findBestMatch(fd.descriptor))
+                const result = faceMatcher.findBestMatch(faceDescriptions.descriptor)
+
+                // results.forEach((bestMatch, i) => {
+                //     const box = faceDescriptions[i].detection.box
+                //     const text = bestMatch.toString()
+                //     const drawBox = new faceapi.draw.DrawBox(box, { label: text })
+                //     drawBox.draw(canvas)
+                // })
+
+                const box = faceDescriptions.detection.box
+                const text = result.toString()
+                const drawBox = new faceapi.draw.DrawBox(box, { label: text })
+                drawBox.draw(canvas)
+
+                console.log(result)
+            }
+
+            face();
         }
     </script>
     <script src="js/auth.js"></script>
@@ -88,13 +223,6 @@
     <!-- bootstrap js -->
     <script src="../extra/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../extra/js/bootstrap.bundle.min.js"></script>
-
-    <!-- include FilePond library  -->
-    <script
-        src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-    <script src="https://unpkg.com/jquery-filepond/filepond.jquery.js"></script>
 
     <!-- First, include the Webcam.js JavaScript Library -->
     <script type="text/javascript" src="js/webcam.min.js"></script>
@@ -104,6 +232,15 @@
 
     <!-- canvas -->
     <script type="text/javascript" src="js/html2canvas.min.js"></script>
+
+    <!-- jsQr -->
+    <script type="text/javascript" src="js/jsQR.js"></script>
+
+    <!-- int to words -->
+    <script type="text/javascript" src="../extra/js/integerToWord.js"></script>
+
+    <!-- faceapi -->
+    <script type="text/javascript" src="js/face-api.js"></script>
 </body>
 
 </html>
