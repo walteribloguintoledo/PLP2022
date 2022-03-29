@@ -294,242 +294,209 @@ $(document).ready(function () {
       });
     });
     Path.map("#/admin").to(function () {
-      var allUser = localStorage.getItem("allUser")
-      var allUsers = JSON.parse(allUser);
-      var resultList =[];
-      console.log(allUsers);
-      $.each(allUsers, function (index, item) {
-        console.log(item);
-        var html ={
-          id: item.id,
-          email: item.email,
-          lastname: item.lastname,
-          firstname:item.firstname,
-          age: item.age,
-          address: item.address
-        }
-        console.log(html);
-        resultList.push(html)
-      });
-      console.log(resultList);
-      var templateData = {
-        users: resultList
-      }
-      console.log(templateData);
-      App.target.html("").append($.Mustache.render('admin',templateData));
       if( localStorage.getItem("currentAdmin") == null){
         window.location.replace("#/login");
       }
       if( localStorage.getItem("currentLogin") != null){
         window.location.replace("#/homepage");
       }
-      //addnewuser
-        $("#modalInsert").on("click", function (e) {
-          e.preventDefault();
-          if (isEmpty($("#email").val())) {
-            alert("Email is required");
-            $("#email").focus();
-            return;
-          }
-          if (
-            !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-              $("#email").val()
-            )
-          ) {
-            alert("You have entered an invalid email address!");
-            return;
-          }
-          if (isEmpty($("#password").val())) {
-            alert("Password is required");
-            return;
-          } else if (
-            !isNumeric($("#password").val()) ||
-            !isAlpha($("#password").val())
-          ) {
-            alert("Password must be alphanumeric");
-            return;
-          } else if ($("#password2").val() != $("#password").val()) {
-            alert("password does not match!");
-            return;
-          }
-          if (isEmpty($("#firstname").val())) {
-            alert("Firstname is required");
-            return;
-          }
-          if (isEmpty($("#lastname").val())) {
-            alert("Lastname is required");
-            return;
-          }
-  
-          if (isEmpty($("#DOB").val())) {
-            alert("Birthdate is required");
-            return;
-          }
-          if (isEmpty($("#address").val())) {
-            alert("address is required");
-            return;
-          }
-          var email = $("#email").val();
-          var password = $("#password").val();
-          var lastname = $("#lastname").val();
-          var firstname = $("#firstname").val();
-          var bday = $("#DOB").val();
-          var age = calculateAge(bday);
-          var address = $("#address").val();
-          storage(email, password, lastname, firstname, age, address);
-        });
-      //display all users
 
-        $.ajax({
-          type: "GET",
-          url: App.api + "view",
-          dataType: "json",
-          success: function(response){
-            if(response.status=='success'){
-             localStorage.setItem("allUser", JSON.stringify(response.html));
+
+      var resultList =[];
+      $.ajax({
+        type: "GET",
+        url: App.api + "view",
+        dataType: "json",
+        success: function(response){
+          if(response.status=='success'){
+            console.log(response.html);
+            $.each(response.html, function (index, item) {
+              console.log(item);
+             var html ={
+               id: item.id,
+               email: item.email,
+               lastname: item.lastname,
+               firstname:item.firstname,
+               age: item.age,
+               address: item.address
+             }
+             console.log(html);
+             resultList.push(html)  
              
+           });
+           console.log(resultList);
+           var templateData = {
+            users: resultList
+          }
+          console.log(templateData);
+          App.target.html("").append($.Mustache.render('admin',templateData));
+          //addnewuser
+            $("#modalInsert").on("click", function (e) {
+              e.preventDefault();
+              if (isEmpty($("#email").val())) {
+                alert("Email is required");
+                $("#email").focus();
+                return;
+              }
+              if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($("#email").val())) {
+                alert("You have entered an invalid email address!");
+                return;
+              }
+              if (isEmpty($("#password").val())) {
+                alert("Password is required");
+                return;
+              } else if (!isNumeric($("#password").val()) ||!isAlpha($("#password").val())) {
+                alert("Password must be alphanumeric");
+                return;
+              } else if ($("#password2").val() != $("#password").val()) {
+                alert("password does not match!");
+                return;
+              }
+              if (isEmpty($("#firstname").val())) {
+                alert("Firstname is required");
+                return;
+              }
+              if (isEmpty($("#lastname").val())) {
+                alert("Lastname is required");
+                return;
+              }
+      
+              if (isEmpty($("#DOB").val())) {
+                alert("Birthdate is required");
+                return;
+              }
+              if (isEmpty($("#address").val())) {
+                alert("address is required");
+                return;
+              }
+              var email = $("#email").val();
+              var password = $("#password").val();
+              var lastname = $("#lastname").val();
+              var firstname = $("#firstname").val();
+              var bday = $("#DOB").val();
+              var age = calculateAge(bday);
+              var address = $("#address").val();
+              storage(email, password, lastname, firstname, age, address);
+            });
+            //display all users
+            $(document).on('click','#btnDelete',function(){
+              var DeleteID = $(this).attr('data-id2');
+              $(document).on("click",'#modalDelete',function(){
+                $.ajax({
+                  type: "POST",
+                  url: App.api + "delete",
+                  data:{del_Id:DeleteID},
+                }).then(
+                  function (response) {
+                    alert(response);
+                    $.ajax({
+                      type: "GET",
+                      url: App.api + "view",
+                      dataType: "json",
+                      success: function(response){
+                        if(response.status=='success'){
+                        localStorage.setItem("allUser", JSON.stringify(response.html));
+                        window.location.reload();
+                        }
+                      }
+                    });
+                  },
+                  function () {
+                    alert("There was some error!");
+                  }
+                );
+              });
+            });
+            $("#editForm").on("submit",function(e){
+              e.preventDefault();
+              var updateId = $('#edit_ID').val();
+              var updateEmail = $('#edit_email').val();
+              var updatePassword = $('#edit_password').val();
+              var updatePassword2 = $('#edit_password2').val();
+              var updateLastname = $('#edit_lastname').val();
+              var updateFirstname = $('#edit_firstname').val();
+              var updateAge = $('#edit_DOB').val();
+              var updateAddress = $('#edit_address').val();
+              if (isEmpty(updatePassword)) {
+                alert("Password is required");
+                  return;
+              } else if (!isNumeric(updatePassword) ||!isAlpha(updatePassword)) {
+                  alert("Password must be alphanumeric");
+                  return;
+                } else if (updatePassword2 != updatePassword) {
+                  alert("password does not match!");
+                  return;
+                }
+                if (isEmpty(updateFirstname)) {
+                  alert("Firstname is required");
+                  return;
+                }
+                if (isEmpty(updateLastname)) {
+                  alert("Lastname is required");
+                  return;
+                }
+        
+                if (isEmpty(updateAge)) {
+                  alert("Birthdate is required");
+                  return;
+                }
+                if (isEmpty(updateAddress)) {
+                  alert("address is required");
+                  return;
+                }
+
+              $.ajax({
+                type: "POST",
+                url: App.api + "update",
+                dataType: "json",
+                data:{U_Id:updateId,U_Email:updateEmail,U_Password:updatePassword,U_Lastname:updateLastname,U_Firstname:updateFirstname,U_Age:updateAge,U_Address:updateAddress},
+                success:function(data){
+                  if(parseInt(data.success)===1){
+                    alert("Successfully updated");
+                    window.location.reload();
+                  }
+                  else{
+                    alert("failed to update");
+                  }
+                }
+              });
+            }); 
+            $(document).on('click','#btnEdit',function(){
+              var ID = $(this).attr('data-id');
+              $.ajax({
+                url: App.api + "getData", //"api/getData",
+                type: "POST",
+                data: {userID:ID},
+                dataType: "JSON",
+                success:function(data){
+                  console.log(data);
+                  $("#edit_ID").val(data.id);
+                  $("#edit_email").val(data.email);
+                  $("#edit_password").val(data.password);
+                  $("#edit_password2").val(data.password);
+                  $("#edit_lastname").val(data.lastname);
+                  $("#edit_firstname").val(data.firstname);
+                  $("#edit_age").val(data.age);
+                  $("#edit_address").val(data.address);
+                }
+              });
+            });
+            if (localStorage.getItem("currentAdmin") != null) {
+              $(".currentlogin").removeAttr("hidden");
+              $(".notLogin").attr("hidden", true);
             }
           }
-        });
-
-        $(document).on('click','#btnDelete',function(){
-          var DeleteID = $(this).attr('data-id2');
-          $(document).on("click",'#modalDelete',function(){
-            $.ajax({
-              type: "POST",
-              url: App.api + "delete",
-              data:{del_Id:DeleteID},
-            }).then(
-              function (response) {
-                alert(response);
-                $.ajax({
-                  type: "GET",
-                  url: App.api + "view",
-                  dataType: "json",
-                  success: function(response){
-                    if(response.status=='success'){
-                     localStorage.setItem("allUser", JSON.stringify(response.html));
-                     window.location.reload();
-                    }
-                  }
-                });
-              },
-              function () {
-                alert("There was some error!");
-              }
-            );
-            });
-          });
-
-          // $("#try").on("submit",function (e) {
-          //   e.preventDefault();
-          //   alert("Hello");
-          // });
-          $("#editForm").on("submit",function(e){
-            e.preventDefault();
-        //  $(document).on('click','#modalEdit',function(){
-            var updateId = $('#edit_ID').val();
-            var updateEmail = $('#edit_email').val();
-            var updatePassword = $('#edit_password').val();
-            var updatePassword2 = $('#edit_password2').val();
-            var updateLastname = $('#edit_lastname').val();
-            var updateFirstname = $('#edit_firstname').val();
-            var updateAge = $('#edit_DOB').val();
-            var updateAddress = $('#edit_address').val();
-            if (isEmpty(updatePassword)) {
-              alert("Password is required");
-              return;
-            } else if (
-              !isNumeric(updatePassword) ||
-              !isAlpha(updatePassword)
-            ) {
-              alert("Password must be alphanumeric");
-              return;
-            } else if (updatePassword2 != updatePassword) {
-              alert("password does not match!");
-              return;
-            }
-            if (isEmpty(updateFirstname)) {
-              alert("Firstname is required");
-              return;
-            }
-            if (isEmpty(updateLastname)) {
-              alert("Lastname is required");
-              return;
-            }
-    
-            if (isEmpty(updateAge)) {
-              alert("Birthdate is required");
-              return;
-            }
-            if (isEmpty(updateAddress)) {
-              alert("address is required");
-              return;
-            }
-
-          $.ajax({
-            type: "POST",
-            url: App.api + "update",
-            dataType: "json",
-            data:{U_Id:updateId,U_Email:updateEmail,U_Password:updatePassword,U_Lastname:updateLastname,U_Firstname:updateFirstname,U_Age:updateAge,U_Address:updateAddress},
-            success:function(data){
-              if(parseInt(data.success)===1){
-                alert("Successfully updated");
-                window.location.reload();
-                // $.ajax({
-                //   type: "GET",
-                //   url: App.api + "view",
-                //   dataType: "json",
-                //   success: function(response){
-                //     if(response.status==='success'){
-                //      localStorage.setItem("allUser", JSON.stringify(response.html));
-                //      window.location.reload();
-                //     }
-                //   }
-                // });
-                
-              }
-              else{
-                alert("failed to update");
-              }
-            }
-          });
-        }); 
-        
-
-        $(document).on('click','#btnEdit',function(){
-          var ID = $(this).attr('data-id');
-          $.ajax({
-            url: App.api + "getData", //"api/getData",
-            type: "POST",
-            data: {userID:ID},
-            dataType: "JSON",
-            success:function(data){
-              console.log(data);
-              $("#edit_ID").val(data.id);
-              $("#edit_email").val(data.email);
-              $("#edit_password").val(data.password);
-              $("#edit_password2").val(data.password);
-              $("#edit_lastname").val(data.lastname);
-              $("#edit_firstname").val(data.firstname);
-              $("#edit_age").val(data.age);
-              $("#edit_address").val(data.address);
-
-            }
-          });
-        });
-
-
-      if (localStorage.getItem("currentAdmin") != null) {
-        $(".currentlogin").removeAttr("hidden");
-        $(".notLogin").attr("hidden", true);
-      }
-      // sign out the user
-      $("#btnLogout").click(function () {
-        localStorage.removeItem("currentAdmin");
-        localStorage.removeItem("allUser");
-        window.location.reload();
+        }
       });
+            // sign out the user
+            $("#btnLogout").click(function () {
+              localStorage.removeItem("currentAdmin");
+              localStorage.removeItem("allUser");
+              window.location.replace("#/login");
+              window.location.reload();
+            });
+      
+
     });
     Path.root("#/login");
 

@@ -297,7 +297,6 @@ $(document).ready(function () {
       var allUser = localStorage.getItem("allUser")
       var allUsers = JSON.parse(allUser);
       var resultList =[];
-      console.log(allUsers);
       $.each(allUsers, function (index, item) {
         console.log(item);
         var html ={
@@ -308,14 +307,12 @@ $(document).ready(function () {
           age: item.age,
           address: item.address
         }
-        console.log(html);
         resultList.push(html)
       });
-      console.log(resultList);
+      
       var templateData = {
         users: resultList
       }
-      console.log(templateData);
       App.target.html("").append($.Mustache.render('admin',templateData));
       if( localStorage.getItem("currentAdmin") == null){
         window.location.replace("#/login");
