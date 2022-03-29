@@ -1,3 +1,80 @@
+<script id="test" type="text/html">
+    <div id="auth">
+        <div class="row h-100">
+            <div class="col-lg-5 col-12" style="position: relative;">
+                <img src="../api/uploads/images/faces/penny.jpg" class="w-75" alt="" id="face1">
+                <canvas id="reflay" class="overlay" style="position: absolute; left: 0; right: 0;"></canvas>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="scan-qr" type="text/html">
+    <div id="auth">
+        <div class="row h-100">
+            <div class="col-lg-5 col-12">
+                <div id="auth-left">
+                    <div class="auth-logo">
+                        <p class="h5">System</p>
+                    </div>
+                    <h3 class="auth-title">Qr Code</h3>
+                    <p class="auth-subtitle mb-5">Please scan the qr code.</p>
+
+                    <div class="position-relative shadow-sm">
+                        <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
+                        <canvas id="canvas" hidden style="width: 100%;"></canvas>
+                        <div class="w-100 h-100 btn-scan-qr-container" style="display: none; background: rgba(0, 0, 0, .3); z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+                            <div class="w-100 h-100 d-flex align-items-center justify-content-center ">
+                                <button class="btn-enable-scan-qr btn btn-primary" style="width: 80%;">Scan Qr Code</button>
+                            </div>
+                        </div>
+                        <div id="output" hidden>
+                            <div hidden><b>Data:</b> <span id="outputData"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5 text-lg fs-4">
+                        <p class='text-gray-600'>I don't have Qr Code, <a href="#/signup"
+                                class="font-bold">Signup</a>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 d-none d-lg-block">
+                <div id="auth-right"></div>
+            </div>
+        </div>
+
+        <div id="my_photo_booth" style="display: none;">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Take Snapshot</h5>
+                    <button type="button" class="btn-close" onClick="cancel_preview()" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="my_camera" class="img-fluid"></div>
+                        <div id="result-container" class="position-relative" style="display: none;">
+                            <canvas id="reflay" class="overlay" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></canvas>
+                        </div>
+                        <div id="distance-container" style="display: none;">
+                            <label for="distance">Distance:</label>
+                            <input disabled value="-" id="distance" type="text" class="bold">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <input type=button value="Cancel" onClick="cancel_preview()" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button id="save-photo"  type="button" class="btn btn-primary" onClick="single_photo()">Snap</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div id="pre_take_buttons"></div>
+            <div id="post_take_buttons" style="display:none"></div>
+        </div>
+    </div>
+</script>
+
 <script id="login" type="text/html">
     <div id="auth">
 
@@ -75,8 +152,21 @@
                     <h1 class="auth-title">Sign Up</h1>
                     <p class="auth-subtitle mb-5">Input your data to register to our website.</p>
 
-                    <div id="results" class="" style="display:none">
-                        <!-- Your captured image will appear here... -->
+                    <!-- <div id="results" class="" style="display:none"></div> -->
+
+                    <!-- Carousel wrapper -->
+                    <div id="results" class="carousel slide mb-4" data-bs-ride="carousel" style="display:none">
+                        <div class="carousel-indicators"></div>
+                        <div class="carousel-inner"></div>
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#results" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#results" data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
 
                     <form id="sign_up_form" class="signin-form" autocomplete="off">
@@ -94,7 +184,7 @@
                                         </div>
                                         <div class="modal-footer">
                                         <input type=button value="Cancel" onClick="cancel_preview()" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        <button id="save-photo"  type="button" class="btn btn-primary" onClick="save_photo()" data-bs-dismiss="modal">Save Photo</button>
+                                        <button id="save-photo"  type="button" class="btn btn-primary" onClick="save_photo()">Save Photo</button>
                                         </div>
                                     </div>
                                     </div>
@@ -103,7 +193,7 @@
                                     <div id="pre_take_buttons">
                                         <button id="take-snapshot" type="button" class="btn btn-primary btn-block btn-lg d-flex align-items-start justify-content-center" onClick="preview_snapshot()" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             <i class="bi bi-camera d-block mt-1 mx-2"></i>
-                                            <span class="d-block">Take Snapshot</span>
+                                            <span class="d-block">Take Snapshots</span>
                                         </button>
                                         <!-- <input id="take-snapshot" class="btn btn-primary btn-block btn-lg shadow-lg" type=button value="Take Snapshot" onClick="preview_snapshot()" data-bs-toggle="modal" data-bs-target="#exampleModal"> -->
                                     </div>
@@ -114,10 +204,12 @@
                             </div>
                         </div>
 
+                        <div class="form-group position-relative snapshots-container"></div>
+
                         <div class="text-danger mb-4 error-input-field" data-validation-id="input-photo"></div>
 
                         <div class="form-group position-relative has-icon-left mb-4">
-                            <input id="full-name" type="text" class="form-control form-control-xl" placeholder="Fullname" autocomplete="off" role="presentation">
+                            <input id="full-name" type="text" class="form-control form-control-xl" placeholder="Fullname" autocomplete="off" role="presentation" required>
                             <label for="full-name" class="text-sm form-label">Fullname</label>
                             <div class="form-control-icon">
                                 <i class="bi bi-person"></i>
@@ -208,68 +300,6 @@
         </div>
 
     </div>
-  <!-- <section class="login-container d-flex align-items-center justify-content-center text-white" style="background-image:url(../../../day-1/images/login.jpg); background-repeat: no-repeat; background-size: cover;">
-      <div class="container">
-          <div class="row justify-content-center">
-              <div class="col-md-6 text-center mb-5">
-                  <h2 class="heading-section">Blog Site</h2>
-              </div>
-          </div>
-          <div class="row justify-content-center">
-              <div class="col-md-6 col-lg-4">
-                  <div class="login-wrap p-0">
-                      <h3 class="mb-4 text-center">Create an account</h3>
-                      <form id="sign_up_form" class="signin-form">
-                          <div class="form-group my-2">
-                              <input id="full-name" type="text" class="form-control" placeholder="Fullname" required>
-                          </div>
-                          <div class="form-group my-2">
-                              <input id="user-name" type="text" class="form-control" placeholder="Username" required>
-                          </div>
-                          <div class="form-group my-2">
-                              <input id="email-address" type="email" class="form-control" placeholder="Email Address" required>
-                          </div>
-                          <div class="form-group my-2">
-                              <input id="address" type="text" class="form-control" placeholder="Address" required>
-                          </div>
-                          <div class="form-group my-2">
-                              <input id="birth-date" type="date" class="form-control" placeholder="Birthdate"
-                                  required>
-                          </div>
-                          <div class="form-group my-2">
-                              <input id="contact-number" type="text" name="tel" class="tel form-control" placeholder="Contact No."
-                                  required>
-                          </div>
-                          <div class="form-group my-2">
-                              <input id="password-field" type="password" class="form-control" placeholder="Password"
-                                  required>
-                              <span toggle="#password-field"
-                                  class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                          </div>
-                          <div class="form-group my-2">
-                              <input id="confirm-password-field" type="password" class="form-control"
-                                  placeholder="Re-type Password" required>
-                              <span toggle="#password-field"
-                                  class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                          </div>
-                          <div class="form-group my-2">
-                              <button type="submit" id="signup-btn" class="form-control btn btn-primary submit px-3">Submit</button>
-                          </div>
-                          <div class="form-group d-md-flex my-2">
-                              <div class="w-100">
-                                  <a href="#" class="w-100" style="color: #fff">
-                                      <p class="text-center">
-                                          <a href="#/login" class="text-white">Already have an account?</a>
-                                      </p>
-                                  </a>
-                              </div>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section> -->
 </script>
 
 <script id="profile" type="text/template">
@@ -584,7 +614,7 @@
                                         <div class="card-header">
                                             <div class="d-block d-sm-flex d-md-block d-xxl-flex align-items-center">
                                                 <div class="flex-shrink-0">
-                                                    <img id="profile-picture" src="{{ photo }}" class="d-block img-thumbnail img-fluid rounded-circle profile-picture" alt="profile picture">
+                                                    <img id="profile-picture" src="../api/uploads/images/{{ id }}/{{ name}} 1.png" class="d-block img-thumbnail img-fluid rounded-circle profile-picture" alt="profile picture">
                                                 </div>
                                                 <div class="mt-2 mt-sm-0 mt-md-2 mx-3 flex-grow-1">
                                                     <div class="d-flex align-items-start justify-content-between">
@@ -612,7 +642,7 @@
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <div class="qr-code-container bg-white d-flex flex-column align-items-center justify-content-center py-5" style="position: relative; margin-top: 80px;">
-                                                                    <img id="qr-profile-picture" src="{{ photo }}" class="d-block img-fluid shadow-sm" width="70" height="80" alt="profile picture">
+                                                                    <img id="qr-profile-picture" src="../api/uploads/images/{{ id }}/{{ name}} 1.png" class="d-block img-fluid shadow-sm" width="70" height="80" alt="profile picture">
                                                                     <div id="qrcode" class="mt-5"></div>
                                                                     <div class="mt-3 text-center">
                                                                         <h3 class="mb-3">{{ name }}</h3>

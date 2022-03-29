@@ -73,6 +73,14 @@
     background: #d6dae0;
 }
 
+#canvas {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    /* Safari and Chrome */
+    -moz-transform: rotateY(180deg);
+    /* Firefox */
+}
+
 @media screen and (max-width:767px) {
     #auth #auth-left {
         padding: 5rem

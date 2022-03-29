@@ -24,7 +24,7 @@
   }
 
   //insert data
-  function insertUser($id, $name, $uname, $email, $address, $bday, $contact, $password, $img){
+  function insertUser($id, $name, $uname, $email, $address, $bday, $contact, $password){
     $person = ORM::for_table('users')->create();
     $person->set('userID', $id);
     $person->set('fullname', $name);
@@ -34,7 +34,6 @@
     $person->set('birthday', $bday);
     $person->set('contact', $contact);
     $person->set('password', $password);
-    $person->set('profileImg', $img);
     $person->save();
     return $id;
   }

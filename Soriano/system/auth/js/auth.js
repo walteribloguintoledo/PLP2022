@@ -5,6 +5,7 @@ $(document).ready(function () {
         "home": "#/home",
         "login": "#/login",
         "profile": "#/profile",
+        "scan": "#/scan-qr",
     };
 
     function resetErrorMessages() {
@@ -77,7 +78,157 @@ $(document).ready(function () {
         return false;
     }
 
+    function webcamJs() {
+        $('#exampleModal').modal('show');
+
+        preview_snapshot();
+
+        var div = $("<div id='block' class='d-flex align-items-center justify-content-center' style='z-index: 10000; background-color: rgb(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; right: 0; bottom: 0;'>"
+            + "<h4 class='text-white'>Getting Ready <span></span></h4>"
+            + "</div>");
+        $('body').append(div);
+
+        var counter = 3;
+        var counterIntervalId = setInterval(function () {
+            $("#block h4 span").empty();
+            $("#block h4 span").append(counter);
+
+            counter--;
+        }, 1000);
+
+        setTimeout(function () {
+            $("#block").remove();
+            clearInterval(counterIntervalId);
+        }, 3000);
+
+        Webcam.set({
+            // live preview size
+            width: 470,
+            height: 400,
+
+            // device capture size
+            dest_width: 320,
+            dest_height: 240,
+
+            // final cropped size
+            crop_width: 320,
+            crop_height: 240,
+
+            // format and quality
+            image_format: 'jpeg',
+            jpeg_quality: 100,
+
+            // flip horizontal (mirror mode)
+            flip_horiz: true
+        });
+
+        Webcam.attach('#my_camera');
+    }
+
     $.Mustache.load("templates.html").done(function () {
+        Path.map("#/scan-qr").to(function () {
+            localStorage.removeItem("user");
+
+            $("#target").html("").append($.Mustache.render("scan-qr"));
+
+            var video = document.createElement("video");
+            var canvasElement = document.getElementById("canvas");
+            var canvas = canvasElement.getContext("2d");
+            var loadingMessage = document.getElementById("loadingMessage");
+            var outputContainer = document.getElementById("output");
+            // var outputMessage = document.getElementById("outputMessage");
+            var outputData = document.getElementById("outputData");
+            var isPaused = false;
+
+            function drawLine(begin, end, color) {
+                canvas.beginPath();
+                canvas.moveTo(begin.x, begin.y);
+                canvas.lineTo(end.x, end.y);
+                canvas.lineWidth = 4;
+                canvas.strokeStyle = color;
+                canvas.stroke();
+            }
+
+            // Use facingMode: environment to attemt to get the front camera on phones
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
+                video.srcObject = stream;
+                video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+                video.play();
+
+                requestAnimationFrame(tick);
+            });
+
+            function tick() {
+                loadingMessage.innerText = "⌛ Loading video...";
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    loadingMessage.hidden = true;
+                    canvasElement.hidden = false;
+                    // outputContainer.hidden = false;
+
+                    canvasElement.height = video.videoHeight;
+                    canvasElement.width = video.videoWidth;
+                    canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                    var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                    var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+
+                    if (code) {
+                        drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+                        drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+                        drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+                        drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+                        // outputMessage.hidden = true;
+                        outputData.parentElement.hidden = false;
+                        // outputData.innerText = code.data;
+
+                        if (isPaused === false) {
+                            $.ajax({
+                                type: "POST",
+                                url: "../api/scan-qr",
+                                dataType: "json",
+                                data: {
+                                    "id": code.data,
+                                },
+                                success: function (data) {
+                                    // video.pause();
+                                    video.srcObject.getTracks().forEach(function (track) {
+                                        track.stop();
+                                    });
+
+                                    isPaused = true;
+
+                                    $(".btn-scan-qr-container").show();
+
+                                    if (!data.verified && data.error) {
+                                        $('.alert-container').show();
+                                        $('.alert span').html(data.message);
+
+                                        return console.log(data.message);
+                                    }
+
+                                    webcamJs();
+                                    localStorage.setItem('user', JSON.stringify(data.result));
+                                }
+                            });
+                        }
+                    } else {
+                        // outputMessage.hidden = false;
+                        outputData.parentElement.hidden = true;
+                    }
+                }
+                
+                if (! isPaused) {
+                    requestAnimationFrame(tick);
+                }
+            }
+
+            $(".btn-enable-scan-qr").click(function () {
+                // isPaused = false;
+                location.reload();
+            });
+        });
+
         Path.map("#/login").to(function () {
             var currentUser = JSON.parse(localStorage.getItem('user'));
 
@@ -131,15 +282,19 @@ $(document).ready(function () {
             $("#sign_up_form").on('submit', function (event) {
                 event.preventDefault();
 
-                var photo = $("#input-photo");
+                var required = 5, snapshotElems = $(".snapshot"), input = $('<input/>');
+                var snapshots = snapshotElems.length;
 
-                if (photo.length === 0) {
-                    var input = $('<input/>');
-                    input.attr('id', 'input-photo');
-                    input.attr('placeholder', 'Snapshot');
-                    input.attr('value', '');
+                input.attr('id', 'input-photo');
+                input.attr('value', '');
 
-                    if (checkifEmpty(input) !== false) return;
+                if (snapshots > 0 && snapshots <= 4) {
+                    var remaining = required - snapshots;
+
+                    input.attr('placeholder', integerToWords(remaining) + ' (' + remaining + ')'
+                        + (remaining < required ? ' more' : '') + (remaining === 1 ? ' snapshot is' : ' snapshots are') + ' required.');
+
+                    return displayFieldErrorMessage(input, '');
                 }
 
                 if (checkifEmpty(fullName) !== false) return;
@@ -156,8 +311,14 @@ $(document).ready(function () {
 
                 if (checkPassword(password, passwordConfirm) !== false) return;
 
+                var photos = {};
+
+                snapshotElems.each(function (i, obj) {
+                    photos[fullName.val() + " " + (i + 1)] = obj.attributes.value.value;
+                });
+
                 var user = {
-                    "photo": photo.val(),
+                    "photos": photos,
                     "name": fullName.val(),
                     "username": userName.val(),
                     "email": email.val(),
@@ -178,12 +339,12 @@ $(document).ready(function () {
                             return alert(data.message);
                         }
 
-                        user["id"] = data.user_id;
-                        delete user["password"];
-                        localStorage.setItem('user', JSON.stringify(user));
-                        window.location.href = paths.profile;
+                        // user["id"] = data.user_id;
+                        // delete user["password"];
+                        // localStorage.setItem('user', JSON.stringify(user));
+                        window.location.href = paths.scan;
                     }
-                })
+                });
             });
 
             $('.modal').on('hidden.bs.modal', function () {
@@ -212,7 +373,7 @@ $(document).ready(function () {
                 Webcam.set({
                     // live preview size
                     width: 470,
-                    height: 440,
+                    height: 400,
 
                     // device capture size
                     dest_width: 320,
@@ -261,7 +422,7 @@ $(document).ready(function () {
                     xhr.onload = function () {
                         var a = document.createElement('a');
                         a.href = window.URL.createObjectURL(xhr.response);
-                        a.download = currentUser.name+'.png';
+                        a.download = currentUser.name + '.png';
                         a.style.display = 'none';
                         document.body.appendChild(a);
                         a.click();
@@ -272,7 +433,7 @@ $(document).ready(function () {
 
                 });
 
-                setTimeout(function(){
+                setTimeout(function () {
                     $("#qr-download-btn").show();
                 }, 1000);
             });
@@ -498,6 +659,94 @@ $(document).ready(function () {
 
                 Webcam.attach('#my_camera');
             });
+        });
+
+        Path.map("#/test").to(function () {
+            var currentUser = JSON.parse(localStorage.getItem('user'));
+
+            $("#target").html("").append($.Mustache.render("test"));
+
+            // const threshold = 0.6;
+            // let descriptors = { desc1: null, desc2: null };
+
+            // const MODEL_URL = 'js/weights' //model directory
+
+            // faceapi.loadSsdMobilenetv1Model(MODEL_URL)
+            // faceapi.loadFaceRecognitionModel(MODEL_URL) //model to Recognise Face
+
+            // function set(which, uri) {
+            //     const input = faceapi.fetchImage(uri);
+            //     descriptors[`desc${which}`] = faceapi.computeFaceDescriptor(input);
+            // }
+
+            // set(1, document.getElementById('face1'));
+            // set(2, document.getElementById('face2'));
+
+            // const distance = faceapi.utils.round(
+            //     faceapi.euclideanDistance(descriptors.desc1, descriptors.desc2)
+            // )
+
+            async function face() {
+
+                const MODEL_URL = 'js/weights'
+
+                await faceapi.loadSsdMobilenetv1Model(MODEL_URL)
+                await faceapi.loadFaceLandmarkModel(MODEL_URL) // model to detect face landmark
+                await faceapi.loadFaceRecognitionModel(MODEL_URL) //model to Recognise Face
+                // await faceapi.loadFaceExpressionModel(MODEL_URL) //model to detect face expression
+
+                const img = document.getElementById('face1')
+                let faceDescriptions = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors()
+                // .withFaceExpressions()
+                const canvas = $('#reflay').get(0)
+                faceapi.matchDimensions(canvas, img)
+
+                faceDescriptions = faceapi.resizeResults(faceDescriptions, img)
+                faceapi.draw.drawDetections(canvas, faceDescriptions)
+                faceapi.draw.drawFaceLandmarks(canvas, faceDescriptions)
+                // faceapi.draw.drawFaceExpressions(canvas, faceDescriptions)
+
+                var labels = [];
+
+                for (let i = 1; i <= 5; i++) {
+                    labels.push(`${currentUser.name} ${i}`);
+                }
+
+                const labeledFaceDescriptors = await Promise.all(
+                    labels.map(async label => {
+
+                        const ext = ".png";
+                        const dir = `../api/uploads/images/${currentUser.id}/`;
+                        const imgUrl = `${dir}${label}${ext}`
+                        const img = await faceapi.fetchImage(imgUrl)
+                        console.log(imgUrl);
+                        const faceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+
+                        if (!faceDescription) {
+                            throw new Error(`no faces detected for ${label}`)
+                        }
+
+                        const faceDescriptors = [faceDescription.descriptor]
+                        return new faceapi.LabeledFaceDescriptors(label, faceDescriptors)
+                    })
+                );
+
+                const threshold = 0.6
+                const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, threshold)
+
+                const results = faceDescriptions.map(fd => faceMatcher.findBestMatch(fd.descriptor))
+
+                console.log(results);
+
+                results.forEach((bestMatch, i) => {
+                    const box = faceDescriptions[i].detection.box
+                    const text = bestMatch.toString()
+                    const drawBox = new faceapi.draw.DrawBox(box, { label: text })
+                    drawBox.draw(canvas)
+                })
+            }
+
+            face();
         });
 
         Path.root("#/");

@@ -55,7 +55,7 @@ function retrieve($username)
     return $person;
 }
 
-function create($name, $username, $email, $address, $birthDate, $contactNumber, $password, $photo)
+function create($name, $username, $email, $address, $birthDate, $contactNumber, $password)
 {
     $person = ORM::for_table('users')->create();
     $person->set('name', $name);
@@ -65,7 +65,6 @@ function create($name, $username, $email, $address, $birthDate, $contactNumber, 
     $person->set('birth_date', $birthDate);
     $person->set('contact_number', $contactNumber);
     $person->set('password', encrpyt($password));
-    $person->set('photo', $photo);
     $person->save();
 
     return $person;

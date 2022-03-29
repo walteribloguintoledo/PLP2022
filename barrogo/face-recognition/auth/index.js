@@ -1,210 +1,211 @@
-// const imageUpload = document.getElementById("imageUpload");
-
-// Promise.all([
-//   faceapi.nets.faceRecognitionNet.loadFromUri("models"),
-//   faceapi.nets.faceLandmark68Net.loadFromUri("models"),
-//   faceapi.nets.ssdMobilenetv1.loadFromUri("models"),
-// ]).then(start);
-
-// async function start() {
-//   const container = document.createElement("div");
-//   container.style.position = "relative";
-//   document.body.append(container);
-//   const labeledFaceDescriptors = await loadLabeledImages();
-//   const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
-//   let image;
-//   let canvas;
-//   document.body.append("Loaded");
-//   imageUpload.addEventListener("change", async () => {
-//     if (image) image.remove();
-//     if (canvas) canvas.remove();
-//     image = await faceapi.bufferToImage(imageUpload.files[0]);
-//     container.append(image);
-//     canvas = faceapi.createCanvasFromMedia(image);
-//     container.append(canvas);
-//     const displaySize = { width: image.width, height: image.height };
-//     faceapi.matchDimensions(canvas, displaySize);
-//     const detections = await faceapi
-//       .detectAllFaces(image)
-//       .withFaceLandmarks()
-//       .withFaceDescriptors();
-//     const resizedDetections = faceapi.resizeResults(detections, displaySize);
-//     const results = resizedDetections.map((d) =>
-//       faceMatcher.findBestMatch(d.descriptor)
-//     );
-//     results.forEach((result, i) => {
-//       const box = resizedDetections[i].detection.box;
-//       const drawBox = new faceapi.draw.DrawBox(box, {
-//         label: result.toString(),
-//       });
-//       drawBox.draw(canvas);
-//     });
-//   });
-// }
-
-// function loadLabeledImages() {
-//   const labels = [
-//     "Black Widow",
-//     "Captain America",
-//     "Captain Marvel",
-//     "Hawkeye",
-//     "Jim Rhodes",
-//     "Thor",
-//     "Tony Stark",
-//   ];
-//   return Promise.all(
-//     labels.map(async (label) => {
-//       const descriptions = [];
-//       for (let i = 1; i <= 2; i++) {
-//         const img = await faceapi.fetchImage(
-//           `https://raw.githubusercontent.com/WebDevSimplified/Face-Recognition-JavaScript/master/labeled_images/${label}/${i}.jpg`
-//         );
-//         const detections = await faceapi
-//           .detectSingleFace(img)
-//           .withFaceLandmarks()
-//           .withFaceDescriptor();
-//         descriptions.push(detections.descriptor);
-//       }
-
-//       return new faceapi.LabeledFaceDescriptors(label, descriptions);
-//     })
-//   );
-// }
-
-// const compareBtn = document.querySelector("#compareBtn");
-// const snapshotBtn = document.querySelector("#snapshotBtn");
-// const snapshot = document.querySelector("#results");
-
-// // Configure a few settings and attach camera
-// Webcam.set({
-//   width: 640,
-//   height: 480,
-//   dest_width: 640,
-//   dest_height: 480,
-//   image_format: "jpeg",
-//   jpeg_quality: 90,
-// });
-// Webcam.attach("#my_camera");
-
-// if (snapshotBtn) {
-//   //Code to handle taking the snapshot and displaying it locally
-//   snapshotBtn.addEventListener("click", () => {
-//     // take snapshot and get image data
-//     Webcam.snap((data_uri) => {
-//       // display results in page
-//       document.querySelector("#my_camera video").remove();
-//       const img = document.createElement("img");
-//       img.src = data_uri;
-//       document.querySelector("#my_camera").append(img);
-//       //document.querySelector("#img").src = data_uri;
-//       compareBtn.style.display = "block";
-//     });
-//   });
-// }
-
-// function start() {
-//   if (compareBtn) {
-//     compareBtn.addEventListener("click", async () => {
-//       const image = await faceapi.bufferToImage(snapshot);
-//       const canvas = faceapi.createCanvasFromMedia(image);
-//       document.body.append(canvas);
-//       const displaySize = { width: image.width, height: image.height };
-//       faceapi.matchDimensions(canvas, displaySize);
-//       const detections = await faceapi
-//         .detectAllFaces(image)
-//         .withFaceLandmarks()
-//         .withFaceDescriptors();
-//       const resizedDetections = faceapi.resizeResults(detections, displaySize);
-//       resizedDetections.forEach((detection) => {
-//         const box = detection.detection.box;
-//         const drawBox = new faceapi.draw.drawDetections(box, { label: "Face" });
-//         drawBox.draw(canvas);
-//       });
-//     });
-//   }
-// }
-
 $(document).ready(function () {
   $.Mustache.options.warnOnMissingTemplates = true;
 
   $.Mustache.load("app/template/template.html").done(function () {
+    // login page
     Path.map("#/login").to(function () {
       $("#target").html("").append($.Mustache.render("login"));
+      checkUserLogs();
+      $("#scanQR").click(function () {
+        $("#preview").show();
+        let scanner = new Instascan.Scanner({
+          video: document.getElementById("preview"),
+        });
+        Instascan.Camera.getCameras()
+          .then((cameras) => {
+            scanner.camera = cameras[cameras.length - 1];
+            scanner.start();
+          })
+          .catch((e) => console.error(e));
+        scanner.addListener("scan", (content) => {
+          $.ajax({
+            type: "POST",
+            url: "api/login",
+            dataType: "json",
+            data: { userID: content },
+          }).done(function (data) {
+            if (parseInt(data.verified) === 0) {
+              Swal.fire({
+                icon: "error",
+                title: "Invalid",
+                text: "No User Found.",
+              });
+            } else {
+              localStorage.setItem("userLogs", JSON.stringify(data.info));
+              window.location.href = "#/result";
+            }
+          });
+        });
+      });
     });
 
+    // face recognition
+    Path.map("#/result").to(function () {
+      $("#target").html("").append($.Mustache.render("result"));
+      checkUserLogs();
+
+      $(document).ready(function () {
+        Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri("models"),
+          faceapi.nets.faceLandmark68Net.loadFromUri("models"),
+          faceapi.nets.faceRecognitionNet.loadFromUri("models"),
+          faceapi.nets.ssdMobilenetv1.loadFromUri("models"),
+        ]).then(startVideo);
+
+        function startVideo() {
+          navigator.getUserMedia(
+            { video: {} },
+            (stream) => (video.srcObject = stream),
+            (err) => console.error(err)
+          );
+        }
+
+        $("#video").on("playing", function () {
+          const canvas = faceapi.createCanvasFromMedia(video);
+          $(canvas).attr("style", "position:absolute");
+          $("#videoContainer").append(canvas);
+          const displaySize = { width: video.width, height: video.height };
+          faceapi.matchDimensions(canvas, displaySize);
+          setInterval(async () => {
+            const detections = await faceapi
+              .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+              .withFaceLandmarks();
+            const resizedDetections = faceapi.resizeResults(
+              detections,
+              displaySize
+            );
+            canvas
+              .getContext("2d")
+              .clearRect(0, 0, canvas.width, canvas.height);
+            faceapi.draw.drawDetections(canvas, resizedDetections);
+          }, 100);
+        });
+
+        function loadImages() {
+          let userLogs = localStorage.getItem("userLogs");
+          userLogs = JSON.parse(userLogs);
+          const userIDFolder = [userLogs[0]];
+
+          return Promise.all(
+            userIDFolder.map(async (id) => {
+              const descriptions = [];
+              for (let i = 1; i <= 5; i++) {
+                const img = faceapi.fetchImage(
+                  `./api/uploads/images/${id}/${id}${i}.jpg`
+                );
+                const detections = faceapi
+                  .detectSingleFace(img)
+                  .withFaceLandmarks()
+                  .withFaceDescriptor();
+                descriptions.push(detections.descriptor);
+              }
+              return new faceapi.LabeledFaceDescriptors(id, descriptions);
+            })
+          );
+        }
+      });
+    });
+
+    // register page
     Path.map("#/register").to(function () {
       $("#target").html("").append($.Mustache.render("register"));
       checkUserID();
+
       // set webcam
       Webcam.set({
         width: 320,
         height: 240,
         image_format: "jpeg",
         jpeg_quality: 90,
-        flip_horiz: true,
       });
+      Webcam.attach("#my_camera");
 
-      // take photo
-      $("#snapshotBtn").click(function () {
-        Webcam.attach("#my_camera");
-        Webcam.unfreeze();
-        $("#my_camera").show();
-        $(this).removeClass("btn btn-outline-primary d-grid w-100");
-        $(this).hide();
-        $("#cameraBtns").show();
-        $("#cameraBtns").addClass("d-flex justify-content-evenly mt-4");
-        $("#takeImg").show();
-        $("#cancelBtn").removeClass("btn-sm");
-      });
-
+      // container for images
+      const imgSrc = [];
       // take snapshot
-      $("#takeImg").click(function () {
+      $("#snapshotBtn").click(function () {
         Webcam.freeze();
+        $(this).removeClass("btn btn-primary d-grid w-100");
         $(this).hide();
-        $("#saveBtn").show();
-        $("#retakeBtn").show();
-        $("#cancelBtn").addClass("btn-sm");
+        $("#resetBtn").removeClass("btn btn-outline-dark d-grid w-100");
+        $("#resetBtn").hide();
+        $("#cameraBtns").show();
+        $("#cameraBtns").addClass("d-flex flex-column");
       });
 
       // retake shot
       $("#retakeBtn").click(function () {
         Webcam.unfreeze();
-        $("#saveBtn").hide();
-        $(this).hide();
-        $("#takeImg").show();
-        $("#cancelBtn").removeClass("btn-sm");
+        $("#cameraBtns").removeClass("d-flex flex-column");
+        $("#cameraBtns").hide();
+        $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
+        $("#snapshotBtn").show();
+        $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+        $("#resetBtn").show();
       });
 
       // save image
       $("#saveBtn").click(function () {
-        $("#my_camera").hide();
-
         Webcam.snap((data_uri) => {
-          $("#profileImg").val(data_uri);
-          $("#resultImg img").attr("src", data_uri);
-          $("#resultImg").show();
+          if ($("#img1").attr("src") == "./app/img/gray-bg.jpg") {
+            $("#img1").attr("src", data_uri);
+            $("#cameraBtns").removeClass("d-flex flex-column");
+            $("#cameraBtns").hide();
+            $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
+            $("#snapshotBtn").show();
+            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").show();
+          } else if ($("#img2").attr("src") == "./app/img/gray-bg.jpg") {
+            $("#img2").attr("src", data_uri);
+            $("#cameraBtns").removeClass("d-flex flex-column");
+            $("#cameraBtns").hide();
+            $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
+            $("#snapshotBtn").show();
+            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").show();
+          } else if ($("#img3").attr("src") == "./app/img/gray-bg.jpg") {
+            $("#img3").attr("src", data_uri);
+            $("#cameraBtns").removeClass("d-flex flex-column");
+            $("#cameraBtns").hide();
+            $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
+            $("#snapshotBtn").show();
+            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").show();
+          } else if ($("#img4").attr("src") == "./app/img/gray-bg.jpg") {
+            $("#img4").attr("src", data_uri);
+            $("#cameraBtns").removeClass("d-flex flex-column");
+            $("#cameraBtns").hide();
+            $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
+            $("#snapshotBtn").show();
+            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").show();
+          } else {
+            $("#img5").attr("src", data_uri);
+            imgSrc[0] = $("#img1").attr("src");
+            imgSrc[1] = $("#img2").attr("src");
+            imgSrc[2] = $("#img3").attr("src");
+            imgSrc[3] = $("#img4").attr("src");
+            imgSrc[4] = $("#img5").attr("src");
+            $("#cameraBtns").removeClass("d-flex flex-column");
+            $("#cameraBtns").hide();
+            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").show();
+          }
         });
-        $("#cameraBtns").removeClass("d-flex justify-content-evenly mt-4");
-        $("#cameraBtns").hide();
-        $(this).hide();
-        $("#retakeBtn").hide();
-        $("#cancelBtn").hide();
       });
 
-      // cancel button
-      $("#cancelBtn").click(function () {
-        Webcam.unfreeze();
-        $("#my_camera").hide();
-        $("#cameraBtns").removeClass("d-flex justify-content-evenly mt-4");
-        $("#cameraBtns").hide();
-        $("#saveBtn").hide();
-        $("#retakeBtn").hide();
-        $("#snapshotBtn").addClass("btn btn-outline-primary d-grid w-100");
+      // reset images
+      $("#resetBtn").click(function () {
+        $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
         $("#snapshotBtn").show();
+        $("#img1").attr("src", "./app/img/gray-bg.jpg");
+        $("#img2").attr("src", "./app/img/gray-bg.jpg");
+        $("#img3").attr("src", "./app/img/gray-bg.jpg");
+        $("#img4").attr("src", "./app/img/gray-bg.jpg");
+        $("#img5").attr("src", "./app/img/gray-bg.jpg");
       });
 
       // declaring variables
-      var profileImg = $("#profileImg");
       var fullName = $("#fullName");
       var userName = $("#userName");
       var email = $("#email");
@@ -229,7 +230,7 @@ $(document).ready(function () {
       // form submit
       $("#registerForm").submit(function (e) {
         e.preventDefault();
-        if (profileImg.val() == "") {
+        if (imgSrc.length !== 5) {
           Swal.fire({
             icon: "error",
             title: "Invalid",
@@ -284,12 +285,16 @@ $(document).ready(function () {
           $("#confirmPasswordFeedback").text("Password does not match.");
         } else {
           removeValidation();
+          var currentYear = new Date();
           $.ajax({
             type: "POST",
             url: "api/signup",
             dataType: "json",
             data: {
-              userID: Math.random().toString(36).slice(-5),
+              userID:
+                currentYear.getFullYear().toString().slice(-2) +
+                "-" +
+                Math.random().toString(36).slice(-5).toLocaleUpperCase(),
               fullName: fullName.val(),
               username: userName.val(),
               email: email.val(),
@@ -297,7 +302,7 @@ $(document).ready(function () {
               birthday: bDay.val(),
               contact: contact.val(),
               password: pass.val(),
-              profileImg: profileImg.val(),
+              profileImg: imgSrc,
             },
           }).done(function (data) {
             if (parseInt(data.verified) === 1) {
@@ -321,6 +326,7 @@ $(document).ready(function () {
       });
     });
 
+    // qr code result
     Path.map("#/qr").to(function () {
       $("#target").html("").append($.Mustache.render("qr"));
       checkUserID();
@@ -379,5 +385,17 @@ function checkUserID() {
     window.location.href = "#/qr";
   } else {
     window.location.href = "#/register";
+  }
+}
+
+// check if the user is logged in
+function checkUserLogs() {
+  let userLogs = localStorage.getItem("userLogs");
+  userLogs = JSON.parse(userLogs);
+
+  if (userLogs !== null) {
+    window.location.href = "#/result";
+  } else {
+    window.location.href = "#/login";
   }
 }
