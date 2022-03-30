@@ -30,7 +30,7 @@ $app->post('/scan-qr', function () {
 
     $response = array(
         "verified" => $appVariables->verified,
-        "error" => $appVariables->error, 
+        "error" => $appVariables->error,
         "message" => $appVariables->message,
         "result" => $result,
     );
@@ -43,7 +43,7 @@ $app->post('/update/:id', function ($id) {
 
     $result = update($id, $_POST['name'], $_POST['address'], $_POST['birth_date'], $_POST['contact_number']);
 
-    if (! $result) {
+    if (!$result) {
         $appVariables->verified = 1;
         $appVariables->error = 0;
         $appVariables->message = "Updated Successfuly";
@@ -53,7 +53,7 @@ $app->post('/update/:id', function ($id) {
 
     $response = array(
         "verified" => $appVariables->verified,
-        "error" => $appVariables->error, 
+        "error" => $appVariables->error,
         "message" => $appVariables->message,
     );
 
@@ -85,7 +85,7 @@ $app->post('/login', function () {
 
     $response = array(
         "verified" => $appVariables->verified,
-        "error" => $appVariables->error, 
+        "error" => $appVariables->error,
         "message" => $appVariables->message,
         "result" => $result,
     );
@@ -105,12 +105,12 @@ $app->post('/signup', function () {
     } else {
         $person = create($_POST['name'], $username, $email, $_POST['address'], $_POST['birth_date'], $_POST['contact_number'], $_POST['password']);
 
-        $dir = 'uploads/images/'.$person->id();
+        $dir = 'uploads/images/' . $person->id();
 
         mkdir($dir);
 
-        foreach($_POST["photos"] as $name => $photo) {
-            file_put_contents($dir.'/'.$name.'.png', file_get_contents($photo));
+        foreach ($_POST["photos"] as $name => $photo) {
+            file_put_contents($dir . '/' . $name . '.png', file_get_contents($photo));
         }
 
         $appVariables->verified = 1;
@@ -121,10 +121,62 @@ $app->post('/signup', function () {
 
     $response = array(
         "verified" => $appVariables->verified,
-        "error" => $appVariables->error, 
+        "error" => $appVariables->error,
         "message" => $appVariables->message,
         "user_id" => $appVariables->user_id,
     );
+
+    echo json_encode($response);
+});
+
+$app->post('/attendance', function () {
+    $timezone = new DateTime("now", new DateTimeZone('Asia/Manila'));
+    $currentDate = $timezone->format('Y-m-d');
+    $currentTime = $timezone->format('h:i:s');
+    $timeRange = [
+        'time_in' => strtotime('9:15:00'),
+        'time_out' => strtotime('6:00:00')
+    ];
+    $userId = $_POST['id'];
+    $response = [];
+
+    $result = ORM::for_table('attendances')->where('user_id', $userId)->where('date', $currentDate)->find_one();
+
+    if (!$result) {
+        $attendance = ORM::for_table('attendances')->create();
+
+        $attendance->time_in = $currentTime;
+        $attendance->date = $currentDate;
+        $attendance->user_id = $userId;
+        $attendance->remarks = strtotime($currentTime) < $timeRange["time_in"] ? "Late Time-In" : null;
+
+        $attendance->save();
+
+        $response = array(
+            "message" => "Time-In successful for ".$currentDate.".",
+            "Time In" => $attendance->time_in,
+            "remarks" => $attendance->remarks
+        );
+    } else if ($result->time_out) {
+        $response = array(
+            "message" => "You already have an attendance for ".$currentDate.".",
+            "Time In" => $result->time_in,
+            "Time Out" => $result->time_out,
+            "remarks" => $result->remarks
+        );
+    } else {
+        $result->time_out = $currentTime;
+        $remarks = "Early Time-Out";
+        $result->remarks = strtotime($currentTime) < $timeRange["time_out"] ? $result->remarks . ", " . $remarks : null;
+
+        $result->save();
+
+        $response = array(
+            "message" => "Time-Out successful for ".$currentDate.".",
+            "Time Out" => $result->time_out,
+            "remarks" => $remarks
+        );
+    }
 
     echo json_encode($response);
 });

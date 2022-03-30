@@ -217,11 +217,112 @@ $(document).ready(function () {
                         outputData.parentElement.hidden = true;
                     }
                 }
-                
-                if (! isPaused) {
+
+                if (!isPaused) {
                     requestAnimationFrame(tick);
                 }
             }
+
+            async function single_photo() {
+                Webcam.snap(function (data_uri) {
+                    //close web camera
+                    Webcam.unfreeze();
+
+                    if ($('#my_camera').children().length > 0) {
+                        Webcam.reset();
+                    }
+
+                    $('#my_camera').empty();
+                    $('#my_camera').hide();
+
+                    $('#result-container').show();
+                    $('#result-container').prepend('<img id="result" src="' + data_uri + '" class="w-100" style="height: 400px"/>');
+                });
+
+                var currentUser = JSON.parse(localStorage.getItem('user'));
+
+                async function face() {
+
+                    const MODEL_URL = 'js/weights'
+
+                    await faceapi.loadSsdMobilenetv1Model(MODEL_URL)
+                    await faceapi.loadFaceLandmarkModel(MODEL_URL) // model to detect face landmark
+                    await faceapi.loadFaceRecognitionModel(MODEL_URL) //model to Recognise Face
+
+                    const img = document.getElementById('result')
+                    let faceDescriptions = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                    // .withFaceExpressions()
+                    if (!faceDescriptions) if (!alert('No face detected!')) { window.location.reload(); }
+
+                    const canvas = $('#reflay').get(0)
+                    faceapi.matchDimensions(canvas, img)
+
+                    faceDescriptions = faceapi.resizeResults(faceDescriptions, img)
+                    faceapi.draw.drawDetections(canvas, faceDescriptions)
+
+                    var labels = []
+
+                    for (let i = 1; i <= 5; i++) {
+                        labels.push(`${currentUser.name} ${i}`);
+                    }
+
+                    const labeledFaceDescriptors = await Promise.all(
+                        labels.map(async label => {
+
+                            const ext = ".png";
+                            const dir = `../api/uploads/images/${currentUser.id}/`;
+                            const imgUrl = `${dir}${label}${ext}`
+                            const img = await faceapi.fetchImage(imgUrl)
+                            const faceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+
+                            if (!faceDescription) {
+                                throw new Error(`no faces detected for ${label}`)
+                            }
+
+                            const faceDescriptors = [faceDescription.descriptor]
+                            return new faceapi.LabeledFaceDescriptors(label, faceDescriptors)
+                        })
+                    );
+
+                    const threshold = 0.6
+                    const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, threshold)
+
+                    const result = faceMatcher.findBestMatch(faceDescriptions.descriptor)
+
+                    const box = faceDescriptions.detection.box
+                    const text = result.toString()
+                    const drawBox = new faceapi.draw.DrawBox(box, { label: text })
+                    drawBox.draw(canvas)
+
+                    return result
+                }
+
+                return face()
+            }
+
+            $("#save-photo").click(function () {
+                single_photo().then(function (result) {
+                    if (!result || result._label === 'unknown') return
+
+                    var currentUser = JSON.parse(localStorage.getItem('user'));
+
+                    $.ajax({
+                        type: "POST",
+                        url: "../api/attendance",
+                        dataType: "json",
+                        data: {
+                            "id": currentUser.id
+                        },
+                        success: function (data) {
+                            // if (!data.verified && data.error) {
+                            // return displayAlertMessage(data.message);
+                            // }
+
+                            console.log(data);
+                        }
+                    });
+                })
+            })
 
             $(".btn-enable-scan-qr").click(function () {
                 // isPaused = false;
@@ -666,87 +767,45 @@ $(document).ready(function () {
 
             $("#target").html("").append($.Mustache.render("test"));
 
-            // const threshold = 0.6;
-            // let descriptors = { desc1: null, desc2: null };
+            const video = document.getElementById('video')
+            const MODEL_URL = 'js/weights'
 
-            // const MODEL_URL = 'js/weights' //model directory
+            Promise.all([
+                faceapi.loadFaceLandmarkModel(MODEL_URL),
+                faceapi.loadFaceRecognitionModel(MODEL_URL),
+                faceapi.loadFaceExpressionModel(MODEL_URL),
+                faceapi.loadTinyFaceDetectorModel(MODEL_URL)
+            ]).then(startVideo);
 
-            // faceapi.loadSsdMobilenetv1Model(MODEL_URL)
-            // faceapi.loadFaceRecognitionModel(MODEL_URL) //model to Recognise Face
-
-            // function set(which, uri) {
-            //     const input = faceapi.fetchImage(uri);
-            //     descriptors[`desc${which}`] = faceapi.computeFaceDescriptor(input);
-            // }
-
-            // set(1, document.getElementById('face1'));
-            // set(2, document.getElementById('face2'));
-
-            // const distance = faceapi.utils.round(
-            //     faceapi.euclideanDistance(descriptors.desc1, descriptors.desc2)
-            // )
-
-            async function face() {
-
-                const MODEL_URL = 'js/weights'
-
-                await faceapi.loadSsdMobilenetv1Model(MODEL_URL)
-                await faceapi.loadFaceLandmarkModel(MODEL_URL) // model to detect face landmark
-                await faceapi.loadFaceRecognitionModel(MODEL_URL) //model to Recognise Face
-                // await faceapi.loadFaceExpressionModel(MODEL_URL) //model to detect face expression
-
-                const img = document.getElementById('face1')
-                let faceDescriptions = await faceapi.detectAllFaces(img).withFaceLandmarks().withFaceDescriptors()
-                // .withFaceExpressions()
-                const canvas = $('#reflay').get(0)
-                faceapi.matchDimensions(canvas, img)
-
-                faceDescriptions = faceapi.resizeResults(faceDescriptions, img)
-                faceapi.draw.drawDetections(canvas, faceDescriptions)
-                faceapi.draw.drawFaceLandmarks(canvas, faceDescriptions)
-                // faceapi.draw.drawFaceExpressions(canvas, faceDescriptions)
-
-                var labels = [];
-
-                for (let i = 1; i <= 5; i++) {
-                    labels.push(`${currentUser.name} ${i}`);
-                }
-
-                const labeledFaceDescriptors = await Promise.all(
-                    labels.map(async label => {
-
-                        const ext = ".png";
-                        const dir = `../api/uploads/images/${currentUser.id}/`;
-                        const imgUrl = `${dir}${label}${ext}`
-                        const img = await faceapi.fetchImage(imgUrl)
-                        console.log(imgUrl);
-                        const faceDescription = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-
-                        if (!faceDescription) {
-                            throw new Error(`no faces detected for ${label}`)
-                        }
-
-                        const faceDescriptors = [faceDescription.descriptor]
-                        return new faceapi.LabeledFaceDescriptors(label, faceDescriptors)
-                    })
-                );
-
-                const threshold = 0.6
-                const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, threshold)
-
-                const results = faceDescriptions.map(fd => faceMatcher.findBestMatch(fd.descriptor))
-
-                console.log(results);
-
-                results.forEach((bestMatch, i) => {
-                    const box = faceDescriptions[i].detection.box
-                    const text = bestMatch.toString()
-                    const drawBox = new faceapi.draw.DrawBox(box, { label: text })
-                    drawBox.draw(canvas)
-                })
+            function startVideo() {
+                navigator.getUserMedia(
+                    { video: {} },
+                    stream => video.srcObject = stream,
+                    err => console.log(err)
+                )
             }
 
-            face();
+            video.addEventListener('play', () => {
+                const canvas = faceapi.createCanvasFromMedia(video)
+                document.getElementById('video-container').append(canvas)
+                $("#video-container canvas").attr('style', 'position: absolute; top: 0; bottom: 0; left: 0')
+                const displaySize = { width: video.width, height: video.height }
+                faceapi.matchDimensions(canvas, displaySize)
+                let detections = null;
+
+                setInterval(async () => {
+                    detections = await faceapi.detectSingleFace(video,
+                        new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
+
+                    if (!detections) return
+
+                    const resizedDetections = faceapi.resizeResults(detections, displaySize)
+                    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+
+                    faceapi.draw.drawDetections(canvas, resizedDetections)
+
+                }, 100)
+            })
         });
 
         Path.root("#/");

@@ -1,9 +1,8 @@
 <script id="test" type="text/html">
     <div id="auth">
         <div class="row h-100">
-            <div class="col-lg-5 col-12" style="position: relative;">
-                <img src="../api/uploads/images/faces/penny.jpg" class="w-75" alt="" id="face1">
-                <canvas id="reflay" class="overlay" style="position: absolute; left: 0; right: 0;"></canvas>
+            <div class="col-12 position-relative" id="video-container">
+                <video id="video" width="720" height="560" autoplay muted></video>
             </div>
         </div>
     </div>
@@ -64,7 +63,7 @@
                     </div>
                     <div class="modal-footer">
                     <input type=button value="Cancel" onClick="cancel_preview()" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <button id="save-photo"  type="button" class="btn btn-primary" onClick="single_photo()">Snap</button>
+                    <button id="save-photo" type="button" class="btn btn-primary">Snap</button>
                     </div>
                 </div>
                 </div>
