@@ -27,6 +27,23 @@
     }
   });
 
+  $app->post('/timeIn',function() {
+    if(isset($_POST['fetchID'])){
+      $user_id = $_POST['fetchID'];
+      $remarks = $_POST['remarks'];
+      $verified = 0;
+  
+      // insert data
+      attendance($user_id, $remarks);
+      $verified = 1;
+      $response = array(
+        "verified" => $verified
+      );
+
+      echo json_encode($response);
+    }
+  });
+
   $app->post('/signup',function() {
     if(isset($_POST['fullName'])){
       $user_id = $_POST['userID'];

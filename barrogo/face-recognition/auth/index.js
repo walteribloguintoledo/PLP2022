@@ -10,6 +10,7 @@ $(document).ready(function () {
         $("#preview").show();
         let scanner = new Instascan.Scanner({
           video: document.getElementById("preview"),
+          mirror: false,
         });
         Instascan.Camera.getCameras()
           .then((cameras) => {
@@ -31,6 +32,7 @@ $(document).ready(function () {
                 text: "No User Found.",
               });
             } else {
+              scanner.stop();
               localStorage.setItem("userLogs", JSON.stringify(data.info));
               window.location.href = "#/result";
             }
@@ -52,35 +54,79 @@ $(document).ready(function () {
           faceapi.nets.ssdMobilenetv1.loadFromUri("models"),
         ]).then(startVideo);
 
+        var vid;
         function startVideo() {
           navigator.getUserMedia(
             { video: {} },
-            (stream) => (video.srcObject = stream),
+
+            (stream) => {
+              video.srcObject = stream;
+              vid = stream.getTracks()[0];
+              $("#video").get(0).play();
+            },
             (err) => console.error(err)
           );
         }
 
-        $("#video").on("playing", function () {
-          const canvas = faceapi.createCanvasFromMedia(video);
-          $(canvas).attr("style", "position:absolute");
-          $("#videoContainer").append(canvas);
+        $("#video").on("playing", async function () {
+          const labeledFaceDescriptors = await loadImages();
+          const faceMatcher = new faceapi.FaceMatcher(
+            labeledFaceDescriptors,
+            0.6
+          );
           const displaySize = { width: video.width, height: video.height };
-          faceapi.matchDimensions(canvas, displaySize);
-          setInterval(async () => {
-            const detections = await faceapi
-              .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
-              .withFaceLandmarks();
-            const resizedDetections = faceapi.resizeResults(
-              detections,
+          let ctr = 0;
+          var playing = setInterval(async () => {
+            const detection = await faceapi
+              .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+              .withFaceLandmarks()
+              .withFaceDescriptor();
+            if (!detection) {
+              throw new Error(`no faces detected`);
+            }
+            const resizedDetection = faceapi.resizeResults(
+              detection,
               displaySize
             );
-            canvas
-              .getContext("2d")
-              .clearRect(0, 0, canvas.width, canvas.height);
-            faceapi.draw.drawDetections(canvas, resizedDetections);
+            const results = faceMatcher.findBestMatch(
+              resizedDetection.descriptor
+            );
+            if (results.label === "unknown") {
+              Swal.fire({
+                icon: "error",
+                title: "Invalid",
+                text: "Please try again.",
+              });
+            } else {
+              ++ctr;
+              if (ctr === 1) {
+                clearInterval(playing);
+                navigator.getUserMedia(
+                  { video: {} },
+
+                  () => {
+                    vid.stop();
+                  },
+                  (err) => console.error(err)
+                );
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Thank you",
+                  showConfirmButton: false,
+                  timer: 1500,
+                });
+                check_remarks(results);
+                localStorage.removeItem("userLogs");
+                setTimeout(() => {
+                  window.location.href = "#/login";
+                }, 1500);
+              }
+            }
           }, 100);
         });
 
+        // load all images
         function loadImages() {
           let userLogs = localStorage.getItem("userLogs");
           userLogs = JSON.parse(userLogs);
@@ -90,18 +136,50 @@ $(document).ready(function () {
             userIDFolder.map(async (id) => {
               const descriptions = [];
               for (let i = 1; i <= 5; i++) {
-                const img = faceapi.fetchImage(
+                const img = await faceapi.fetchImage(
                   `./api/uploads/images/${id}/${id}${i}.jpg`
                 );
-                const detections = faceapi
+                const detections = await faceapi
                   .detectSingleFace(img)
                   .withFaceLandmarks()
                   .withFaceDescriptor();
+                if (!img) {
+                  console.log(`no faces detected for ${id}`);
+                }
                 descriptions.push(detections.descriptor);
               }
               return new faceapi.LabeledFaceDescriptors(id, descriptions);
             })
           );
+        }
+
+        // check time
+        function check_remarks(result) {
+          const date = new Date();
+
+          if (date.getHours() == 9 && date.getMinutes > 15) {
+            const remarks = "Late";
+            time_in(remarks, result);
+          } else if (date.getHours() > 15) {
+            const remarks = "Late";
+            time_in(remarks, result);
+          } else {
+            const remarks = "On Time";
+            time_in(remarks, result);
+          }
+        }
+
+        // insert time and remarks to db
+        function time_in(remark, result) {
+          $.ajax({
+            type: "POST",
+            url: "api/timeIn",
+            dataType: "json",
+            data: {
+              fetchID: result.label,
+              remarks: remark,
+            },
+          });
         }
       });
     });
@@ -115,6 +193,8 @@ $(document).ready(function () {
       Webcam.set({
         width: 320,
         height: 240,
+        dest_width: 640,
+        dest_height: 480,
         image_format: "jpeg",
         jpeg_quality: 90,
       });
