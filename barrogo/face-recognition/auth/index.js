@@ -82,45 +82,52 @@ $(document).ready(function () {
               .withFaceLandmarks()
               .withFaceDescriptor();
             if (!detection) {
-              throw new Error(`no faces detected`);
-            }
-            const resizedDetection = faceapi.resizeResults(
-              detection,
-              displaySize
-            );
-            const results = faceMatcher.findBestMatch(
-              resizedDetection.descriptor
-            );
-            if (results.label === "unknown") {
-              Swal.fire({
-                icon: "error",
-                title: "Invalid",
-                text: "Please try again.",
-              });
-            } else {
               ++ctr;
-              if (ctr === 1) {
+              if (ctr == 1) {
                 clearInterval(playing);
-                navigator.getUserMedia(
-                  { video: {} },
-
-                  () => {
-                    vid.stop();
-                  },
-                  (err) => console.error(err)
-                );
                 Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "Thank you",
-                  showConfirmButton: false,
-                  timer: 1500,
+                  icon: "error",
+                  title: "Invalid",
+                  text: "No Faces Detected. Please try again.",
+                }).then(() => {
+                  window.location.reload();
                 });
-                check_remarks(results);
-                localStorage.removeItem("userLogs");
-                setTimeout(() => {
-                  window.location.href = "#/login";
-                }, 1500);
+                throw new Error(`no faces detected`);
+              }
+            } else {
+              const resizedDetection = faceapi.resizeResults(
+                detection,
+                displaySize
+              );
+              const results = faceMatcher.findBestMatch(
+                resizedDetection.descriptor
+              );
+              if (results.label === "unknown") {
+                ++ctr;
+                if (ctr === 1) {
+                  clearInterval(playing);
+                  Swal.fire({
+                    icon: "error",
+                    title: "Invalid",
+                    text: "Please try again.",
+                  }).then(() => {
+                    window.location.reload();
+                  });
+                }
+              } else {
+                ++ctr;
+                if (ctr === 1) {
+                  clearInterval(playing);
+                  navigator.getUserMedia(
+                    { video: {} },
+
+                    () => {
+                      vid.stop();
+                    },
+                    (err) => console.error(err)
+                  );
+                  time_in(results);
+                }
               }
             }
           }, 100);
@@ -153,32 +160,46 @@ $(document).ready(function () {
           );
         }
 
-        // check time
-        function check_remarks(result) {
-          const date = new Date();
-
-          if (date.getHours() == 9 && date.getMinutes > 15) {
-            const remarks = "Late";
-            time_in(remarks, result);
-          } else if (date.getHours() > 15) {
-            const remarks = "Late";
-            time_in(remarks, result);
-          } else {
-            const remarks = "On Time";
-            time_in(remarks, result);
-          }
-        }
-
         // insert time and remarks to db
-        function time_in(remark, result) {
+        function time_in(result) {
           $.ajax({
             type: "POST",
-            url: "api/timeIn",
+            url: "api/attendance",
             dataType: "json",
             data: {
               fetchID: result.label,
-              remarks: remark,
             },
+          }).done(function (data) {
+            if (data.timeIn == 1 && data.timeOut == 1) {
+              Swal.fire({
+                icon: "error",
+                title: "Invalid",
+                text: "You time in and time out already",
+              }).then(() => {
+                localStorage.removeItem("userLogs");
+                window.location.href = "#/login";
+              });
+            } else {
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Thank you",
+                html:
+                  "Time: " +
+                  data.data[0] +
+                  "<br>" +
+                  "Date: " +
+                  data.data[1] +
+                  "<br>" +
+                  "Remarks: " +
+                  data.data[2],
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(() => {
+                localStorage.removeItem("userLogs");
+                window.location.href = "#/login";
+              });
+            }
           });
         }
       });
@@ -385,14 +406,7 @@ $(document).ready(function () {
               profileImg: imgSrc,
             },
           }).done(function (data) {
-            if (parseInt(data.verified) === 1) {
-              localStorage.setItem("userID", JSON.stringify(data.id));
-              localStorage.setItem(
-                "userFullName",
-                JSON.stringify(fullName.val())
-              );
-              window.location.href = "#/qr";
-            } else if (data.user == 1) {
+            if (data.user == 1) {
               removeValidation();
               userName.addClass("is-invalid");
               $("#unameFeedback").text("Username already exists.");
@@ -400,6 +414,13 @@ $(document).ready(function () {
               removeValidation();
               email.addClass("is-invalid");
               $("#emailFeedback").text("Email address already exists.");
+            } else {
+              localStorage.setItem("userID", JSON.stringify(data.id));
+              localStorage.setItem(
+                "userFullName",
+                JSON.stringify(fullName.val())
+              );
+              window.location.href = "#/qr";
             }
           });
         }

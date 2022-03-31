@@ -27,19 +27,48 @@
     }
   });
 
-  $app->post('/timeIn',function() {
+  $app->post('/attendance',function() {
     if(isset($_POST['fetchID'])){
       $user_id = $_POST['fetchID'];
-      $remarks = $_POST['remarks'];
+      date_default_timezone_set("Asia/Manila"); 
+      $time = date('H:i:s a');
+      $date = date("Y-m-d");
+      if(date("H") == 9 && date('i') > 15){
+        $remarks = "Late";
+      }else if(date("H") > 9){
+        $remarks = "Late";
+      }else{
+        $remarks = "On Time";
+      }
       $verified = 0;
-  
-      // insert data
-      attendance($user_id, $remarks);
-      $verified = 1;
-      $response = array(
-        "verified" => $verified
-      );
+      //check if the user already time in
+      $time_in_already = checkTimeIn($user_id, $date);
+      $time_out_already = checkTimeOut($user_id, $date);
 
+      if($time_in_already == 0 && $time_out_already == 0){
+        // time in
+        $data = time_in($user_id, $time, $date, $remarks);
+        $verified = 1;
+        $response = array(
+          "data" => $data,
+          "verified" => $verified
+        );
+      }else if($time_in_already == 1 && $time_out_already == 0){
+        // time out
+        $data = time_out($user_id, $time, $date);
+        $verified = 1;
+        $response = array(
+          "data" => $data,
+          "timeIn" => $time_in_already,
+          "verified" => $verified
+        );
+      } else{
+        $response = array(
+          "timeOut" => $time_out_already,
+          "timeIn" => $time_in_already,
+          "verified" => $verified
+        );
+      }
       echo json_encode($response);
     }
   });
