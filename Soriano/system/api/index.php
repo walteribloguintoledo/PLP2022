@@ -132,49 +132,45 @@ $app->post('/signup', function () {
 $app->post('/attendance', function () {
     $timezone = new DateTime("now", new DateTimeZone('Asia/Manila'));
     $currentDate = $timezone->format('Y-m-d');
-    $currentTime = $timezone->format('h:i:s');
+    $currentTime = $timezone->format('h:i:s A');
     $timeRange = [
-        'time_in' => strtotime('9:15:00'),
-        'time_out' => strtotime('6:00:00')
+        'time_in' => strtotime('9:15 AM'),
+        'time_out' => strtotime('6:00 PM')
     ];
     $userId = $_POST['id'];
     $response = [];
 
     $result = ORM::for_table('attendances')->where('user_id', $userId)->where('date', $currentDate)->find_one();
 
-    if (!$result) {
+    if (is_bool($result)) {
         $attendance = ORM::for_table('attendances')->create();
 
         $attendance->time_in = $currentTime;
         $attendance->date = $currentDate;
         $attendance->user_id = $userId;
-        $attendance->remarks = strtotime($currentTime) < $timeRange["time_in"] ? "Late Time-In" : null;
+        $attendance->remarks = strtotime($currentTime) > $timeRange["time_in"] ? "Late Time-In" : (strtotime($currentTime) == $timeRange["time_in"] ? "On-Time" : null);
 
         $attendance->save();
 
         $response = array(
-            "message" => "Time-In successful for ".$currentDate.".",
-            "Time In" => $attendance->time_in,
-            "remarks" => $attendance->remarks
+            "alert" => "success",
+            "message" => "Time-In successful for ".$timezone->format('F d, Y h:i:s A').". ".($attendance->remarks ? "(".$attendance->remarks.")" : ""),
         );
     } else if ($result->time_out) {
         $response = array(
-            "message" => "You already have an attendance for ".$currentDate.".",
-            "Time In" => $result->time_in,
-            "Time Out" => $result->time_out,
-            "remarks" => $result->remarks
+            "alert" => "info",
+            "message" => "You already have an attendance for ".$timezone->format('F d, Y').".",
         );
     } else {
         $result->time_out = $currentTime;
         $remarks = "Early Time-Out";
-        $result->remarks = strtotime($currentTime) < $timeRange["time_out"] ? $result->remarks . ", " . $remarks : null;
+        $result->remarks = strtotime($currentTime) < $timeRange["time_out"] ? ($result->remarks ? $result->remarks . ", " . $remarks : $remarks) : null;
 
         $result->save();
 
         $response = array(
-            "message" => "Time-Out successful for ".$currentDate.".",
-            "Time Out" => $result->time_out,
-            "remarks" => $remarks
+            "alert" => "success",
+            "message" => "Time-Out successful for ".$currentDate.". ".($result->remarks ? "(".$remarks.")" : ""),
         );
     }
 

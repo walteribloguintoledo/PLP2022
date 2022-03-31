@@ -52,6 +52,11 @@
                     <button type="button" class="btn-close" onClick="cancel_preview()" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="alert-container alert-snapshot-container p-2" style="display: none;">
+                            <div class="alert alert-dismissible show fade">
+                                <span style="font-size: 13px;"></span>
+                            </div>
+                        </div>
                         <div id="my_camera" class="img-fluid"></div>
                         <div id="result-container" class="position-relative" style="display: none;">
                             <canvas id="reflay" class="overlay" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"></canvas>

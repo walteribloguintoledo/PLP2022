@@ -192,9 +192,9 @@ $(document).ready(function () {
                                 },
                                 success: function (data) {
                                     // video.pause();
-                                    video.srcObject.getTracks().forEach(function (track) {
-                                        track.stop();
-                                    });
+                                    // video.srcObject.getTracks().forEach(function (track) {
+                                    //     track.stop();
+                                    // });
 
                                     isPaused = true;
 
@@ -284,7 +284,7 @@ $(document).ready(function () {
                         })
                     );
 
-                    const threshold = 0.6
+                    const threshold = 0.3
                     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, threshold)
 
                     const result = faceMatcher.findBestMatch(faceDescriptions.descriptor)
@@ -293,6 +293,8 @@ $(document).ready(function () {
                     const text = result.toString()
                     const drawBox = new faceapi.draw.DrawBox(box, { label: text })
                     drawBox.draw(canvas)
+
+                    console.log(result)
 
                     return result
                 }
@@ -314,19 +316,27 @@ $(document).ready(function () {
                             "id": currentUser.id
                         },
                         success: function (data) {
-                            // if (!data.verified && data.error) {
-                            // return displayAlertMessage(data.message);
-                            // }
+                            $(".alert-snapshot-container").show()
+                            $(".alert-snapshot-container .alert").addClass("alert-"+data.alert)
+                            $(".alert-snapshot-container .alert span").empty()
+                            $(".alert-snapshot-container .alert span").append(data.message)
 
-                            console.log(data);
+                            console.log(data)
                         }
                     });
                 })
             })
 
             $(".btn-enable-scan-qr").click(function () {
-                // isPaused = false;
-                location.reload();
+                video.play()
+                isPaused = false
+
+                setTimeout(function() {
+                    requestAnimationFrame(tick)
+                }, 1000)
+
+                $(".btn-scan-qr-container").hide()
+                // window.location.reload()
             });
         });
 
