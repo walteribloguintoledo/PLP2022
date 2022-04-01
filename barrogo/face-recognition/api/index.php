@@ -43,14 +43,18 @@
       $verified = 0;
       //check if the user already time in
       $time_in_already = checkTimeIn($user_id, $date);
+      //check if the user already time out
       $time_out_already = checkTimeOut($user_id, $date);
-
+      // get last attendance
+      $last_attendance = last_attendance($user_id);
+      
       if($time_in_already == 0 && $time_out_already == 0){
         // time in
         $data = time_in($user_id, $time, $date, $remarks);
         $verified = 1;
         $response = array(
           "data" => $data,
+          "lastLog" => $last_attendance,
           "verified" => $verified
         );
       }else if($time_in_already == 1 && $time_out_already == 0){

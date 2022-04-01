@@ -180,25 +180,121 @@ $(document).ready(function () {
                 window.location.href = "#/login";
               });
             } else {
-              Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Thank you",
-                html:
-                  "Time: " +
-                  data.data[0] +
-                  "<br>" +
-                  "Date: " +
-                  data.data[1] +
-                  "<br>" +
-                  "Remarks: " +
-                  data.data[2],
-                showConfirmButton: false,
-                timer: 1500,
-              }).then(() => {
-                localStorage.removeItem("userLogs");
-                window.location.href = "#/login";
-              });
+              if (data.lastLog !== undefined) {
+                if (data.lastLog !== 0) {
+                  if (data.lastLog[2] !== null) {
+                    Swal.fire({
+                      position: "center",
+                      icon: "success",
+                      title: "Thank you",
+                      html:
+                        "YOUR LAST ATTENDANCE" +
+                        "<br>" +
+                        "Time in: " +
+                        data.lastLog[1] +
+                        "<br>" +
+                        "Time out: " +
+                        data.lastLog[2] +
+                        "<br>" +
+                        "Date: " +
+                        data.lastLog[3] +
+                        "<br>" +
+                        "Remarks: " +
+                        data.lastLog[4] +
+                        "<br>" +
+                        "<br>" +
+                        "YOUR ATTENDANCE TODAY" +
+                        "<br>" +
+                        "Time: " +
+                        data.data[0] +
+                        "<br>" +
+                        "Date: " +
+                        data.data[1] +
+                        "<br>" +
+                        "Remarks: " +
+                        data.data[2],
+                      showConfirmButton: true,
+                    }).then(() => {
+                      localStorage.removeItem("userLogs");
+                      window.location.href = "#/login";
+                    });
+                  } else {
+                    Swal.fire({
+                      position: "center",
+                      icon: "success",
+                      title: "Thank you",
+                      html:
+                        "YOUR LAST ATTENDANCE" +
+                        "<br>" +
+                        "Time in: " +
+                        data.lastLog[1] +
+                        "<br>" +
+                        "Time out: " +
+                        "N/A" +
+                        "<br>" +
+                        "Date: " +
+                        data.lastLog[3] +
+                        "<br>" +
+                        "Remarks: " +
+                        data.lastLog[4] +
+                        "<br>" +
+                        "<br>" +
+                        "YOUR ATTENDANCE TODAY" +
+                        "<br>" +
+                        "Time: " +
+                        data.data[0] +
+                        "<br>" +
+                        "Date: " +
+                        data.data[1] +
+                        "<br>" +
+                        "Remarks: " +
+                        data.data[2],
+                      showConfirmButton: true,
+                    }).then(() => {
+                      localStorage.removeItem("userLogs");
+                      window.location.href = "#/login";
+                    });
+                  }
+                } else {
+                  Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Thank you",
+                    html:
+                      "Time in: " +
+                      data.data[0] +
+                      "<br>" +
+                      "Date: " +
+                      data.data[1] +
+                      "<br>" +
+                      "Remarks: " +
+                      data.data[2],
+                    showConfirmButton: true,
+                  }).then(() => {
+                    localStorage.removeItem("userLogs");
+                    window.location.href = "#/login";
+                  });
+                }
+              } else {
+                Swal.fire({
+                  position: "center",
+                  icon: "success",
+                  title: "Thank you",
+                  html:
+                    "Time out: " +
+                    data.data[0] +
+                    "<br>" +
+                    "Date: " +
+                    data.data[1] +
+                    "<br>" +
+                    "Remarks: " +
+                    data.data[2],
+                  showConfirmButton: true,
+                }).then(() => {
+                  localStorage.removeItem("userLogs");
+                  window.location.href = "#/login";
+                });
+              }
             }
           });
         }

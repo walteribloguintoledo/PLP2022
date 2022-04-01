@@ -23,6 +23,22 @@
     }
   }
 
+  // get last attendance
+  function last_attendance($id){
+    $query = ORM::for_table('attendance')->where('userID', $id)->order_by_desc('id')->find_one();
+
+    if($query){
+      if($query->timeOut == null){
+        return $user_data = array($query->userID, date("h:i:s a", strtotime($query->timeIn)), $query->timeOut, date("F d, Y", strtotime($query->date)), $query->remarks);
+      }else{
+        return $user_data = array($query->userID, date("h:i:s a", strtotime($query->timeIn)), date("h:i:s a", strtotime($query->timeOut)), date("F d, Y", strtotime($query->date)), $query->remarks);
+      }
+    } else {
+      return 0;
+    }
+
+  }
+
 
   // time in
   function time_in($id, $time, $date, $remarks){
@@ -32,7 +48,7 @@
     $person->set('date', $date);
     $person->set('remarks', $remarks);
     $person->save();
-    return $user_data = array($time, date("F d, Y", strtotime($date)), $remarks);
+    return $user_data = array(date("h:i:s a", strtotime($person->timeIn)), date("F d, Y", strtotime($person->date)), $person->remarks);
   }
 
   // time out
@@ -46,5 +62,5 @@
     }
     $person->remarks = $remarks;
     $person->save();
-    return $user_data = array($time, date("F d, Y", strtotime($date)), $remarks);
+    return $user_data = array(date("h:i:s a", strtotime($person->timeOut)), date("F d, Y", strtotime($person->date)), $person->remarks);
   }
