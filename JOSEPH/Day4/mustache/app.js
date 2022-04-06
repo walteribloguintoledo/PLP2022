@@ -13,22 +13,30 @@ $(document).ready(function () {
             var userInput = JSON.parse(localStorage.getItem('userInput')) ?? new Array();
             console.log(userInput);
 
-            $("#documernt").ready(function () {
+            $(document).ready(function () {
                 $("#login").click(function (e) {
                     e.preventDefault();
 
-                    var currentUser = JSON.parse(localStorage.getItem('currentLogin'));
-                    if (currentUser === null) window.location.replace("#/login");
+                    var currentLogin = JSON.parse(localStorage.getItem('currentLogin'));
+                    if (currentLogin !== null) {
+                        alert("Your already logged in.")
+                        window.location.replace("#/blog");
+                    }
+                    else if (currentLogin === null) window.location.replace("#/login");
                 });
             });
 
-            $("#documernt").ready(function () {
+            $(document).ready(function () {
                 $("#signup").click(function (e) {
                     e.preventDefault();
 
-                    var currentUser = JSON.parse(localStorage.getItem('currentLogin'));
-                    if (currentUser === null) window.location.replace("#/signup");
-                }); 0
+                    var currentLogin = JSON.parse(localStorage.getItem('currentLogin'));
+                    if (currentLogin !== null) {
+                        alert("Your already logged in.")
+                        window.location.replace("#/blog");
+                    }
+                    else if (currentLogin === null) window.location.replace("#/signup");
+                });
             });
         });
 
@@ -158,20 +166,14 @@ $(document).ready(function () {
             var userInput = JSON.parse(localStorage.getItem('userInput')) ?? new Array();
             console.log(userInput);
 
-            var currentUser = JSON.parse(localStorage.getItem('currentLogin'));
-            if (currentUser !== null) {
-                alert("You have already logged in.");
-                window.location.replace("#/blog");
-            }
-
             //save user array
             function registerUser() {
 
                 // display
                 // signup = "First name: " + FirstName.value + "<br>" + "Last Name: " + LastName.value + "<br>" + "Username: " + UserName.value + "<br>" + "Email: " + Email.value + "<br>" + "Password: " + Password.value + "<br>" + "Confirm Password: " + ConfirmPassword.value + "<br>" + "Birthdate: " + Birthdate.value + "<br>" + "Age: " + getAge() + "yrs old" + "<br>" + "Contact: " + Contact.value + "<br>" + "Time and Date: " + timeDate;
 
-                // signup = searchUser();
                 // local storage
+
                 var currentLogin = {
                     firstname: $("#fname").val(),
                     lastname: $("#lname").val(),
@@ -185,10 +187,6 @@ $(document).ready(function () {
                     timendate: timeDate
                 };
 
-                if (localStorage.getItem("currentLogin") != null) {
-                    window.location.replace("#/blog");
-                }
-
                 $.ajax({
                     type: "POST",
                     url: "signup.php",
@@ -198,13 +196,11 @@ $(document).ready(function () {
                     function (response) {
                         if (response.userIsExist) {
                             alert("Please choose another username.");
-                            $("#uname").val('');
                             $("#uname").focus();
                             return;
                         }
                         if (response.emailIsExist) {
                             alert("Please choose another email.");
-                            $("#email").val('');
                             $("#email").focus();
                             return;
                         }
@@ -220,7 +216,6 @@ $(document).ready(function () {
                             console.log("Contact: " + $("#contact").val());
                             console.log("Time and Date: " + timeDate);
 
-                            localStorage.setItem('currentLogin', JSON.stringify(currentLogin));
                             userInput.push(currentLogin);
                             localStorage.setItem('userInput', JSON.stringify(userInput));
                             userInput = JSON.parse(localStorage.getItem('userInput'));
@@ -235,18 +230,11 @@ $(document).ready(function () {
                             $("#birthdate").val('');
                             $("#contact").val('');
                             $("#display").innerHTML = "";
-
                             alert("Successfully Registered!");
                             window.location.replace("#/login");
                         }
                     },
-                    // reject/failure callback
-                    function () {
-                        alert("There was some error!");
-                    }
                 );
-
-                // document.getElementById("display").innerHTML = searchUser();
             }
 
             //search fucntion
@@ -257,74 +245,51 @@ $(document).ready(function () {
                     var username = $("#uname").val();
                     var searchInput = JSON.parse(localStorage.getItem('userInput'));
                     console.log(searchInput);
+                    var counter = 0;
 
                     $.each(searchInput, function (i, item) {
                         if (item.username === username) {
                             var result = "";
-                            var fname = "First name: " + item.firstname + "<br>";
-                            result += fname;
-                            var lname = "Last name: " + item.lastname + "<br>";
-                            result += lname
-                            var uname = "Username: " + item.username + "<br>";
-                            result += uname
-                            var email = "Email: " + item.email + "<br>";
-                            result += email
-                            var password = "Password: " + item.password + "<br>";
-                            result += password
-                            var cpassword = "Confirm Password: " + item.confirm + "<br>";
-                            result += cpassword
-                            var birthday = "Birthdate: " + item.birthdate + "<br>";
-                            result += birthday
-                            var age = "Age: " + item.age + "<br>";
-                            result += age
-                            var contact = "Contact: " + item.contact + "<br>";
-                            result += contact
-                            var timendate = "Time and Date: " + item.timendate + "<br>";
-                            result += timendate
-                            document.getElementById("display").innerHTML = result;
+                            result += "First name: " + item.firstname + "<br>";
+                            result += "Last name: " + item.lastname + "<br>";
+                            result += "Username: " + item.username + "<br>";
+                            result += "Email: " + item.email + "<br>";
+                            result += "Password: " + item.password + "<br>";
+                            result += "Confirm Password: " + item.confirm + "<br>";
+                            result += "Birthdate: " + item.birthdate + "<br>";
+                            result += "Age: " + item.age + "<br>";
+                            result += "Contact: " + item.contact + "<br>";
+                            result += "Time and Date: " + item.timendate + "<br>";
+                            $("#display").append(result);
                             console.log(result);
-                        }
-                        else {
-                            alert("No such username");
+                            counter = 1;
                         }
                     });
+
+                    if (counter == 0) {
+                        alert("No such username.");
+                    }
                 });
             });
-
         });
 
         //login
         Path.map("#/login").to(function () {
             $("#target").html("").append($.Mustache.render("login"));
 
-            var currentUser = JSON.parse(localStorage.getItem('currentLogin'));
-            if (currentUser !== null) {
-                alert("You have already logged in.");
-                window.location.replace("#/blog");
-            }
-
             var userInput = JSON.parse(localStorage.getItem('userInput')) ?? new Array(), userInfo = null;
             console.log(userInput);
-            function checkifEmpty(elem) {
-                if (elem === "") {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
 
             $(document).ready(function () {
                 $("#login").click(function (e) {
                     e.preventDefault();
 
-                    var currentUser = [];
                     var username = $("#username").val();
                     var password = $("#password").val();
                     var currentLogin = {
                         Username: username,
                         Password: password,
                     };
-                    currentUser.push(currentLogin);
                     $.ajax({
                         type: "POST",
                         url: "login.php",
@@ -334,16 +299,14 @@ $(document).ready(function () {
                         function (response) {
                             if (response.isValid) {
                                 alert("Welcome " + response.users["firstname"] + " " + response.users["lastname"]);
-                                currentUser.push(response.Users);
-                                localStorage.setItem("currentLogin", JSON.stringify(currentUser));
+                                localStorage.setItem('currentLogin', JSON.stringify(currentLogin));
                                 window.location.replace("#/blog");
                             } else {
-                                alert("Credentials is incorrect");
+                                alert("Incorrect credentials.");
+                                $("#username").val('');
+                                $("#password").val('');
                             }
                         },
-                        function () {
-                            alert("There was some error!");
-                        }
                     );
                 });
             });
@@ -375,6 +338,7 @@ $(document).ready(function () {
             });
         });
 
+        //users
         Path.map("#/users").to(function () {
             $("#target").html("").append($.Mustache.render("users"));
 
@@ -395,30 +359,20 @@ $(document).ready(function () {
 
             //array of user input
             var userInput = JSON.parse(localStorage.getItem('userInput')) ?? new Array();
-            var userInfo = null;
             console.log(userInput);
-
-            var currentUser = JSON.parse(localStorage.getItem('currentLogin'));
-            if (currentUser !== null) {
-                alert("You have already logged in.");
-                window.location.replace("#/blog");
-            }
 
             //show users
             $.ajax({
                 type: "GET",
                 url: "view.php",
-            }).then(
-                function (response) {
-                    response = $.parseJSON(response);
-                    if (response.status == 'success') {
-                        $('#table').html(response.html);
-                    }
-                },
-                function () {
-                    alert("There was some error!");
+                success: function (data) {
+                    $("#table").html(data);
                 }
-            );
+            });
+
+            // $.getJSON('view.php', dataType = "html", function (data) {
+            //     $("#table").html(data.html);
+            // });
 
             //delete users
             $(document).on('click', '#btnDelete', function () {
@@ -430,12 +384,15 @@ $(document).ready(function () {
                         data: { del_Id: DeleteID },
                     }).then(
                         function (response) {
-                            alert(response);
-                            location.reload();
+                            if (response.success == "0") {
+                                alert("Error");
+                                location.reload();
+                            }
+                            else {
+                                alert("Data deleted successfully.");
+                                location.reload();
+                            }
                         },
-                        function () {
-                            alert("There was some error!");
-                        }
                     );
                 })
             })
@@ -468,7 +425,6 @@ $(document).ready(function () {
 
                 var updatefname = $('#userfname');
                 var updatelname = $('#userlname');
-                var updateuname = $('#useruname');
                 var updateemail = $('#useremail');
                 var updatepassword = $("userpassword");
                 var updatecpassword = $("usercpassword");
@@ -492,11 +448,8 @@ $(document).ready(function () {
                     alert("Lastname should be letters only.");
                     $("lfname").focus();
                     return updatelname.val('');
-                } if (isEmpty(updateuname)) {
-                    alert("Username is empty.");
-                    $("#useruname").focus();
-                    return false;
-                } else if ($("#useruname").val().length < 4 || $("#useruname").val().length > 10) {
+                }
+                else if ($("#useruname").val().length < 4 || $("#useruname").val().length > 10) {
                     alert("Username must be 4 character to 10 characters long.");
                     $("#useruname").focus();
                     return false;
@@ -564,51 +517,31 @@ $(document).ready(function () {
                     function (response) {
                         if (response.emailExists) {
                             alert("Please choose another email.");
-                            $("#useremail").val('');
                             $("#useremail").focus();
-                            return;
-                        }
-                        else if (response.usernameExists) {
-                            alert("Please choose another username.");
-                            $("#useruname").val('');
-                            $("#useruname").focus();
                             return;
                         }
                         else {
                             alert("Data updated successfully!");
+                            window.location.reload();
                         }
                     },
-                    // reject/failure callback
-                    function () {
-                        alert("There was some error!");
-                    }
                 );
             });
 
             //confirm update
             $(document).on('click', '#btnEdit', function () {
                 var ID = $(this).attr('data-id');
-                $.ajax({
-                    url: "getData.php",
-                    type: "GET",
-                    data: { userID: ID },
-                    dataType: "JSON",
-                }).then(
-                    function (response) {
-                        $('#userID').val(response[0]);
-                        $('#userfname').val(response[1]);
-                        $('#userlname').val(response[2]);
-                        $('#useruname').val(response[3]);
-                        $('#useremail').val(response[4]);
-                        $('#userpassword').val(response[5]);
-                        $('#usercpassword').val(response[6]);
-                        $('#userbirthdate').val(response[7]);
-                        $('#usercontact').val(response[8]);
-                    },
-                    function () {
-                        alert("There was some error!");
-                    }
-                )
+                $.getJSON('getData.php?userID=' + ID, function (response) {
+                    $('#userID').val(response.id);
+                    $('#userfname').val(response.fname);
+                    $('#userlname').val(response.lname);
+                    $('#useruname').val(response.uname);
+                    $('#useremail').val(response.email);
+                    $('#userpassword').val(response.password);
+                    $('#usercpassword').val(response.cpassword);
+                    $('#userbirthdate').val(response.birthdate);
+                    $('#usercontact').val(response.contact);
+                });
             });
         });
 

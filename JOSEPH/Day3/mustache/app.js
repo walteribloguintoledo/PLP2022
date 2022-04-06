@@ -266,9 +266,6 @@ $(document).ready(function () {
                 var routeHome = "http://ernanie.com/Day3//mustache/#/blog";
                 alert("Successfully Registered!");
                 window.location.replace(routeHome);
-                // return userData;
-
-                // document.getElementById("display").innerHTML = searchUser();
             }
 
             //array of user input
@@ -282,18 +279,6 @@ $(document).ready(function () {
                 window.location.replace("http://ernanie.com/Day3/mustache/#/blog");
             }
 
-            function usernameIsValid(usernameElem) {
-                if (userInput === undefined) return false;
-
-                userInput.forEach(userData => {
-                    if (usernameElem.val() === userData.username) {
-                        userInfo = userData;
-                    }
-                });
-
-                return userInfo === null ? alert('No such username.') : false;
-            }
-
             //search fucntion
             $(document).ready(function () {
                 $("#search").click(function (e) {
@@ -302,37 +287,29 @@ $(document).ready(function () {
                     var username = $("#uname").val();
                     var searchInput = JSON.parse(localStorage.getItem('userInput'));
                     console.log(searchInput);
+                    var counter = 0;
 
                     $.each(searchInput, function (i, item) {
                         if (item.username === username) {
                             var result = "";
-                            var fname = "First name: " + item.firstname + "<br>";
-                            result += fname;
-                            var lname = "Last name: " + item.lastname + "<br>";
-                            result += lname
-                            var uname = "Username: " + item.username + "<br>";
-                            result += uname
-                            var email = "Email: " + item.email + "<br>";
-                            result += email
-                            var password = "Password: " + item.password + "<br>";
-                            result += password
-                            var cpassword = "Confirm Password: " + item.confirm + "<br>";
-                            result += cpassword
-                            var birthday = "Birthdate: " + item.birthdate + "<br>";
-                            result += birthday
-                            var age = "Age: " + item.age + "<br>";
-                            result += age
-                            var contact = "Contact: " + item.contact + "<br>";
-                            result += contact
-                            var timendate = "Time and Date: " + item.timendate + "<br>";
-                            result += timendate
-                            document.getElementById("display").innerHTML = result;
+                            result += "First name: " + item.firstname + "<br>";
+                            result += "Last name: " + item.lastname + "<br>";
+                            result += "Username: " + item.username + "<br>";
+                            result += "Email: " + item.email + "<br>";
+                            result += "Password: " + item.password + "<br>";
+                            result += "Confirm Password: " + item.confirm + "<br>";
+                            result += "Birthdate: " + item.birthdate + "<br>";
+                            result += "Age: " + item.age + "<br>";
+                            result += "Contact: " + item.contact + "<br>";
+                            result += "Time and Date: " + item.timendate + "<br>";
+                            $("#display").append(result);
                             console.log(result);
-                        }
-                        else {
-                            alert("No such username");
+                            counter = 1;
                         }
                     });
+                    if (counter == 0) {
+                        alert("No such username.");
+                    }
                 });
             });
         });

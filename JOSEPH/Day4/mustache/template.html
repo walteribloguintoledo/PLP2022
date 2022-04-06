@@ -51,8 +51,8 @@
                         Occult Club unsealed the talisman, a rotten finger, which attracted Curses to the school.
                     </div>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#/login">Login</a>
-                        <a class="btn btn-outline-light btn-lg px-4" href="#/signup">Signup</a>
+                        <button type="button" class="btn btn-primary btn-lg" id="login">Login</button>
+                        <button type="button" class="btn btn-outline-secondary btn-lg" id="signup">Signup</button>
                     </div>
                 </div>
             </div>
@@ -546,9 +546,9 @@
         </div>
     </nav>
     
-    <section>
-        <div id="table"></div>
-    </section>
+    
+   <div id="table"></div>
+    
   <!-- modal for edit -->
   <div class="modal fade" id="Edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -572,7 +572,7 @@
             </div>
             <div class="form-group">
                 <label>Username</label>
-                <input type='text' id="useruname" class='form-control'>
+                <input type='text' id="useruname" class='form-control' disabled>
             </div>
             <div class="form-group">
                 <label>Email</label>

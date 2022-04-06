@@ -1,8 +1,8 @@
 <?php
   include('db/db_conn.php');
 
-    $email = $_POST['Username'];
-    $password = $_POST['Password'];
+    $email = $_POST['username'];
+    $password = $_POST['password'];
 
 
     $sql = "SELECT * FROM `users` WHERE `username`='$email' AND `password`='$password'";

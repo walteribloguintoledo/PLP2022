@@ -1,40 +1,54 @@
 <?php
  include('db/db_conn.php');
 
-  $value="";
-  $value='<table class="table table-striped table-dark">
-          <thead>
-          <tr>
-              <th scope="col">Id</th>
-              <th scope="col">Firstname</th>
-              <th scope="col">Lastname</th>
-              <th scope="col">Username</th>
-              <th scope="col">Email</th>
-              <th scope="col">Password</th>
-              <th scope="col">Age</th>
-              <th scope="col">Birtdate</th>
-              <th scope="col">Contact</th>
-              <th scope="col">Update</th>
-              <th scope="col">Delete</th>
-          </tr>
-          </thead>';
-  $query = "SELECT * FROM users";
-  $results = mysqli_query($conn,$query);
+ $db=$conn;
+// fetch query
+function fetch_data($db){
 
-  while($row=mysqli_fetch_assoc($results)){
-    $value.='<tr>
-              <th scope="col">'.$row['id'].'</th>
-              <th scope="col">'.$row['firstname'].'</th>
-              <th scope="col">'.$row['lastname'].'</th>
-              <th scope="col">'.$row['username'].'</th>
-              <th scope="col">'.$row['email'].'</th>
-              <th scope="col">'.$row['password'].'</th>
-              <th scope="col">'.$row['age'].'</th>
-              <th scope="col">'.$row['birthdate'].'</th>
-              <th scope="col">'.$row['contact'].'</th>
-              <th scope="col"><button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#Edit" id="btnEdit" data-id ='.$row['id'].'><span>UPDATE</span></button></th>
-              <th scope="col"><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Delete" id="btnDelete" data-id2 ='.$row['id'].'><span>DELETE</span></button></th>
-            </tr>';         
+  $query="SELECT * from users";
+  $results=mysqli_query($db, $query);
+  if(mysqli_num_rows($results)>0){
+    $row= mysqli_fetch_all($results, MYSQLI_ASSOC);
+    return $row;
+  }else{
+    echo '<script>alert("No users database.")</script>';
+    return $row=[];
   }
-    $value.='</table>';
-    echo json_encode(['status'=>'success','html'=>$value]);
+}
+$fetchData=fetch_data($db);
+show_data($fetchData);
+
+function show_data($fetchData){
+ echo '<table class="table table-bordered table-hover table-striped table-light">
+        <tr>
+            <th>ID</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Age</th>
+            <th>Birthdate</th>
+            <th>Contact</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>';
+
+foreach($fetchData as $data){
+
+  echo '<tr>
+          <td>'.$data['id'].'</td>
+          <td>'.$data['firstname'].'</td>
+          <td>'.$data['lastname'].'</td>
+          <td>'.$data['username'].'</td>
+          <td>'.$data['email'].'</td>
+          <td>'.$data['password'].'</td>
+          <td>'.$data['age'].'</td>
+          <td>'.$data['birthdate'].'</td>
+          <td>'.$data['contact'].'</td>
+          <td><button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#Edit" id="btnEdit" data-id ='.$data['id'].'><span>EDIT</span></button></td>
+          <th scope="col"><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#Delete" id="btnDelete" data-id2 ='.$data['id'].'><span>Delete</span></button></th>
+   </tr>';
+    }
+}
+  echo "</table>";

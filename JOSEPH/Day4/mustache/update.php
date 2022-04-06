@@ -11,30 +11,18 @@ $updateage =  $_POST['UAge'];
 $updatebirthdate = $_POST['UBirthdate'];
 $updatecontact = $_POST['UContact'];
 
-$search_sql = "SELECT * FROM `users` WHERE username='$updateuname'";
-$usernameResult = $conn->query($search_sql);
-if($usernameResult->num_rows > 0) {
-    echo json_encode(array('usernameExists' => true));
-    exit();
-}
-
-$search_sql = "SELECT * FROM `users` WHERE email='$updateemail'";
-$emailResult = $conn->query($search_sql);
+$valid_email = "SELECT * FROM `users` WHERE email='$updateemail'";
+$emailResult = $conn->query($valid_email);
 if($emailResult->num_rows > 0) {
     echo json_encode(array('emailExists' => true));
     exit();
 }
 
-$update_sql = "UPDATE users SET firstname='$updatefname',lastname='$updatelname',username='$updateuname',email='$updateemail',password='$updatepassword',age='$updateage',birthdate='$updatebirthdate',contact='$updatecontact' WHERE id='$updateId'";
+$update_sql = "UPDATE users SET firstname='$updatefname',lastname='$updatelname',email='$updateemail',password='$updatepassword',age='$updateage',birthdate='$updatebirthdate',contact='$updatecontact' WHERE id='$updateId'";
 
 if(mysqli_query($conn, $update_sql)){
-    echo json_encode(array('success' => 2));
-}else if(mysqli_query($conn, $update_sql)){
+    //assigns the key of the array 
     echo json_encode(array('success' => 1));
-    echo "ERROR: Hush! Sorry $update_sql. " 
-        . mysqli_error($conn);
 }else if(mysqli_query($conn, $update_sql)){
     echo json_encode(array('success' => 0));
-    echo "ERROR: Hush! Sorry $update_sql. " 
-        . mysqli_error($conn);
 }

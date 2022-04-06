@@ -1,11 +1,12 @@
 body {
-    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(../../img/background.jpg);   
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../img/background_home.jpg);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
 }
 
-html, body {
+html,
+body {
     height: 50%;
     width: 100%;
 }
@@ -20,7 +21,7 @@ h5 {
     margin-bottom: 10px;
 }
 
-th{
+th {
     color: #fff;
 }
 
@@ -37,7 +38,7 @@ th{
     padding-left: 5px;
 }
 
-h6{
+h6 {
     color: #fff;
 }
 
@@ -71,16 +72,22 @@ form h2 {
     margin-right: 400px;
 }
 
-  .signup_link{
+.signup_link {
     margin: 30px 0;
     text-align: center;
     font-size: 16px;
     color: #666666;
-  }
-  .signup_link a{
+}
+
+.signup_link a {
     color: #2691d9;
     text-decoration: none;
-  }
-  .signup_link a:hover{
+}
+
+.signup_link a:hover {
     text-decoration: underline;
-  }
+}
+
+th {
+    color: #000;
+}
