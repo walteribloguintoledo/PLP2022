@@ -5,48 +5,134 @@ $(document).ready(function () {
     // login page
     Path.map("#/login").to(function () {
       $("#target").html("").append($.Mustache.render("login"));
+      $("#timeWrapper").html("").append($.Mustache.render("timeDisplay"));
       checkUserLogs();
-      $("#scanQR").click(function () {
-        $("#preview").show();
-        let scanner = new Instascan.Scanner({
-          video: document.getElementById("preview"),
-          mirror: false,
-        });
+      clock();
+
+      let scanner = new Instascan.Scanner({
+        video: document.getElementById("preview"),
+      });
+
+      $(".scanQR").click(function () {
+        const time = $(this).val();
+        $("#loginContainer").removeClass("d-md-flex");
+        $("#loginContainer").addClass("d-none");
         Instascan.Camera.getCameras()
-          .then((cameras) => {
-            scanner.camera = cameras[cameras.length - 1];
-            scanner.start();
+          .then(function (cameras) {
+            if (cameras.length > 0) {
+              scanner.start(cameras[0]);
+              setTimeout(() => {
+                $("#scannerWrapper").removeClass("d-none");
+                $("#laser").removeClass("d-none");
+              }, 1200);
+            } else {
+              console.error("No cameras found.");
+            }
           })
-          .catch((e) => console.error(e));
-        scanner.addListener("scan", (content) => {
+          .catch(function (e) {
+            console.error(e);
+          });
+        scanner.addListener("scan", function (content) {
           $.ajax({
             type: "POST",
             url: "api/login",
             dataType: "json",
-            data: { userID: content },
+            data: { userID: content, time: time.toUpperCase() },
           }).done(function (data) {
-            if (parseInt(data.verified) === 0) {
+            scanner.stop();
+            $("#scannerWrapper").addClass("d-none");
+            $("#laser").addClass("d-none");
+            $("#loginContainer").removeClass("d-none");
+            if (data.verified == 0) {
               Swal.fire({
                 icon: "error",
                 title: "Invalid",
-                text: "No User Found.",
+                text: "No user found.",
+              }).then(() => {
+                window.location.reload();
               });
             } else {
-              scanner.stop();
-              localStorage.setItem("userLogs", JSON.stringify(data.info));
-              window.location.href = "#/result";
+              if (data.record !== 0) {
+                Swal.fire({
+                  icon: "error",
+                  title: "Invalid",
+                  html:
+                    "Hey, " +
+                    data.record[1] +
+                    ". " +
+                    " You already " +
+                    "<span class='text-lowercase'>" +
+                    data.record[5] +
+                    ".</span>" +
+                    "<br>" +
+                    "Date: " +
+                    data.record[3] +
+                    "<br>" +
+                    "Time: " +
+                    data.record[4],
+                }).then(() => {
+                  window.location.reload();
+                });
+              } else if (data.info == null) {
+                localStorage.setItem("userLogs", JSON.stringify(data.data));
+                localStorage.setItem(
+                  "type",
+                  JSON.stringify(time.toUpperCase())
+                );
+                localStorage.setItem("remarks", data.info);
+                localStorage.setItem("attempts", 2);
+                window.location.href = "#/result";
+              } else {
+                Swal.fire({
+                  icon: "warning",
+                  title: "Note",
+                  html:
+                    "Hi, " +
+                    data.data[2] +
+                    "." +
+                    "<br>" +
+                    "<br>" +
+                    "Your Last Attendance:" +
+                    "<br>" +
+                    "<p class='text-warning'>" +
+                    data.info +
+                    "</p>",
+                  showConfirmButton: false,
+                  timer: 2500,
+                }).then(() => {
+                  localStorage.setItem("userLogs", JSON.stringify(data.data));
+                  localStorage.setItem(
+                    "type",
+                    JSON.stringify(time.toUpperCase())
+                  );
+                  localStorage.setItem("remarks", data.info);
+                  localStorage.setItem("attempts", 2);
+                  window.location.href = "#/result";
+                });
+              }
             }
           });
         });
+      });
+
+      $("#backBtn").click(function () {
+        scanner.stop();
+        $("#laser").addClass("d-none");
+        $("#scannerWrapper").addClass("d-none");
+        $("#loginContainer").removeClass("d-none");
       });
     });
 
     // face recognition
     Path.map("#/result").to(function () {
       $("#target").html("").append($.Mustache.render("result"));
+      $("#timeWrapper").html("").append($.Mustache.render("timeDisplay"));
       checkUserLogs();
+      clock();
 
       $(document).ready(function () {
+        $("div.spanner").addClass("show");
+        $("div.overlay").addClass("show");
         Promise.all([
           faceapi.nets.tinyFaceDetector.loadFromUri("models"),
           faceapi.nets.faceLandmark68Net.loadFromUri("models"),
@@ -62,17 +148,24 @@ $(document).ready(function () {
             (stream) => {
               video.srcObject = stream;
               vid = stream.getTracks()[0];
-              $("#video").get(0).play();
             },
             (err) => console.error(err)
           );
         }
 
+        setTimeout(() => {
+          $("div.spanner").removeClass("show");
+          $("div.overlay").removeClass("show");
+          $("#scanWrapper").removeClass("d-none");
+          $("#scanWrapper").addClass("d-md-flex align-items-center");
+          $("#video").get(0).play();
+        }, 3000);
+
         $("#video").on("playing", async function () {
           const labeledFaceDescriptors = await loadImages();
           const faceMatcher = new faceapi.FaceMatcher(
             labeledFaceDescriptors,
-            0.6
+            0.5
           );
           const displaySize = { width: video.width, height: video.height };
           let ctr = 0;
@@ -85,14 +178,43 @@ $(document).ready(function () {
               ++ctr;
               if (ctr == 1) {
                 clearInterval(playing);
-                Swal.fire({
-                  icon: "error",
-                  title: "Invalid",
-                  text: "No Faces Detected. Please try again.",
-                }).then(() => {
-                  window.location.reload();
-                });
-                throw new Error(`no faces detected`);
+                let attempts = localStorage.getItem("attempts");
+                attempts = JSON.parse(attempts);
+                localStorage.setItem(
+                  "attempts",
+                  JSON.stringify(attempts - ctr)
+                );
+                if (attempts == 0) {
+                  Swal.fire({
+                    icon: "error",
+                    title: "Invalid",
+                    html:
+                      "No Faces Detected." +
+                      "<br>" +
+                      "<p class='text-danger'>Attempts has been exceeded.</p>",
+                  }).then(() => {
+                    stopVideo();
+                    localStorage.removeItem("attempts");
+                    localStorage.removeItem("type");
+                    localStorage.removeItem("userLogs");
+                    localStorage.removeItem("remarks");
+                    window.location.href = "#/login";
+                  });
+                } else {
+                  Swal.fire({
+                    icon: "error",
+                    title: "Invalid",
+                    html:
+                      "No Faces Detected. Please try again." +
+                      "<br>" +
+                      "<small class='text-warning'>You only have " +
+                      attempts +
+                      " tries attempt.</small>",
+                  }).then(() => {
+                    window.location.reload();
+                  });
+                  throw new Error(`no faces detected`);
+                }
               }
             } else {
               const resizedDetection = faceapi.resizeResults(
@@ -106,32 +228,66 @@ $(document).ready(function () {
                 ++ctr;
                 if (ctr === 1) {
                   clearInterval(playing);
-                  Swal.fire({
-                    icon: "error",
-                    title: "Invalid",
-                    text: "Please try again.",
-                  }).then(() => {
-                    window.location.reload();
-                  });
+                  let attempts = localStorage.getItem("attempts");
+                  attempts = JSON.parse(attempts);
+                  localStorage.setItem(
+                    "attempts",
+                    JSON.stringify(attempts - ctr)
+                  );
+                  if (attempts == 0) {
+                    Swal.fire({
+                      icon: "error",
+                      title: "Invalid",
+                      html:
+                        "Face not match." +
+                        "<br>" +
+                        "<p class='text-danger'>Attempts has been exceeded.</p>",
+                    }).then(() => {
+                      stopVideo();
+                      localStorage.removeItem("attempts");
+                      localStorage.removeItem("type");
+                      localStorage.removeItem("userLogs");
+                      localStorage.removeItem("remarks");
+                      window.location.href = "#/login";
+                    });
+                  } else {
+                    Swal.fire({
+                      icon: "error",
+                      title: "Invalid",
+                      html:
+                        "Face not match. Please try again." +
+                        "<br>" +
+                        "<small class='text-warning'>You only have " +
+                        attempts +
+                        " tries attempt.</small>",
+                    }).then(() => {
+                      window.location.reload();
+                    });
+                  }
                 }
               } else {
                 ++ctr;
                 if (ctr === 1) {
                   clearInterval(playing);
-                  navigator.getUserMedia(
-                    { video: {} },
-
-                    () => {
-                      vid.stop();
-                    },
-                    (err) => console.error(err)
-                  );
-                  time_in(results);
+                  stopVideo();
+                  insert_attendance(results);
                 }
               }
             }
           }, 100);
         });
+
+        // stop video
+        function stopVideo() {
+          navigator.getUserMedia(
+            { video: {} },
+
+            () => {
+              vid.stop();
+            },
+            (err) => console.error(err)
+          );
+        }
 
         // load all images
         function loadImages() {
@@ -144,7 +300,7 @@ $(document).ready(function () {
               const descriptions = [];
               for (let i = 1; i <= 5; i++) {
                 const img = await faceapi.fetchImage(
-                  `./api/uploads/images/${id}/${id}${i}.jpg`
+                  `./api/uploads/images/${id}/${id}-${i}.jpg`
                 );
                 const detections = await faceapi
                   .detectSingleFace(img)
@@ -160,141 +316,48 @@ $(document).ready(function () {
           );
         }
 
-        // insert time and remarks to db
-        function time_in(result) {
+        // insert record
+        function insert_attendance(result) {
+          let type = localStorage.getItem("type");
+          type = JSON.parse(type);
+          let remarks = localStorage.getItem("remarks");
+
           $.ajax({
             type: "POST",
             url: "api/attendance",
             dataType: "json",
             data: {
               fetchID: result.label,
+              type: type,
+              remarks: remarks,
             },
           }).done(function (data) {
-            if (data.timeIn == 1 && data.timeOut == 1) {
+            if (data.verified == 1) {
+              const category = data.data[5].toLowerCase();
+              const finalPhrase = category.replace(
+                /(^\w{1})|(\s+\w{1})/g,
+                (letter) => letter.toUpperCase()
+              );
               Swal.fire({
-                icon: "error",
-                title: "Invalid",
-                text: "You time in and time out already",
+                position: "center",
+                icon: "success",
+                title: "Thank you, " + data.data[1] + ".",
+                html:
+                  "Date: " +
+                  data.data[3] +
+                  "<br>" +
+                  "Time: " +
+                  data.data[4] +
+                  "<br>" +
+                  "Category: " +
+                  finalPhrase,
               }).then(() => {
+                localStorage.removeItem("attempts");
                 localStorage.removeItem("userLogs");
+                localStorage.removeItem("type");
+                localStorage.removeItem("remarks");
                 window.location.href = "#/login";
               });
-            } else {
-              if (data.lastLog !== undefined) {
-                if (data.lastLog !== 0) {
-                  if (data.lastLog[2] !== null) {
-                    Swal.fire({
-                      position: "center",
-                      icon: "success",
-                      title: "Thank you",
-                      html:
-                        "YOUR LAST ATTENDANCE" +
-                        "<br>" +
-                        "Time in: " +
-                        data.lastLog[1] +
-                        "<br>" +
-                        "Time out: " +
-                        data.lastLog[2] +
-                        "<br>" +
-                        "Date: " +
-                        data.lastLog[3] +
-                        "<br>" +
-                        "Remarks: " +
-                        data.lastLog[4] +
-                        "<br>" +
-                        "<br>" +
-                        "YOUR ATTENDANCE TODAY" +
-                        "<br>" +
-                        "Time: " +
-                        data.data[0] +
-                        "<br>" +
-                        "Date: " +
-                        data.data[1] +
-                        "<br>" +
-                        "Remarks: " +
-                        data.data[2],
-                      showConfirmButton: true,
-                    }).then(() => {
-                      localStorage.removeItem("userLogs");
-                      window.location.href = "#/login";
-                    });
-                  } else {
-                    Swal.fire({
-                      position: "center",
-                      icon: "success",
-                      title: "Thank you",
-                      html:
-                        "YOUR LAST ATTENDANCE" +
-                        "<br>" +
-                        "Time in: " +
-                        data.lastLog[1] +
-                        "<br>" +
-                        "Time out: " +
-                        "N/A" +
-                        "<br>" +
-                        "Date: " +
-                        data.lastLog[3] +
-                        "<br>" +
-                        "Remarks: " +
-                        data.lastLog[4] +
-                        "<br>" +
-                        "<br>" +
-                        "YOUR ATTENDANCE TODAY" +
-                        "<br>" +
-                        "Time: " +
-                        data.data[0] +
-                        "<br>" +
-                        "Date: " +
-                        data.data[1] +
-                        "<br>" +
-                        "Remarks: " +
-                        data.data[2],
-                      showConfirmButton: true,
-                    }).then(() => {
-                      localStorage.removeItem("userLogs");
-                      window.location.href = "#/login";
-                    });
-                  }
-                } else {
-                  Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: "Thank you",
-                    html:
-                      "Time in: " +
-                      data.data[0] +
-                      "<br>" +
-                      "Date: " +
-                      data.data[1] +
-                      "<br>" +
-                      "Remarks: " +
-                      data.data[2],
-                    showConfirmButton: true,
-                  }).then(() => {
-                    localStorage.removeItem("userLogs");
-                    window.location.href = "#/login";
-                  });
-                }
-              } else {
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "Thank you",
-                  html:
-                    "Time out: " +
-                    data.data[0] +
-                    "<br>" +
-                    "Date: " +
-                    data.data[1] +
-                    "<br>" +
-                    "Remarks: " +
-                    data.data[2],
-                  showConfirmButton: true,
-                }).then(() => {
-                  localStorage.removeItem("userLogs");
-                  window.location.href = "#/login";
-                });
-              }
             }
           });
         }
@@ -308,8 +371,8 @@ $(document).ready(function () {
 
       // set webcam
       Webcam.set({
-        width: 320,
-        height: 240,
+        width: 520,
+        height: 380,
         dest_width: 640,
         dest_height: 480,
         image_format: "jpeg",
@@ -337,7 +400,7 @@ $(document).ready(function () {
         $("#cameraBtns").hide();
         $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
         $("#snapshotBtn").show();
-        $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+        $("#resetBtn").addClass("btn btn-outline-light d-grid w-100");
         $("#resetBtn").show();
       });
 
@@ -350,7 +413,7 @@ $(document).ready(function () {
             $("#cameraBtns").hide();
             $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
             $("#snapshotBtn").show();
-            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").addClass("btn btn-outline-light d-grid w-100");
             $("#resetBtn").show();
           } else if ($("#img2").attr("src") == "./app/img/gray-bg.jpg") {
             $("#img2").attr("src", data_uri);
@@ -358,7 +421,7 @@ $(document).ready(function () {
             $("#cameraBtns").hide();
             $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
             $("#snapshotBtn").show();
-            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").addClass("btn btn-outline-light d-grid w-100");
             $("#resetBtn").show();
           } else if ($("#img3").attr("src") == "./app/img/gray-bg.jpg") {
             $("#img3").attr("src", data_uri);
@@ -366,7 +429,7 @@ $(document).ready(function () {
             $("#cameraBtns").hide();
             $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
             $("#snapshotBtn").show();
-            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").addClass("btn btn-outline-light d-grid w-100");
             $("#resetBtn").show();
           } else if ($("#img4").attr("src") == "./app/img/gray-bg.jpg") {
             $("#img4").attr("src", data_uri);
@@ -374,7 +437,7 @@ $(document).ready(function () {
             $("#cameraBtns").hide();
             $("#snapshotBtn").addClass("btn btn-primary d-grid w-100");
             $("#snapshotBtn").show();
-            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").addClass("btn btn-outline-light d-grid w-100");
             $("#resetBtn").show();
           } else {
             $("#img5").attr("src", data_uri);
@@ -385,7 +448,7 @@ $(document).ready(function () {
             imgSrc[4] = $("#img5").attr("src");
             $("#cameraBtns").removeClass("d-flex flex-column");
             $("#cameraBtns").hide();
-            $("#resetBtn").addClass("btn btn-outline-dark d-grid w-100");
+            $("#resetBtn").addClass("btn btn-outline-light d-grid w-100");
             $("#resetBtn").show();
           }
         });
@@ -423,6 +486,28 @@ $(document).ready(function () {
         pass.removeClass("is-invalid");
         confirmPass.removeClass("is-invalid");
       }
+
+      // show password
+      $("#showPass").click(function () {
+        if ($("#password").attr("type") === "password") {
+          $("#password").attr("type", "text");
+          $("#showPass i").attr("class", "bx bx-show");
+        } else {
+          $("#password").attr("type", "password");
+          $("#showPass i").attr("class", "bx bx-hide");
+        }
+      });
+
+      // show confirm password
+      $("#showConfirmPass").click(function () {
+        if ($("#confirmPassword").attr("type") === "password") {
+          $("#confirmPassword").attr("type", "text");
+          $("#showConfirmPass i").attr("class", "bx bx-show");
+        } else {
+          $("#confirmPassword").attr("type", "password");
+          $("#showConfirmPass i").attr("class", "bx bx-hide");
+        }
+      });
 
       // form submit
       $("#registerForm").submit(function (e) {
@@ -511,7 +596,7 @@ $(document).ready(function () {
               email.addClass("is-invalid");
               $("#emailFeedback").text("Email address already exists.");
             } else {
-              localStorage.setItem("userID", JSON.stringify(data.id));
+              localStorage.setItem("userID", JSON.stringify(data.userID));
               localStorage.setItem(
                 "userFullName",
                 JSON.stringify(fullName.val())
@@ -595,4 +680,27 @@ function checkUserLogs() {
   } else {
     window.location.href = "#/login";
   }
+}
+
+// running time
+function clock() {
+  setInterval(() => {
+    const d = new Date();
+    const time = d.toLocaleString("default", {
+      timeZone: "Asia/Manila",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    });
+    $("#realTime").text(time);
+  }, 1000);
+
+  const d = new Date();
+  const date = d.toLocaleString("default", {
+    month: "long",
+    day: "2-digit",
+    year: "numeric",
+  });
+  $("#dateToday").text(date);
 }
