@@ -100,51 +100,32 @@
   });
 
   $app->post('/signup',function() {
-    if(isset($_POST['fullName'])){
-      $user_id = $_POST['userID'];
+    if(isset($_POST['employeeID'])){
+      $employee_id = $_POST['employeeID'];
       $full_name = $_POST['fullName'];
-      $user_name = $_POST['username'];
-      $email = $_POST['email'];
-      $address = $_POST['address'];
-      $birthday = $_POST['birthday'];
-      $contact = $_POST['contact'];
-      $password = md5($_POST['password']);
+      $dept = $_POST['dept'];
       $profile_img = $_POST['profileImg'];
       $verified = 0;
+
+      $uid_exists = checkUID($employee_id);
   
-      $user_exists = checkUsername($user_name);
-      $email_exists = checkEmail($email);
-  
-      if($user_exists == 0 && $email_exists == 0){
-        $user_added = insertUser($user_id, $full_name, $user_name, $email, $address, $birthday, $contact, $password);
+      if($uid_exists == 0){
+        $user_added = insertUser($employee_id, $full_name, $dept);
         $verified = 1;
 
         $response = array(
-          "id" => (int)$user_added,
-          "userID" => $user_id,
-          "user" => $user_exists,
-          "email" => $email_exists,
+          "user" => $user_added,
           "verified" => $verified
         );
         
-        if((int)$user_added < 10){
-          $unique_id = "000". $user_added;
-        }elseif((int)$user_added < 100){
-          $unique_id = "00". $user_added;
-        }elseif((int)$user_added < 999){
-          $unique_id = "0". $user_added;
-        }else{
-          $unique_id = $user_added;
-        }
-        mkdir('./uploads/images/' . $unique_id);
+        mkdir('./uploads/images/' . $user_added[1]);
 
         for($i = 1; $i <= count($profile_img); $i++){
-          file_put_contents('./uploads/images/'. $unique_id . '/' . $unique_id ."-".$i.'.jpg', file_get_contents($profile_img[$i - 1]));
+          file_put_contents('./uploads/images/'. $user_added[1] . '/' . $user_added[1] ."-".$i.'.jpg', file_get_contents($profile_img[$i - 1]));
         }
       }else{
         $response = array(
-          "user" => $user_exists,
-          "email" => $email_exists,
+          "user" => $uid_exists,
           "verified" => $verified
         );
       }

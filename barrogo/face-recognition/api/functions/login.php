@@ -1,9 +1,9 @@
 <?php
   function login($userID){
-    $query = ORM::for_table('users')->where('user_id', $userID)->find_one();
+    $query = ORM::for_table('users')->where('uid', $userID)->find_one();
 
     if($query){
-      return $user = array($query->id, $query->user_id, $query->fullname, $query->username, $query->email, $query->address, $query->birthday, $query->contact);
+      return $user = array($query->id, $query->uid, $query->fullname, $query->department);
     }else{
       return 0;
     }
@@ -11,7 +11,7 @@
 
   //check duplicate records
   function checkDuplicateRecords($id, $day, $night, $type, $status){
-    $query = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', $type)->where('attendance.status', $status)->find_one();
+    $query = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', $type)->where('attendance.status', $status)->find_one();
 
     if ($query) {
       // output data of each row
@@ -23,9 +23,9 @@
 
   // check records today
   function check_records_today($id, $day, $night, $type, $status){
-    $check_time_in = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', 'TIME IN')->where('attendance.status', $status)->count();
-    $check_lunch_in = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', 'LUNCH IN')->where('attendance.status', $status)->count();
-    $check_lunch_out = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', 'LUNCH OUT')->where('attendance.status', $status)->count();
+    $check_time_in = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', 'TIME IN')->where('attendance.status', $status)->count();
+    $check_lunch_in = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', 'LUNCH IN')->where('attendance.status', $status)->count();
+    $check_lunch_out = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', 'LUNCH OUT')->where('attendance.status', $status)->count();
 
     // set remarks
     $remarks = "";
@@ -63,10 +63,10 @@
 
   // check records yesterday
   function check_records_yesterday($id, $day_yesterday, $night_yesterday, $type, $status){
-    $check_time_in_yesterday = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'TIME IN')->where('attendance.status', $status)->count();
-    $check_lunch_in_yesterday = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'LUNCH IN')->where('attendance.status', $status)->count();
-    $check_lunch_out_yesterday = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'LUNCH OUT')->where('attendance.status', $status)->count();
-    $check_time_out_yesterday = ORM::for_table('users')->join('attendance', array('users.id', '=', 'attendance.user_id'))->where('users.user_id', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'TIME OUT')->where('attendance.status', $status)->count();
+    $check_time_in_yesterday = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'TIME IN')->where('attendance.status', $status)->count();
+    $check_lunch_in_yesterday = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'LUNCH IN')->where('attendance.status', $status)->count();
+    $check_lunch_out_yesterday = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'LUNCH OUT')->where('attendance.status', $status)->count();
+    $check_time_out_yesterday = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day_yesterday)->where_lte('attendance.date_created', $night_yesterday)->where('attendance.type', 'TIME OUT')->where('attendance.status', $status)->count();
 
     // set remarks
     $remarks = "";

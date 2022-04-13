@@ -4,6 +4,7 @@ $(document).ready(function () {
   $.Mustache.load("app/template/template.html").done(function () {
     // login page
     Path.map("#/login").to(function () {
+      $("title").html("Face Recognition").after($.Mustache.render("styles"));
       $("#target").html("").append($.Mustache.render("login"));
       $("#timeWrapper").html("").append($.Mustache.render("timeDisplay"));
       checkUserLogs();
@@ -125,6 +126,7 @@ $(document).ready(function () {
 
     // face recognition
     Path.map("#/result").to(function () {
+      $("title").html("Face Recognition").after($.Mustache.render("styles"));
       $("#target").html("").append($.Mustache.render("result"));
       $("#timeWrapper").html("").append($.Mustache.render("timeDisplay"));
       checkUserLogs();
@@ -293,7 +295,7 @@ $(document).ready(function () {
         function loadImages() {
           let userLogs = localStorage.getItem("userLogs");
           userLogs = JSON.parse(userLogs);
-          const userIDFolder = [userLogs[0]];
+          const userIDFolder = [userLogs[1]];
 
           return Promise.all(
             userIDFolder.map(async (id) => {
@@ -466,48 +468,16 @@ $(document).ready(function () {
       });
 
       // declaring variables
+      var employeeID = $("#employeeID");
       var fullName = $("#fullName");
-      var userName = $("#userName");
-      var email = $("#email");
-      var address = $("#address");
-      var bDay = $("#bDay");
-      var contact = $("#contact");
-      var pass = $("#password");
-      var confirmPass = $("#confirmPassword");
+      var dept = $("#dept");
 
       // remove validation class
       function removeValidation() {
+        employeeID.removeClass("is-invalid");
         fullName.removeClass("is-invalid");
-        userName.removeClass("is-invalid");
-        email.removeClass("is-invalid");
-        address.removeClass("is-invalid");
-        bDay.removeClass("is-invalid");
-        contact.removeClass("is-invalid");
-        pass.removeClass("is-invalid");
-        confirmPass.removeClass("is-invalid");
+        dept.removeClass("is-invalid");
       }
-
-      // show password
-      $("#showPass").click(function () {
-        if ($("#password").attr("type") === "password") {
-          $("#password").attr("type", "text");
-          $("#showPass i").attr("class", "bx bx-show");
-        } else {
-          $("#password").attr("type", "password");
-          $("#showPass i").attr("class", "bx bx-hide");
-        }
-      });
-
-      // show confirm password
-      $("#showConfirmPass").click(function () {
-        if ($("#confirmPassword").attr("type") === "password") {
-          $("#confirmPassword").attr("type", "text");
-          $("#showConfirmPass i").attr("class", "bx bx-show");
-        } else {
-          $("#confirmPassword").attr("type", "password");
-          $("#showConfirmPass i").attr("class", "bx bx-hide");
-        }
-      });
 
       // form submit
       $("#registerForm").submit(function (e) {
@@ -518,89 +488,34 @@ $(document).ready(function () {
             title: "Invalid",
             text: "Profile Image is required.",
           });
+        } else if (employeeID.val() == "") {
+          removeValidation();
+          employeeID.addClass("is-invalid");
         } else if (fullName.val() == "") {
           removeValidation();
           fullName.addClass("is-invalid");
-        } else if (userName.val() == "") {
+        } else if (dept.val() == "") {
           removeValidation();
-          userName.addClass("is-invalid");
-          $("#unameFeedback").text("Please enter username.");
-        } else if (email.val() == "") {
-          removeValidation();
-          email.addClass("is-invalid");
-          $("#emailFeedback").text("Please enter Email Address.");
-        } else if (address.val() == "") {
-          removeValidation();
-          address.addClass("is-invalid");
-        } else if (bDay.val() == "") {
-          removeValidation();
-          bDay.addClass("is-invalid");
-        } else if (contact.val() == "") {
-          removeValidation();
-          contact.addClass("is-invalid");
-          $("#contactFeedback").text("Please enter your Contact Number.");
-        } else if (isNaN(contact.val())) {
-          removeValidation();
-          contact.addClass("is-invalid");
-          $("#contactFeedback").text("Please enter number only.");
-        } else if (contact.val().length < 11 || contact.val().length > 11) {
-          removeValidation();
-          contact.addClass("is-invalid");
-          $("#contactFeedback").text("Please enter 11 digits only.");
-        } else if (pass.val() == "") {
-          removeValidation();
-          pass.addClass("is-invalid");
-          $("#passwordFeedback").text("Please enter Password.");
-        } else if (confirmPass.val() == "") {
-          removeValidation();
-          confirmPass.addClass("is-invalid");
-          $("#confirmPasswordFeedback").text("Please enter Confirm Password.");
-        } else if (pass.val().length < 8) {
-          removeValidation();
-          pass.addClass("is-invalid");
-          $("#passwordFeedback").text(
-            "Password must be at least 8 characters."
-          );
-        } else if (pass.val() !== confirmPass.val()) {
-          removeValidation();
-          confirmPass.addClass("is-invalid");
-          $("#confirmPasswordFeedback").text("Password does not match.");
+          dept.addClass("is-invalid");
         } else {
           removeValidation();
-          var currentYear = new Date();
           $.ajax({
             type: "POST",
             url: "api/signup",
             dataType: "json",
             data: {
-              userID:
-                currentYear.getFullYear().toString().slice(-2) +
-                "-" +
-                Math.random().toString(36).slice(-5).toLocaleUpperCase(),
+              employeeID: employeeID.val(),
               fullName: fullName.val(),
-              username: userName.val(),
-              email: email.val(),
-              address: address.val(),
-              birthday: bDay.val(),
-              contact: contact.val(),
-              password: pass.val(),
+              dept: dept.val(),
               profileImg: imgSrc,
             },
           }).done(function (data) {
             if (data.user == 1) {
               removeValidation();
-              userName.addClass("is-invalid");
-              $("#unameFeedback").text("Username already exists.");
-            } else if (data.email == 1) {
-              removeValidation();
-              email.addClass("is-invalid");
-              $("#emailFeedback").text("Email address already exists.");
+              employeeID.addClass("is-invalid");
+              $("#feedback").text("Employee ID Number already exists.");
             } else {
-              localStorage.setItem("userID", JSON.stringify(data.userID));
-              localStorage.setItem(
-                "userFullName",
-                JSON.stringify(fullName.val())
-              );
+              localStorage.setItem("user", JSON.stringify(data.user));
               window.location.href = "#/qr";
             }
           });
@@ -613,18 +528,16 @@ $(document).ready(function () {
       $("#target").html("").append($.Mustache.render("qr"));
       checkUserID();
 
-      let userID = localStorage.getItem("userID");
-      userID = JSON.parse(userID);
-      let userFullName = localStorage.getItem("userFullName");
-      userFullName = JSON.parse(userFullName);
+      let user = localStorage.getItem("user");
+      user = JSON.parse(user);
 
       // generate qr code
-      new QRCode(document.getElementById("qrcode"), userID);
-      $("#userFullName").text(userFullName);
+      new QRCode(document.getElementById("qrcode"), user[1]);
+      $("#userFullName").text(user[2]);
 
       $("#downloadQR").click(function () {
         html2canvas(document.querySelector("#qrCode")).then((canvas) => {
-          saveAs(canvas.toDataURL(), userFullName + ".jpg");
+          saveAs(canvas.toDataURL(), user[2] + ".jpg");
         });
 
         function saveAs(uri, filename) {
@@ -646,8 +559,7 @@ $(document).ready(function () {
             window.open(uri);
           }
         }
-        localStorage.removeItem("userID");
-        localStorage.removeItem("userFullName");
+        localStorage.removeItem("user");
         window.location.href = "#/login";
       });
     });
@@ -660,10 +572,10 @@ $(document).ready(function () {
 
 // check if the user is registered before to proceed to qr page
 function checkUserID() {
-  let userID = localStorage.getItem("userID");
-  userID = JSON.parse(userID);
+  let user = localStorage.getItem("user");
+  user = JSON.parse(user);
 
-  if (userID !== null) {
+  if (user !== null) {
     window.location.href = "#/qr";
   } else {
     window.location.href = "#/register";
