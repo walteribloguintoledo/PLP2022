@@ -3,7 +3,18 @@
     $query = ORM::for_table('users')->where('uid', $userID)->find_one();
 
     if($query){
-      return $user = array($query->id, $query->uid, $query->fullname, $query->department);
+      return $user = array($query->id, $query->uid, $query->fullname, $query->department, $query->date_created);
+    }else{
+      return 0;
+    }
+  }
+
+  // check if the user is new
+  function checkNewUser($id, $day, $night){
+    $query = ORM::for_table('users')->where('uid', $id)->where_gte('date_created', $day)->where_lte('date_created', $night)->find_one();
+
+    if($query){
+      return $user = array($query->id, $query->uid, $query->fullname, $query->department, $query->date_created);
     }else{
       return 0;
     }

@@ -39,19 +39,32 @@
             );
           }else{
             $remarks = check_records_today($user_id, $day, $night, $type, $status);
-            $remarks_time_in = check_records_yesterday($user_id, $day_yesterday, $night_yesterday, $type, $status);
-            if($remarks){
-              $response = array(
-                "data" => $data,
-                "record" => $duplicate_record,
-                "info" => $remarks,
-                "verified" => $verified
-              );
+            $new_user = checkNewUser($user_id, $day, $night);
+            if($new_user == 0){
+              $remarks_time_in = check_records_yesterday($user_id, $day_yesterday, $night_yesterday, $type, $status);
+              if($remarks){
+                $response = array(
+                  "data" => $data,
+                  "record" => $duplicate_record,
+                  "new"=> $new_user,
+                  "info" => $remarks,
+                  "verified" => $verified
+                );
+              }else{
+                $response = array(
+                  "data" => $data,
+                  "record" => $duplicate_record,
+                  "new"=> $new_user,
+                  "info" => $remarks_time_in,
+                  "verified" => $verified
+                );
+              }
             }else{
               $response = array(
                 "data" => $data,
                 "record" => $duplicate_record,
-                "info" => $remarks_time_in,
+                "new"=> $new_user,
+                "info" => $remarks,
                 "verified" => $verified
               );
             }
