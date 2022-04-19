@@ -173,11 +173,11 @@
 <!-- sign up page -->
 <script id="register" type="text/template">
   <!-- Main -->
-  <div class="d-md-flex align-items-center h-100">
+  <div class="d-md-flex h-100">
     <div class="col-md-6 p-0 h-100 bg-dark">
       <div class="w-100 p-5">
         <div class="container">
-          <label for="profileImg" class="form-label fs-5 text-capitalize text-white">Profile Image</label>
+          <label for="profileImg" class="form-label fs-5 text-capitalize text-white">Profile Image <span class="text-warning fs-6">(Please take 5 pictures)</span></label>
           <div id="my_camera" class="img-fluid mx-auto mb-3"></div>
           <div id="cameraBtns" style="display:none;">
             <button type="button" id="saveBtn" class="btn btn-success d-grid w-100 mb-3">Save Image</button>
@@ -289,7 +289,8 @@
                   Please enter your Department.
                 </div>
               </div>
-              <button class="btn btn-primary d-grid w-100">Register</button>
+              <button type="submit" id="register-btn" class="btn btn-primary d-grid w-100" disabled aria-describedby="registerInfo">Register</button>
+              <div id="registerInfo" class="form-text text-warning">Please take a photo before you register.</div>
             </form>
           </div>
         </div>
@@ -327,11 +328,12 @@
       <div class="w-100 p-2 position-absolute top-50 start-50 translate-middle">
         <h2 class="text-center text-white">Please scan your face</h2>
         <div class="position-relative">
-          <video id="video" width="100%" height="100%" muted></video>
-          <div id="laser" class="laser text-center text-success fs-4">Scanning...</div>
+          <div id="my_camera" class="W-100 img-fluid mx-auto"></div>
+          <div id="laser" class="d-none laser text-center text-success fs-4">Scanning...</div>
         </div>
       </div>
     </div>
+    <img src="" class="d-none w-100 h-100" id="result">
   </div>
   <!-- End Main -->
   <div class="overlay"></div>

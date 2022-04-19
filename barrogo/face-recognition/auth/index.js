@@ -9,6 +9,7 @@ $(document).ready(function () {
       $("#timeWrapper").html("").append($.Mustache.render("timeDisplay"));
       checkUserLogs();
       clock();
+      Webcam.reset();
 
       let scanner = new Instascan.Scanner({
         video: document.getElementById("preview"),
@@ -26,6 +27,24 @@ $(document).ready(function () {
                 $("#scannerWrapper").removeClass("d-none");
                 $("#laser").removeClass("d-none");
               }, 1200);
+              let idleTime = 0;
+
+              setInterval(timerIncrement, 60000); // 1 minute
+              // Zero the idle timer on mouse movement and keyboard movement.
+              $(document).mousemove(function () {
+                idleTime = 0;
+              });
+              $(document).keypress(function () {
+                idleTime = 0;
+              });
+
+              function timerIncrement() {
+                idleTime += 1;
+                if (idleTime == 2) {
+                  // 2 minutes
+                  window.location.reload();
+                }
+              }
             } else {
               console.error("No cameras found.");
             }
@@ -99,7 +118,7 @@ $(document).ready(function () {
                     data.info +
                     "</p>",
                   showConfirmButton: false,
-                  timer: 2500,
+                  timer: 2000,
                 }).then(() => {
                   localStorage.setItem("userLogs", JSON.stringify(data.data));
                   localStorage.setItem(
@@ -132,244 +151,243 @@ $(document).ready(function () {
       checkUserLogs();
       clock();
 
-      $(document).ready(function () {
-        $("div.spanner").addClass("show");
-        $("div.overlay").addClass("show");
-        Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri("models"),
-          faceapi.nets.faceLandmark68Net.loadFromUri("models"),
-          faceapi.nets.faceRecognitionNet.loadFromUri("models"),
-          faceapi.nets.ssdMobilenetv1.loadFromUri("models"),
-        ]).then(startVideo);
+      // show loading screen
+      $("div.spanner").addClass("show");
+      $("div.overlay").addClass("show");
 
-        var vid;
-        function startVideo() {
-          navigator.getUserMedia(
-            { video: {} },
+      Webcam.set({
+        width: 800,
+        height: 600,
+        dest_width: 640,
+        dest_height: 480,
+        image_format: "jpeg",
+        jpeg_quality: 90,
+        flip_horiz: true,
+      });
 
-            (stream) => {
-              video.srcObject = stream;
-              vid = stream.getTracks()[0];
-            },
-            (err) => console.error(err)
-          );
-        }
+      Promise.all([
+        faceapi.nets.faceLandmark68Net.loadFromUri("models"),
+        faceapi.nets.faceRecognitionNet.loadFromUri("models"),
+        faceapi.nets.ssdMobilenetv1.loadFromUri("models"),
+      ]).then(start);
+
+      async function start() {
+        const labeledFaceDescriptors = await loadImages();
+        const faceMatcher = new faceapi.FaceMatcher(
+          labeledFaceDescriptors,
+          0.5
+        );
 
         setTimeout(() => {
           $("div.spanner").removeClass("show");
           $("div.overlay").removeClass("show");
           $("#scanWrapper").removeClass("d-none");
           $("#scanWrapper").addClass("d-md-flex align-items-center");
-          $("#video").get(0).play();
+          Webcam.attach("#my_camera");
         }, 3000);
 
-        $("#video").on("playing", async function () {
-          const labeledFaceDescriptors = await loadImages();
-          const faceMatcher = new faceapi.FaceMatcher(
-            labeledFaceDescriptors,
-            0.5
-          );
-          const displaySize = { width: video.width, height: video.height };
-          let ctr = 0;
-          var playing = setInterval(async () => {
-            const detection = await faceapi
-              .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
-              .withFaceLandmarks()
-              .withFaceDescriptor();
-            if (!detection) {
-              ++ctr;
-              if (ctr == 1) {
-                clearInterval(playing);
-                let attempts = localStorage.getItem("attempts");
-                attempts = JSON.parse(attempts);
-                localStorage.setItem(
-                  "attempts",
-                  JSON.stringify(attempts - ctr)
-                );
-                if (attempts == 0) {
-                  Swal.fire({
-                    icon: "error",
-                    title: "Invalid",
-                    html:
-                      "No Faces Detected." +
-                      "<br>" +
-                      "<p class='text-danger'>Attempts has been exceeded.</p>",
-                  }).then(() => {
-                    stopVideo();
-                    localStorage.removeItem("attempts");
-                    localStorage.removeItem("type");
-                    localStorage.removeItem("userLogs");
-                    localStorage.removeItem("remarks");
-                    window.location.href = "#/login";
-                  });
-                } else {
-                  Swal.fire({
-                    icon: "error",
-                    title: "Invalid",
-                    html:
-                      "No Faces Detected. Please try again." +
-                      "<br>" +
-                      "<small class='text-warning'>You only have " +
-                      attempts +
-                      " tries attempt.</small>",
-                  }).then(() => {
-                    window.location.reload();
-                  });
-                  throw new Error(`no faces detected`);
-                }
-              }
-            } else {
-              const resizedDetection = faceapi.resizeResults(
-                detection,
-                displaySize
-              );
-              const results = faceMatcher.findBestMatch(
-                resizedDetection.descriptor
-              );
-              if (results.label === "unknown") {
-                ++ctr;
-                if (ctr === 1) {
-                  clearInterval(playing);
-                  let attempts = localStorage.getItem("attempts");
-                  attempts = JSON.parse(attempts);
-                  localStorage.setItem(
-                    "attempts",
-                    JSON.stringify(attempts - ctr)
-                  );
-                  if (attempts == 0) {
-                    Swal.fire({
-                      icon: "error",
-                      title: "Invalid",
-                      html:
-                        "Face not match." +
-                        "<br>" +
-                        "<p class='text-danger'>Attempts has been exceeded.</p>",
-                    }).then(() => {
-                      stopVideo();
-                      localStorage.removeItem("attempts");
-                      localStorage.removeItem("type");
-                      localStorage.removeItem("userLogs");
-                      localStorage.removeItem("remarks");
-                      window.location.href = "#/login";
-                    });
-                  } else {
-                    Swal.fire({
-                      icon: "error",
-                      title: "Invalid",
-                      html:
-                        "Face not match. Please try again." +
-                        "<br>" +
-                        "<small class='text-warning'>You only have " +
-                        attempts +
-                        " tries attempt.</small>",
-                    }).then(() => {
-                      window.location.reload();
-                    });
-                  }
-                }
-              } else {
-                ++ctr;
-                if (ctr === 1) {
-                  clearInterval(playing);
-                  stopVideo();
-                  insert_attendance(results);
-                }
-              }
-            }
-          }, 100);
+        Webcam.on("live", function () {
+          $("#laser").removeClass("d-none");
+          setTimeout(matching, 2500, faceMatcher);
         });
+      }
+      async function matching(faceMatcher) {
+        Webcam.snap((data_uri) => {
+          $("#result").attr("src", data_uri);
+        });
+        const img = document.querySelector("#result");
+        const detection = await faceapi
+          .detectSingleFace(img)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
 
-        // stop video
-        function stopVideo() {
-          navigator.getUserMedia(
-            { video: {} },
+        let attempts = localStorage.getItem("attempts");
+        attempts = JSON.parse(attempts);
 
-            () => {
-              vid.stop();
-            },
-            (err) => console.error(err)
+        if (detection) {
+          const displaySize = { width: img.width, height: img.height };
+          const resizedDetection = faceapi.resizeResults(
+            detection,
+            displaySize
           );
-        }
-
-        // load all images
-        function loadImages() {
-          let userLogs = localStorage.getItem("userLogs");
-          userLogs = JSON.parse(userLogs);
-          const userIDFolder = [userLogs[1]];
-
-          return Promise.all(
-            userIDFolder.map(async (id) => {
-              const descriptions = [];
-              for (let i = 1; i <= 5; i++) {
-                const img = await faceapi.fetchImage(
-                  `./api/uploads/images/${id}/${id}-${i}.jpg`
-                );
-                const detections = await faceapi
-                  .detectSingleFace(img)
-                  .withFaceLandmarks()
-                  .withFaceDescriptor();
-                if (!img) {
-                  console.log(`no faces detected for ${id}`);
-                }
-                descriptions.push(detections.descriptor);
-              }
-              return new faceapi.LabeledFaceDescriptors(id, descriptions);
-            })
-          );
-        }
-
-        // insert record
-        function insert_attendance(result) {
-          let type = localStorage.getItem("type");
-          type = JSON.parse(type);
-          let remarks = localStorage.getItem("remarks");
-
-          $.ajax({
-            type: "POST",
-            url: "api/attendance",
-            dataType: "json",
-            data: {
-              fetchID: result.label,
-              type: type,
-              remarks: remarks,
-            },
-          }).done(function (data) {
-            if (data.verified == 1) {
-              const category = data.data[5].toLowerCase();
-              const finalPhrase = category.replace(
-                /(^\w{1})|(\s+\w{1})/g,
-                (letter) => letter.toUpperCase()
-              );
+          const result = faceMatcher.findBestMatch(resizedDetection.descriptor);
+          if (result.label === "unknown") {
+            if (attempts == 0) {
               Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Thank you, " + data.data[1] + ".",
+                icon: "error",
+                title: "Invalid",
                 html:
-                  "Date: " +
-                  data.data[3] +
+                  "Face not match." +
                   "<br>" +
-                  "Time: " +
-                  data.data[4] +
-                  "<br>" +
-                  "Category: " +
-                  finalPhrase,
+                  "<p class='text-danger'>Attempts has been exceeded.</p>",
+                showConfirmButton: false,
+                timer: 2000,
               }).then(() => {
+                $("#result").attr("src", "");
                 localStorage.removeItem("attempts");
-                localStorage.removeItem("userLogs");
                 localStorage.removeItem("type");
+                localStorage.removeItem("userLogs");
                 localStorage.removeItem("remarks");
                 window.location.href = "#/login";
               });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Invalid",
+                html:
+                  "Face not match. Please try again." +
+                  "<br>" +
+                  "<small class='text-warning'>You only have " +
+                  attempts +
+                  " tries attempt.</small>",
+                showConfirmButton: false,
+                timer: 2000,
+              }).then(() => {
+                localStorage.setItem("attempts", JSON.stringify(attempts - 1));
+                window.location.reload();
+              });
             }
-          });
+          } else {
+            insert_attendance(result);
+          }
+        } else {
+          if (attempts == 0) {
+            Swal.fire({
+              icon: "error",
+              title: "Invalid",
+              html:
+                "No Faces Detected." +
+                "<br>" +
+                "<p class='text-danger'>Attempts has been exceeded.</p>",
+              showConfirmButton: false,
+              timer: 2000,
+            }).then(() => {
+              $("#result").attr("src", "");
+              localStorage.removeItem("attempts");
+              localStorage.removeItem("type");
+              localStorage.removeItem("userLogs");
+              localStorage.removeItem("remarks");
+              window.location.href = "#/login";
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Invalid",
+              html:
+                "No Faces Detected. Please try again." +
+                "<br>" +
+                "<small class='text-warning'>You only have " +
+                attempts +
+                " tries attempt.</small>",
+              showConfirmButton: false,
+              timer: 2000,
+            }).then(() => {
+              localStorage.setItem("attempts", JSON.stringify(attempts - 1));
+              window.location.reload();
+            });
+          }
         }
-      });
+      }
+
+      // load all images
+      function loadImages() {
+        let userLogs = localStorage.getItem("userLogs");
+        userLogs = JSON.parse(userLogs);
+        const userIDFolder = [userLogs[1]];
+
+        return Promise.all(
+          userIDFolder.map(async (id) => {
+            const descriptions = [];
+            for (let i = 1; i <= 5; i++) {
+              const img = await faceapi.fetchImage(
+                `./api/uploads/images/${id}/${id}-${i}.jpg`
+              );
+              const detections = await faceapi
+                .detectSingleFace(img)
+                .withFaceLandmarks()
+                .withFaceDescriptor();
+              if (!img) {
+                console.log(`no faces detected for ${id}`);
+              }
+              descriptions.push(detections.descriptor);
+            }
+            return new faceapi.LabeledFaceDescriptors(id, descriptions);
+          })
+        );
+      }
+
+      // insert record
+      function insert_attendance(result) {
+        let type = localStorage.getItem("type");
+        type = JSON.parse(type);
+        let remarks = localStorage.getItem("remarks");
+        $.ajax({
+          type: "POST",
+          url: "api/attendance",
+          dataType: "json",
+          data: {
+            fetchID: result.label,
+            type: type,
+            remarks: remarks,
+          },
+        }).done(function (data) {
+          if (data.verified == 1) {
+            const category = data.data[5].toLowerCase();
+            const finalPhrase = category.replace(
+              /(^\w{1})|(\s+\w{1})/g,
+              (letter) => letter.toUpperCase()
+            );
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Thank you, " + data.data[1] + ".",
+              html:
+                "Date: " +
+                data.data[3] +
+                "<br>" +
+                "Time: " +
+                data.data[4] +
+                "<br>" +
+                "Category: " +
+                finalPhrase,
+              showConfirmButton: false,
+              timer: 2000,
+            }).then(() => {
+              $("#result").attr("src", "");
+              localStorage.removeItem("attempts");
+              localStorage.removeItem("userLogs");
+              localStorage.removeItem("type");
+              localStorage.removeItem("remarks");
+              window.location.href = "#/login";
+            });
+          }
+        });
+      }
     });
 
     // register page
     Path.map("#/register").to(function () {
       $("#target").html("").append($.Mustache.render("register"));
       checkUserID();
+
+      let idleTime = 0;
+
+      setInterval(timerIncrement, 60000); // 1 minute
+      // Zero the idle timer on mouse movement and keyboard movement.
+      $(document).mousemove(function () {
+        idleTime = 0;
+      });
+      $(document).keypress(function () {
+        idleTime = 0;
+      });
+
+      function timerIncrement() {
+        idleTime += 1;
+        if (idleTime == 2) {
+          // 2 minutes
+          window.location.href = "#/login";
+        }
+      }
 
       // set webcam
       Webcam.set({
@@ -379,6 +397,7 @@ $(document).ready(function () {
         dest_height: 480,
         image_format: "jpeg",
         jpeg_quality: 90,
+        flip_horiz: true,
       });
       Webcam.attach("#my_camera");
 
@@ -452,6 +471,7 @@ $(document).ready(function () {
             $("#cameraBtns").hide();
             $("#resetBtn").addClass("btn btn-outline-light d-grid w-100");
             $("#resetBtn").show();
+            $("#register-btn").removeAttr("disabled");
           }
         });
       });

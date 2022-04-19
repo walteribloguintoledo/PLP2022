@@ -3,8 +3,10 @@
   date_default_timezone_set("Asia/Manila"); 
   $app = new Slim();
 
-  $app->get('/timeStamp', function(){
+  $app->get('/test/:var', function($var){
     echo date("Y-m-d H:i:s");
+
+    echo var_dump(login($var));
   });
 
   $app->post('/login',function() {
@@ -24,61 +26,64 @@
       // function for login
       $data = login($user_id);
 
-      if($data !== 0){
+      if($data){
         $verified = 1;
+        $info= array($data->id, $data->uid, $data->fullname, $data->department, $data->date_created);
         //check duplicate records
         $duplicate_record = checkDuplicateRecords($user_id, $day, $night, $type, $status);
-        if($duplicate_record == 0){
+        if(!$duplicate_record){
           if($weekend == 0 || $weekend == 6){
             $remarks = check_records_today($user_id, $day, $night, $type, $status);
             $response = array(
-              "data" => $data,
-              "record" => $duplicate_record,
+              "data" => $info,
+              "record" => 0,
               "info" => $remarks,
               "verified" => $verified
             );
           }else{
             $remarks = check_records_today($user_id, $day, $night, $type, $status);
             $new_user = checkNewUser($user_id, $day, $night);
-            if($new_user == 0){
+            if($new_user){
+              $new_info = array($new_user->id, $new_user->uid, $new_user->fullname, $new_user->department, $new_user->date_created);
+              $response = array(
+                "data" => $info,
+                "record" => 0,
+                "new" => $new_info,
+                "info" => $remarks,
+                "verified" => $verified
+              );
+            }else{
               $remarks_time_in = check_records_yesterday($user_id, $day_yesterday, $night_yesterday, $type, $status);
               if($remarks){
                 $response = array(
-                  "data" => $data,
-                  "record" => $duplicate_record,
-                  "new"=> $new_user,
+                  "data" => $info,
+                  "record" => 0,
+                  "new"=> 0,
                   "info" => $remarks,
                   "verified" => $verified
                 );
               }else{
                 $response = array(
-                  "data" => $data,
-                  "record" => $duplicate_record,
-                  "new"=> $new_user,
+                  "data" => $info,
+                  "record" => 0,
+                  "new"=> 0,
                   "info" => $remarks_time_in,
                   "verified" => $verified
                 );
               }
-            }else{
-              $response = array(
-                "data" => $data,
-                "record" => $duplicate_record,
-                "new"=> $new_user,
-                "info" => $remarks,
-                "verified" => $verified
-              );
             }
           }
         }else{
+          $record = array($duplicate_record->id, $duplicate_record->fullname, $duplicate_record->user_id, date("F d, Y", strtotime($duplicate_record->date_created)), date("h:i:s a", strtotime($duplicate_record->date_created)), $duplicate_record->type, $duplicate_record->status);
           $response = array(
-            "data" => $data,
-            "record" => $duplicate_record,
+            "data" => $info,
+            "record" => $record,
             "verified" => $verified
           );
         }
       }else{
         $response = array(
-          "data" => $data,
+          "data" => 0,
           "verified" => $verified
         );
       }

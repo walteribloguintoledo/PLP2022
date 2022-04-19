@@ -1,35 +1,22 @@
 <?php
   function login($userID){
     $query = ORM::for_table('users')->where('uid', $userID)->find_one();
-
-    if($query){
-      return $user = array($query->id, $query->uid, $query->fullname, $query->department, $query->date_created);
-    }else{
-      return 0;
-    }
+    
+    return $query;
   }
 
   // check if the user is new
   function checkNewUser($id, $day, $night){
     $query = ORM::for_table('users')->where('uid', $id)->where_gte('date_created', $day)->where_lte('date_created', $night)->find_one();
 
-    if($query){
-      return $user = array($query->id, $query->uid, $query->fullname, $query->department, $query->date_created);
-    }else{
-      return 0;
-    }
+    return $query;
   }
 
   //check duplicate records
   function checkDuplicateRecords($id, $day, $night, $type, $status){
     $query = ORM::for_table('users')->join('attendance', array('users.uid', '=', 'attendance.uid'))->where('users.uid', $id)->where_gte('attendance.date_created', $day)->where_lte('attendance.date_created', $night)->where('attendance.type', $type)->where('attendance.status', $status)->find_one();
 
-    if ($query) {
-      // output data of each row
-      return $user_data = array($query->id, $query->fullname, $query->user_id, date("F d, Y", strtotime($query->date_created)), date("h:i:s a", strtotime($query->date_created)), $query->type, $query->status);
-    } else {
-      return 0;
-    }
+    return $query;
   }
 
   // check records today
