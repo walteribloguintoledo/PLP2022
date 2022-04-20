@@ -177,18 +177,17 @@ $(document).ready(function () {
           labeledFaceDescriptors,
           0.5
         );
-
-        setTimeout(() => {
+        if (labeledFaceDescriptors && faceMatcher) {
           $("div.spanner").removeClass("show");
           $("div.overlay").removeClass("show");
           $("#scanWrapper").removeClass("d-none");
           $("#scanWrapper").addClass("d-md-flex align-items-center");
           Webcam.attach("#my_camera");
-        }, 3000);
+          setTimeout(matching, 2500, faceMatcher);
+        }
 
         Webcam.on("live", function () {
           $("#laser").removeClass("d-none");
-          setTimeout(matching, 2500, faceMatcher);
         });
       }
       async function matching(faceMatcher) {
