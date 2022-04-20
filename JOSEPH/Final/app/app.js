@@ -366,18 +366,18 @@ $(document).ready(function () {
                         data: { ID: DeleteID },
                     }).then(
                         function (response) {
-                            if (currentUser.length == 1) {
-                                localStorage.removeItem("allUsersData");
-                                alert(response);
-                                window.location.reload();
-                            }
                             $.getJSON('./api/view', function (response) {
                                 if (response.status == 'success') {
                                     localStorage.setItem("allUsersData", JSON.stringify(response.html));
                                     window.location.reload();
                                 }
                             });
-                            if (currentUser.length > 1) {
+                            if (currentUser.length == 1) {
+                                localStorage.removeItem("allUsersData");
+                                alert(response);
+                                window.location.reload();
+                            }
+                            else if (currentUser.length > 1) {
                                 alert(response);
                                 window.location.reload();
                             }

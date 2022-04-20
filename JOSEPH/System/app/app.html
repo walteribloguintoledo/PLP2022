@@ -1,0 +1,514 @@
+<!-- admin nav bar-->
+<script type="text/template" id="top-nav-bar">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <a class="navbar-brand ps-3">Online Exam</a>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" id="logout">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+</script>
+
+<!-- admin side nav -->
+<script type="text/template" id="side-menu-bar">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Admin</div>
+                    <a class="nav-link" href="#/adminSide">
+                        <div class="sb-nav-link-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                            </svg>
+                        </div>
+                        Questionaire
+                    </a>
+                    <div class="sb-sidenav-menu-heading">User</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                        data-bs-target="#collapseAuthenticate" aria-expanded="false"
+                        aria-controls="collapseAuthenticate">
+                        <div class="sb-nav-link-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                                </svg>
+                        </div>
+                        Users Data
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseAuthenticate" aria-labelledby="headingOne"
+                        data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="#/userInformation">Users Infromation</a>
+                            <a class="nav-link">Users Scores</a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                <u>Admin</u>
+            </div>
+        </nav>
+    </div>
+</div>
+</script>
+
+<!-- admin -->
+<script type="text/template" id="adminSide">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                    <h1 class="mt-4">Questionaire
+                        <button class="btn btn-outline-secondary" id="add">
+                            <a href="#/addQuestion">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-plus" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                            </svg>
+                            </a>
+                        </button>
+                    </h1>
+                </div>
+                <table class="table table-dark table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Question</th>
+                            <th scope="col">Choice 1</th>
+                            <th scope="col">Choice 2</th>
+                            <th scope="col">Choice 3</th>
+                            <th scope="col">Choice 4</th>
+                            <th scope="col">Answer</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Subject</th>
+                            <th scope="col">Level</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabledata">
+                        {{#questions}}
+                        <tr>
+                            <td scope="row">{{id}}</td>
+                            <td scope="row">{{question}}</td>
+                            <td scope="row">{{choice1}}</td>
+                            <td scope="row">{{choice2}}</td>
+                            <td scope="row">{{choice3}}</td>
+                            <td scope="row">{{choice4}}</td>
+                            <td scope="row">{{answer}}</td>
+                            <td scope="row">{{category}}</td>
+                            <td scope="row">{{subject}}</td>
+                            <td scope="row">{{level}}</td>
+                            <td scope='row'><a href="#/editQuestion"><button class='btn btn-info' id='btnEdit' data-id='{{id}}'><span>EDIT</span></button></a></td>
+                            <td scope='row'><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#Delete' id='btnDelete' data-id2='{{id}}'><span>Delete</span></button></td>
+                        </tr>
+                        {{/questions}}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2022</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- delete -->
+<div class="modal fade" id="Delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text">Are you sure you want to Delete Question?</p>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="deleteQuestion">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- admin add -->
+<script type="text/template" id="addQuestion">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                <br/>
+                    <h2>Add Another Question</h2>
+                    <hr>
+                    <div class="row mb-3">
+                        <label for="question" class="col-sm-2 col-form-label">Question</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="question" class='form-control' placeholder="Enter Question">
+                        </div>
+                    </div>
+                    <div class="px-5">
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Choice 1</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="choice1" class='form-control' placeholder="Enter Choice 1">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Choice 2</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="choice2" class='form-control' placeholder="Enter Choice 2">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Choice 3</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="choice3" class='form-control' placeholder="Enter Choice 3">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Choice 4</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="choice4" class='form-control' placeholder="Enter Choice 4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="subject" class="col-sm-2 col-form-label">Answer</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="answer">
+                                    <option value="A" selected>A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="category" class="col-sm-2 col-form-label">Category</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="category">
+                                <option value="--Select--" selected>--Select--</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Programming">Programming</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="subject" class="col-sm-2 col-form-label">Subject</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="subject">
+                                <option value="--Select--" selected>--Select--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="subject" class="col-sm-2 col-form-label">Level</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="level">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                        </div>
+                    </div>
+                    <button type="click" class="btn btn-secondary" id="back">Back</a></button>
+                    <button type="click" class="btn btn-primary" id="addQuestion">Add Question</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- admin edit -->
+<script type="text/template" id="editQuestion">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                <br/>
+                    <h2>Update</h2>
+                    <hr>
+                    <div class="row mb-3">
+                        <label for="question" class="col-sm-2 col-form-label">Update ID</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateID" class='form-control' disabled>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="question" class="col-sm-2 col-form-label">Update Question</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateQuestionnaire" class='form-control' placeholder="Enter Question">
+                        </div>
+                    </div>
+                    <div class="px-5">
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Update Choice 1</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="updateChoice1" class='form-control' placeholder="Enter Choice 1">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Update Choice 2</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="updateChoice2" class='form-control' placeholder="Enter Choice 2">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Update Choice 3</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="updateChoice3" class='form-control' placeholder="Enter Choice 3">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="question" class="col-sm-2 col-form-label">Update Choice 4</label>
+                            <div class="col-sm-10">
+                                <input type='text' id="updateChoice4" class='form-control' placeholder="Enter Choice 4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="subject" class="col-sm-2 col-form-label">Update Answer</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="updateAnswer">
+                                    <option value="A" selected>A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="category" class="col-sm-2 col-form-label">Update Category</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="updateCategory">
+                                <option value="--Select--" selected>--Select--</option>
+                                <option value="Hardware">Hardware</option>
+                                <option value="Programming">Programming</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="subject" class="col-sm-2 col-form-label">Update Subject</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="updateSubject">
+                                <option value="--Select--" selected>--Select--</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="subject" class="col-sm-2 col-form-label">Update Level</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="updateLevel">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                        </div>
+                    </div>
+                    <button type="click" class="btn btn-secondary" id="updateback">Back</a></button>
+                    <button type="click" class="btn btn-primary" id="updateQuestion">Update</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- admin login -->
+<script type="text/template" id="login">
+<form>
+    <h2>Login</h2>
+    <hr>
+    <div class="row mb-3">
+        <label for="username" class="col-sm-2 col-form-label">Username</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="password" class="col-sm-2 col-form-label">Password</label>
+        <div class="col-sm-10">
+            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+        </div>
+    </div>
+    <button type="click" class="btn btn-primary" id="login">Login</button>
+</form>
+</script>
+
+<!-- home page -->
+<script type="text/template" id="home">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <h3>Online Exam</h3>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#/home">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        About Admin
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" target="_blank"
+                                href="https://www.facebook.com/naniii20/">Facebook</a></li>
+                        <li><a class="dropdown-item" target="_blank"
+                                href="https://www.instagram.com/naniii0620/">Instagram</a></li>
+                        <li><a class="dropdown-item" target="_blank"
+                                href="https://twitter.com/nnaanniieee?fbclid=IwAR2ZEGIffc8lmGy4QUxrVct7kYM-P1XwCkTc3v-bC21eiGzreb_Ztsc5MtU">Twitter</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+                <li><a class="dropdown-item" href="#/login">Login As Admin</a></li>
+            </ul>
+        </li>
+    </ul>
+    </div>
+</nav>
+
+<header class="bg-dark py-5">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-lg-8 col-xl-7 col-xxl-6">
+                <div class="my-5 text-center text-xl-start">
+                    <h1 class="display-5 fw-bolder text-white mb-2">Online Exam
+                    </h1>
+                    <div class="lead fw-normal text-white-50 mb-4">Online Examination System is a technology-driven way to simplify examination activities like defining exam patterns with question banks, defining exam timer, objective/subjective question sections, conducting exams using the computer or mobile devices in a paperless manner.
+                    </div>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                        <button type="button" class="btn btn-outline-light btn-lg" id="credentials">Take Exam</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+                <img class="img-fluid rounded-3 my-5" src="./extra/img/home.jpg"/></div>
+        </div>
+    </div>
+</header>
+</script>
+
+<script type="text/template" id="credentials">
+<form>
+    <h2>Enter Credentials</h2>
+    <hr>
+    <div class="row mb-3">
+        <label for="fname" class="col-sm-2 col-form-label">Firstname</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="fname" placeholder="ex.(John)" name="fname">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="lname" class="col-sm-2 col-form-label">Lastname</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="lname" placeholder="ex.(Wick)" name="lname">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="email" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="email" placeholder="ex.(john_wick@gmail.com)" name="email">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="birthdate" class="col-sm-2 col-form-label">Birthdate</label>
+        <div class="col-sm-10">
+            <input type="date" class="form-control" id="birthdate" name="birthdate">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="contact" class="col-sm-2 col-form-label">Contact</label>
+        <div class="col-sm-10">
+            <input type="tel" class="form-control" id="contact" placeholder="Enter your Contact" name="contact"
+                maxlength="11">
+        </div>
+    </div>
+    <button type="click" class="btn btn-primary" id="register">Register</button>
+</form>
+</script>
+
+<script type="text/template" id="userInformation">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                    <h1 class="mt-4">User Infromation</h1>
+                </div>
+                <table class="table table-dark table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Firstname</th>
+                            <th scope="col">Lastname</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Birthdate</th>
+                            <th scope="col">Contact</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tabledata">
+                        {{#userInformation}}
+                        <tr>
+                            <td scope="row">{{id}}</td>
+                            <td scope="row">{{firstname}}</td>
+                            <td scope="row">{{lastname}}</td>
+                            <td scope="row">{{email}}</td>
+                            <td scope="row">{{birthdate}}</td>
+                            <td scope="row">{{contact}}</td>
+                        </tr>
+                        {{/userInformation}}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+</script>

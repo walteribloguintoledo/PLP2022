@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>
+        Reset select value to
+        default with JQuery
+    </title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
+    </script>
+</head>
+
+<body>
+
+    <div class="custom-control custom-radio" id="add_other">
+        <div id="container0">
+            <input type="radio" class="custom-control-input" name="defaultExampleRadios">
+            <input type="search" name="" value="">
+        </div>
+        <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" name="defaultExampleRadios">
+            <input type="search" name="" value="">
+            <button onclick="removeDiv(this);">X</button>
+        </div>
+    </div>
+    <div class="custom-control copy-radio" onclick="addoptions()">
+        <label class="add_option" id="add_othe1r">Add More</label>
+    </div>
+
+    <script>
+        function addoptions() {
+            $('#add_other').append('<div>' + '<input type="radio" class="custom-control-input" name="defaultExampleRadios">' + '<input type="search" name="" value="">' + '<button class="remove" onclick="removeDiv(this);">X</button>' + "</div>");
+        }
+
+        function removeDiv(btn) {
+            ((btn.parentNode).parentNode).removeChild(btn.parentNode);
+        }
+    </script>
+</body>
+
+</html>
