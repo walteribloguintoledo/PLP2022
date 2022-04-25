@@ -105,10 +105,11 @@
 
       $data = attendance($user_id, $day, $night, $type, $remarks, $status);
 
-      if($data !== 0){
+      if($data){
         $verified = 1;
+        $user_data = array($data->id, $data->fullname, $data->uid, date("F d, Y", strtotime($data->date_created)), date("h:i:s a", strtotime($data->date_created)), $data->type, $data->remarks, $data->status);
         $response = array(
-          "data" => $data,
+          "data" => $user_data,
           "remarks" => $remarks,
           "verified" => $verified
         );
