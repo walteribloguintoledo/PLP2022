@@ -1,7 +1,6 @@
-<!-- admin nav bar-->
+<!-- top-nav-bar -->
 <script type="text/template" id="top-nav-bar">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <!-- Navbar Brand-->
     <a class="navbar-brand ps-3">Online Exam</a>
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
@@ -9,52 +8,121 @@
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!">Settings</a></li>
-                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li><a class="dropdown-item">Settings</a></li>
+                <li><a class="dropdown-item">Activity Log</a></li>
                 <li>
-                    <hr class="dropdown-divider" />
+                    <hr class="dropdown-divider"/>
                 </li>
-                <li><a class="dropdown-item" id="logout">Logout</a></li>
+                <li><a class="dropdown-item" href="#/home" id="logout">Logout</a></li>
             </ul>
         </li>
     </ul>
 </nav>
 </script>
 
-<!-- admin side nav -->
+<!-- side-menu-bar -->
 <script type="text/template" id="side-menu-bar">
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Admin</div>
-                    <a class="nav-link" href="#/adminSide">
+                    <div class="sb-sidenav-menu-heading">Manage Category</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                        data-bs-target="#collapseCategory" aria-expanded="false"
+                        aria-controls="collapseCategory">
                         <div class="sb-nav-link-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+                                <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
                             </svg>
                         </div>
-                        Questionaire
-                    </a>
-                    <div class="sb-sidenav-menu-heading">User</div>
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                        data-bs-target="#collapseAuthenticate" aria-expanded="false"
-                        aria-controls="collapseAuthenticate">
-                        <div class="sb-nav-link-icon">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
-                                </svg>
-                        </div>
-                        Users Data
+                        Category
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
-                    <div class="collapse" id="collapseAuthenticate" aria-labelledby="headingOne"
+                    <div class="collapse" id="collapseCategory" aria-labelledby="headingOne"
                         data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="#/userInformation">Users Infromation</a>
-                            <a class="nav-link">Users Scores</a>
+                            <a class="nav-link" href="#/addCategory">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                                &nbsp;Add Category
+                            </a>
+                            <a class="nav-link" href="#/manageCategory">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                                </svg>
+                                &nbsp;Manage Category
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+                 <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Manage Exam</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExam" aria-expanded="false"
+                        aria-controls="collapseExam">
+                        <div class="sb-nav-link-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                                <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
+                            </svg>
+                        </div>
+                        Exam
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseExam" aria-labelledby="headingOne"
+                        data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="#/chooseExamCategory">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                                &nbsp;Add Exam
+                            </a>
+                            <a class="nav-link" href="#/manageExam">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                                </svg>
+                                &nbsp;Manage Exam
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">Manage Examinee</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExaminee" aria-expanded="false"
+                        aria-controls="collapseExaminee">
+                        <div class="sb-nav-link-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                            </svg>
+                        </div>
+                        Examinee
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseExaminee" aria-labelledby="headingOne"
+                        data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="#/examineeRanking">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-award" viewBox="0 0 16 16">
+                                    <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z"/>
+                                    <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
+                                </svg>
+                                &nbsp;Examinee Ranking</a>
+                            <a class="nav-link" href="#/manageExaminee">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
+                                    <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                    <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                                </svg>
+                                &nbsp;Manage Examinee
+                            </a>
                         </nav>
                     </div>
                 </div>
@@ -68,62 +136,42 @@
 </div>
 </script>
 
-<!-- admin -->
-<script type="text/template" id="adminSide">
+<!-- manageCategory -->
+<script type="text/template" id="manageCategory">
 <div id="layoutSidenav">
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
                 <div>
-                    <h1 class="mt-4">Questionaire
-                        <button class="btn btn-outline-secondary" id="add">
-                            <a href="#/addQuestion">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-plus" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                            </svg>
-                            </a>
-                        </button>
-                    </h1>
+                    <h1 class="mt-4">Questionaire</h1>
                 </div>
-                <table class="table table-dark table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Question</th>
-                            <th scope="col">Choice 1</th>
-                            <th scope="col">Choice 2</th>
-                            <th scope="col">Choice 3</th>
-                            <th scope="col">Choice 4</th>
-                            <th scope="col">Answer</th>
-                            <th scope="col">Category</th>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Level</th>
-                            <th scope="col">Edit</th>
-                            <th scope="col">Delete</th>
-                        </tr>
-                    </thead>
+                <div class="table-responsive">
+                    <table id="courseTable" class="display table" width="100%">  
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">UID</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Subject</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
 
-                    <tbody id="tabledata">
-                        {{#questions}}
-                        <tr>
-                            <td scope="row">{{id}}</td>
-                            <td scope="row">{{question}}</td>
-                            <td scope="row">{{choice1}}</td>
-                            <td scope="row">{{choice2}}</td>
-                            <td scope="row">{{choice3}}</td>
-                            <td scope="row">{{choice4}}</td>
-                            <td scope="row">{{answer}}</td>
-                            <td scope="row">{{category}}</td>
-                            <td scope="row">{{subject}}</td>
-                            <td scope="row">{{level}}</td>
-                            <td scope='row'><a href="#/editQuestion"><button class='btn btn-info' id='btnEdit' data-id='{{id}}'><span>EDIT</span></button></a></td>
-                            <td scope='row'><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#Delete' id='btnDelete' data-id2='{{id}}'><span>Delete</span></button></td>
-                        </tr>
-                        {{/questions}}
-                    </tbody>
-                </table>
+                        <tbody id="tabledata">
+                            {{#category}}
+                            <tr>
+                                <td scope="row">{{id}}</td>
+                                <td scope="row">{{uid}}</td>
+                                <td scope="row">{{course}}</td>
+                                <td scope="row">{{subject}}</td>
+                                <td scope='row'><a href="#/editCategory"><button class='btn btn-info' id='btnEdit' data-id='{{id}}'><span>EDIT</span></button></a></td>
+                                <td scope='row'><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#Delete' id='btnDelete' data-id2='{{id}}'><span>Delete</span></button></td>
+                            </tr>
+                            {{/category}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
         <footer class="py-4 bg-light mt-auto">
@@ -152,96 +200,37 @@
             <div class="modal-body">
                 <p class="text">Are you sure you want to Delete Question?</p>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="deleteQuestion">Delete</button>
+                <button type="button" class="btn btn-danger" id="deleteCategory">Delete</button>
             </div>
         </div>
     </div>
 </div>
 </script>
 
-<!-- admin add -->
-<script type="text/template" id="addQuestion">
+<!-- addCategory -->
+<script type="text/template" id="addCategory">
 <div id="layoutSidenav">
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
                 <div>
                 <br/>
-                    <h2>Add Another Question</h2>
+                    <h2>Add Category</h2>
                     <hr>
                     <div class="row mb-3">
-                        <label for="question" class="col-sm-2 col-form-label">Question</label>
+                        <label for="course" class="col-sm-2 col-form-label">Course</label>
                         <div class="col-sm-10">
-                            <input type='text' id="question" class='form-control' placeholder="Enter Question">
-                        </div>
-                    </div>
-                    <div class="px-5">
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Choice 1</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="choice1" class='form-control' placeholder="Enter Choice 1">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Choice 2</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="choice2" class='form-control' placeholder="Enter Choice 2">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Choice 3</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="choice3" class='form-control' placeholder="Enter Choice 3">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Choice 4</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="choice4" class='form-control' placeholder="Enter Choice 4">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="subject" class="col-sm-2 col-form-label">Answer</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="answer">
-                                    <option value="A" selected>A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                    <option value="D">D</option>
-                                </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="category" class="col-sm-2 col-form-label">Category</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="category">
-                                <option value="--Select--" selected>--Select--</option>
-                                <option value="Hardware">Hardware</option>
-                                <option value="Programming">Programming</option>
-                            </select>
+                            <input type='text' id="course" class='form-control' placeholder="Enter a Course">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="subject" class="col-sm-2 col-form-label">Subject</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="subject">
-                                <option value="--Select--" selected>--Select--</option>
-                            </select>
+                            <input type='text' id="subject" class='form-control' placeholder="Enter a Subject">
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <label for="subject" class="col-sm-2 col-form-label">Level</label>
-                        <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="level">
-                                    <option value="1" selected>1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                        </div>
-                    </div>
-                    <button type="click" class="btn btn-secondary" id="back">Back</a></button>
-                    <button type="click" class="btn btn-primary" id="addQuestion">Add Question</button>
+                    <button type="click" class="btn btn-secondary" id="categoryBack">Back</a></button>
+                    <button type="click" class="btn btn-primary" id="addCategory">Add Category</button>
                 </div>
             </div>
         </main>
@@ -249,95 +238,317 @@
 </div>
 </script>
 
-<!-- admin edit -->
-<script type="text/template" id="editQuestion">
+<!-- editCategory -->
+<script type="text/template" id="editCategory">
 <div id="layoutSidenav">
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
                 <div>
                 <br/>
-                    <h2>Update</h2>
+                    <h2>Update Category</h2>
                     <hr>
                     <div class="row mb-3">
-                        <label for="question" class="col-sm-2 col-form-label">Update ID</label>
+                        <label for="updateID" class="col-sm-2 col-form-label">Update ID</label>
                         <div class="col-sm-10">
-                            <input type='text' id="updateID" class='form-control' disabled>
+                            <input type='text' id="updateID" class='form-control' placeholder="Enter a ID" disabled>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="question" class="col-sm-2 col-form-label">Update Question</label>
+                        <label for="updateCourse" class="col-sm-2 col-form-label">Update Course</label>
                         <div class="col-sm-10">
-                            <input type='text' id="updateQuestionnaire" class='form-control' placeholder="Enter Question">
-                        </div>
-                    </div>
-                    <div class="px-5">
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Update Choice 1</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="updateChoice1" class='form-control' placeholder="Enter Choice 1">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Update Choice 2</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="updateChoice2" class='form-control' placeholder="Enter Choice 2">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Update Choice 3</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="updateChoice3" class='form-control' placeholder="Enter Choice 3">
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="question" class="col-sm-2 col-form-label">Update Choice 4</label>
-                            <div class="col-sm-10">
-                                <input type='text' id="updateChoice4" class='form-control' placeholder="Enter Choice 4">
-                            </div>
+                            <input type='text' id="updateCourse" class='form-control' placeholder="Enter a Course">
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="subject" class="col-sm-2 col-form-label">Update Answer</label>
+                        <label for="subjupdateSubjectect" class="col-sm-2 col-form-label">Update Subject</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="updateAnswer">
-                                    <option value="A" selected>A</option>
-                                    <option value="B">B</option>
-                                    <option value="C">C</option>
-                                    <option value="D">D</option>
-                                </select>
+                            <input type='text' id="updateSubject" class='form-control' placeholder="Enter a Subject">
+                        </div>
+                    </div>
+                    <button type="click" class="btn btn-secondary" id="categoryBack">Back</button>
+                    <button type="click" class="btn btn-primary" id="updateCategory">Save Changes</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- manageExam -->
+<script type="text/template" id="manageExam">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                    <h1 class="mt-4">Exam Table</h1>
+                </div>
+                <div class="table-responsive table-dark">
+                    <table id="examTable" class="display table" width="100%">  
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Exam ID</th>
+                                <th scope="col">Exam Key</th>
+                                <th scope="col">Exam Value</th>
+                                <th scope="col">Exam Level</th>
+                                <th scope="col">Edit</th>
+                                <th scope="col">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabledata">
+                            {{#exam}}
+                            <tr>
+                                <td scope="row">{{id}}</td>
+                                <td scope="row">{{exam_id}}</td>
+                                <td scope="row">{{exam_key}}</td>
+                                <td scope="row">{{exam_value}}</td>
+                                <td scope="row">{{exam_level}}</td>
+                                <td scope='row'><a href="#/editExam"><button class='btn btn-info' id='btnEdit' data-id='{{id}}'><span>EDIT</span></button></a></td>
+                                <td scope='row'><button class='btn btn-danger' data-bs-toggle='modal' data-bs-target='#Delete' id='btnDelete' data-id2='{{id}}'><span>Delete</span></button></td>
+                            </tr>
+                            {{/exam}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2022</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- delete -->
+<div class="modal fade" id="Delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text">Are you sure you want to Delete Exam?</p>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="deleteExam">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<!-- chooseExamCategory -->
+<script type="text/template" id="chooseExamCategory">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                <br/>
+                    <h2>Choose Category</h2>
+                    <hr>
+                    <div class="row mb-3">
+                        <label for="level" class="col-sm-2 col-form-label">Level</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="level">
+                                <option value="Level 1" selected>Level 1</option>
+                                <option value="Level 2">Level 2</option>
+                                <option value="Level 3">Level 3</option>
+                             </select>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="category" class="col-sm-2 col-form-label">Update Category</label>
+                        <label for="course" class="col-sm-2 col-form-label">Course</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="updateCategory">
-                                <option value="--Select--" selected>--Select--</option>
-                                <option value="Hardware">Hardware</option>
-                                <option value="Programming">Programming</option>
+                            <select class="form-select" aria-label="Default select example" id="course">
+                                <option value="-- Select --" selected>-- Select --</option>
+                                {{#courses}}
+                                <option value="{{course}}">{{course}}</option>
+                                {{/courses}}
                             </select>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="subject" class="col-sm-2 col-form-label">Update Subject</label>
+                        <label for="subject" class="col-sm-2 col-form-label">Subject</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="updateSubject">
-                                <option value="--Select--" selected>--Select--</option>
-                                </select>
+                            <select class="form-select" aria-label="Default select example" id="subject">
+                                <option value="-- Select --" selected>-- Select --</option>
+                                {{#subjects}}
+                                <option value="{{subject}}">{{subject}}</option>
+                                {{/subjects}}
+                            </select>
+                        </div>
+                    </div>
+                    <button type="click" class="btn btn-secondary" id="chooseCategoryBack">Back</a></button>
+                    <button type="click" class="btn btn-primary" id="chooseCategoryNext">Next</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- addExam -->
+<script type="text/template" id="addExam">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                <br/>
+                    <h2>Add Another Exam</h2>
+                    <hr>
+                    <div class="row mb-3">
+                        <label for="question" class="col-sm-2 col-form-label">Question</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="question" class='form-control' placeholder="Enter a Question">
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <label for="subject" class="col-sm-2 col-form-label">Update Level</label>
+                        <label for="choice1" class="col-sm-2 col-form-label">Choice 1</label>
                         <div class="col-sm-10">
-                            <select class="form-select" aria-label="Default select example" id="updateLevel">
-                                    <option value="1" selected>1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
+                            <input type='text' id="choice1" class='form-control' placeholder="Enter Choice 1">
                         </div>
                     </div>
-                    <button type="click" class="btn btn-secondary" id="updateback">Back</a></button>
-                    <button type="click" class="btn btn-primary" id="updateQuestion">Update</button>
+                    <div class="row mb-3">
+                        <label for="choice2" class="col-sm-2 col-form-label">Choice 2</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="choice2" class='form-control' placeholder="Enter Choice 2">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="choice3" class="col-sm-2 col-form-label">Choice 3</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="choice3" class='form-control' placeholder="Enter Choice 3">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="choice4" class="col-sm-2 col-form-label">Choice 4</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="choice4" class='form-control' placeholder="Enter Choice 4">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="answer" class="col-sm-2 col-form-label">Answer</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="answer" class='form-control' placeholder="Enter Answer">
+                        </div>
+                    </div>
+                    <button type="click" class="btn btn-secondary" id="addExamBack">Back</a></button>
+                    <button type="click" class="btn btn-primary" id="addExam">Add Exam</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- editExamCategory -->
+<script type="text/template" id="editExamCategory">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                <br/>
+                    <h2>Edit Exam Category</h2>
+                    <hr>
+                    <div class="row mb-3">
+                        <label for="updateLevel" class="col-sm-2 col-form-label">Edit Level</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="updateLevel">
+                                <option value="Level 1" selected>Level 1</option>
+                                <option value="Level 2">Level 2</option>
+                                <option value="Level 3">Level 3</option>
+                             </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="updateCourse" class="col-sm-2 col-form-label">Edit Course</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="updateCourse">
+                                <option value="-- Select --" selected>-- Select --</option>
+                                {{#courses}}
+                                <option value="{{course}}">{{course}}</option>
+                                {{/courses}}
+                             </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="updateSubject" class="col-sm-2 col-form-label">Edit Subject</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" aria-label="Default select example" id="updateSubject">
+                                <option value="-- Select --" selected>-- Select --</option>
+                             </select>
+                        </div>
+                    </div>
+                    <button type="click" class="btn btn-secondary" id="editCategoryBack">Back</a></button>
+                    <button type="click" class="btn btn-primary" id="editCategoryNext">Next</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- editExam -->
+<script type="text/template" id="editExam">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                <br/>
+                    <h2>Edit Exam</h2>
+                    <hr>
+                    <div class="row mb-3">
+                        <label for="updateQuestion" class="col-sm-2 col-form-label">Update Question</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateQuestion" class='form-control' placeholder="Update Question">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="updateChoice1" class="col-sm-2 col-form-label">Update Choice 1</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateChoice1" class='form-control' placeholder="Update Choice 1">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="updateChoice2" class="col-sm-2 col-form-label">Update Choice 2</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateChoice2" class='form-control' placeholder="Update Choice 2">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="updateChoice3" class="col-sm-2 col-form-label">Update Choice 3</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateChoice3" class='form-control' placeholder="Update Choice 3">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="updateChoice4" class="col-sm-2 col-form-label">Update Choice 4</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateChoice4" class='form-control' placeholder="Update Choice 4">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="updateAnswer" class="col-sm-2 col-form-label">Update Answer</label>
+                        <div class="col-sm-10">
+                            <input type='text' id="updateAnswer" class='form-control' placeholder="Update Answer">
+                        </div>
+                    </div>
+                    <button type="click" class="btn btn-secondary" id="addExamBack">Back</a></button>
+                    <button type="click" class="btn btn-primary" id="addExam">Save Changes</button>
                 </div>
             </div>
         </main>
@@ -366,7 +577,89 @@
 </form>
 </script>
 
-<!-- home page -->
+<!-- examineeRanking -->
+<script type="text/template" id="examineeRanking">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                    <h1 class="mt-4">Examinee Ranking</h1>
+                </div>
+                <div class="table-responsive table-dark">
+                    <table id="rankingTable" class="display table" width="100%">  
+                        <thead>
+                            <tr>
+                                <th scope="col">Firstname</th>
+                                <th scope="col">Lastname</th>
+                                <th scope="col">Course</th>
+                                <th scope="col">Subject</th>
+                                <th scope="col">Score</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabledata">
+                            {{#ranking}}
+                            <tr>
+                                <td scope="row">{{firstname}}</td>
+                                <td scope="row">{{lastname}}</td>
+                                <td scope="row">{{course}}</td>
+                                <td scope="row">{{subject}}</td>
+                                <td scope="row">{{score}}</td>
+                            </tr>
+                            {{/ranking}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- manageExaminee -->
+<script type="text/template" id="manageExaminee">
+<div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div>
+                    <h1 class="mt-4">User Infromation</h1>
+                </div>
+                <div class="table-responsive table-dark">
+                    <table id="examineeTable" class="display table" width="100%">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Firstname</th>
+                                <th scope="col">Lastname</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Birthdate</th>
+                                <th scope="col">Contact</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="tabledata">
+                            {{#userInformation}}
+                            <tr>
+                                <td scope="row">{{id}}</td>
+                                <td scope="row">{{firstname}}</td>
+                                <td scope="row">{{lastname}}</td>
+                                <td scope="row">{{email}}</td>
+                                <td scope="row">{{birthdate}}</td>
+                                <td scope="row">{{contact}}</td>
+                            </tr>
+                            {{/userInformation}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+</script>
+
+<!-- home -->
 <script type="text/template" id="home">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -424,7 +717,7 @@
                     <div class="lead fw-normal text-white-50 mb-4">Online Examination System is a technology-driven way to simplify examination activities like defining exam patterns with question banks, defining exam timer, objective/subjective question sections, conducting exams using the computer or mobile devices in a paperless manner.
                     </div>
                     <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                        <button type="button" class="btn btn-outline-light btn-lg" id="credentials">Take Exam</button>
+                        <button type="button" class="btn btn-outline-light btn-lg" id="userCredentials">Take Exam</button>
                     </div>
                 </div>
             </div>
@@ -435,7 +728,8 @@
 </header>
 </script>
 
-<script type="text/template" id="credentials">
+<!-- userCredentials -->
+<script type="text/template" id="userCredentials">
 <form>
     <h2>Enter Credentials</h2>
     <hr>
@@ -470,45 +764,52 @@
                 maxlength="11">
         </div>
     </div>
-    <button type="click" class="btn btn-primary" id="register">Register</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectCategory">Register</button>
 </form>
-</script>
 
-<script type="text/template" id="userInformation">
-<div id="layoutSidenav">
-    <div id="layoutSidenav_content">
-        <main>
-            <div class="container-fluid px-4">
-                <div>
-                    <h1 class="mt-4">User Infromation</h1>
-                </div>
-                <table class="table table-dark table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Firstname</th>
-                            <th scope="col">Lastname</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Birthdate</th>
-                            <th scope="col">Contact</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="tabledata">
-                        {{#userInformation}}
-                        <tr>
-                            <td scope="row">{{id}}</td>
-                            <td scope="row">{{firstname}}</td>
-                            <td scope="row">{{lastname}}</td>
-                            <td scope="row">{{email}}</td>
-                            <td scope="row">{{birthdate}}</td>
-                            <td scope="row">{{contact}}</td>
-                        </tr>
-                        {{/userInformation}}
-                    </tbody>
-                </table>
+<!-- Modal -->
+<div class="modal fade" id="selectCategory" tabindex="-1" aria-labelledby="selectCategoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectCategoryLabel">Choose Category & Subject</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-        </main>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <label for="category" class="col-sm-2 col-form-label">Category</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" aria-label="Default select example" id="category">
+                            <option value="--Select--" selected>--Select--</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Programming">Programming</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="subject" class="col-sm-2 col-form-label">Subject</label>
+                    <div class="col-sm-10">
+                        <select class="form-select" aria-label="Default select example" id="subject">
+                            <option value="--Select--" selected>--Select--</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="beginExam">Begin Exam</button>
+            </div>
+        </div>
     </div>
 </div>
+</script>
+
+<!-- exam -->
+<script type="text/template" id="showQuestion">
+<div class="card m-5">
+    <div class="card-body p-3">
+        <p id="question"></p>
+    </div>
+</div>
+<button type="click" class="btn btn-primary" id="next">Next</button>
 </script>

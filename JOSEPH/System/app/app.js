@@ -8,43 +8,43 @@ $(document).ready(function () {
     $.Mustache.options.warnOnMissingTemplates = true;
     $.Mustache.load("./app/app.html").done(function () {
 
-        // admin side
-        Path.map("#/adminSide").to(function () {
+        //manageCategory
+        Path.map("#/manageCategory").to(function () {
 
             App.navbar.html("").append($.Mustache.render("top-nav-bar"));
             App.menubar.html("").append($.Mustache.render("side-menu-bar"));
 
-            //show questions
-            var allQuestions = JSON.parse(localStorage.getItem('allQuestions'));
-            console.log(allQuestions);
-            var data = [];
-            $.each(allQuestions, function (index, item) {
-                var html = {
-                    id: item.id,
-                    question: item.question,
-                    choice1: item.choice1,
-                    choice2: item.choice2,
-                    choice3: item.choice3,
-                    choice4: item.choice4,
-                    answer: item.answer,
-                    category: item.category,
-                    subject: item.subject,
-                    level: item.level
-                }
-                data.push(html);
-            });
-            var templateData = {
-                questions: data
+            var allCategory = JSON.parse(localStorage.getItem('allCategory'));
+
+            if (allCategory === null) {
+                alert("No current data.");
             }
-            console.log(templateData);
-
-            $.getJSON('./api/view', function (response) {
-                if (response.status == 'success') {
-                    localStorage.setItem("allQuestions", JSON.stringify(response.html));
+            else {
+                var data = [];
+                $.each(allCategory, function (index, item) {
+                    var html = {
+                        id: item.id,
+                        uid: item.uid,
+                        course: item.course,
+                        subject: item.subject
+                    }
+                    data.push(html);
+                });
+                var categoryData = {
+                    category: data
                 }
-            });
+                console.log(categoryData);
 
-            App.canvas.html("").append($.Mustache.render("adminSide", templateData));
+                $.getJSON('./api/viewCategory', function (response) {
+                    if (response.status == 'success') {
+                        localStorage.setItem("allCategory", JSON.stringify(response.html));
+                    }
+                });
+
+                App.canvas.html("").append($.Mustache.render("manageCategory", categoryData));
+            }
+
+            $('#courseTable').dataTable();
 
             var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
 
@@ -57,7 +57,273 @@ $(document).ready(function () {
             $("#logout").click(function (e) {
                 e.preventDefault();
 
-                var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
+            });
+
+            //deleteCategory
+            $(document).on('click', '#btnDelete', function () {
+                var currentUser = JSON.parse(localStorage.getItem('allCategory'));
+
+                var DeleteID = $(this).attr('data-id2');
+                $(document).on("click", '#deleteCategory', function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "./api/deleteCategory",
+                        data: { categoryID: DeleteID },
+                    }).then(
+                        function (response) {
+                            $.getJSON('./api/viewCategory', function (response) {
+                                if (response.status == 'success') {
+                                    localStorage.setItem("allCategory", JSON.stringify(response.html));
+                                    window.location.reload();
+                                }
+                            });
+                            if (currentUser.length == 1) {
+                                localStorage.removeItem("allCategory");
+                                alert(response);
+                                window.location.reload();
+                            }
+                            else if (currentUser.length > 1) {
+                                alert(response);
+                                window.location.reload();
+                            }
+                        },
+                    );
+                });
+            });
+
+            //getCategory
+            $(document).on('click', '#btnEdit', function () {
+
+                var ID = $(this).attr('data-id');
+                $.getJSON("./api/getCategory?categoryID=" + ID, function (response) {
+                    $("#updateID").val(response.id);
+                    $("#updateCourse").val(response.course);
+                    $("#updateSubject").val(response.subject);
+                });
+            });
+        });
+
+        //addCategory
+        Path.map("#/addCategory").to(function () {
+
+            App.navbar.html("").append($.Mustache.render("top-nav-bar"));
+            App.menubar.html("").append($.Mustache.render("side-menu-bar"));
+            App.canvas.html("").append($.Mustache.render("addCategory"));
+
+            var allCategory = JSON.parse(localStorage.getItem('allCategory'));
+            console.log(allCategory);
+
+            var course = $("#course");
+
+            var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+
+            if (currentUser === null) {
+                alert("Please login first!");
+                window.location.replace("#/login");
+                window.location.reload();
+            }
+
+            $("#categoryBack").click(function (e) {
+                e.preventDefault();
+                window.location.replace("#/manageCategory");
+                window.location.reload();
+            });
+
+            $("#logout").click(function (e) {
+                e.preventDefault();
+
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
+            });
+
+
+            var counter = 0;
+            function increment() {
+                let temp;
+                if (allCategory !== null) {
+                    allCategory.forEach(cat => {
+                        if (course[0].value == cat.course) {
+                            temp = cat.uid;
+                        }
+                        else {
+                            temp = counter++;
+                        }
+                    });
+                }
+                return temp;
+            }
+
+            $(document).on('click', '#addCategory', function () {
+                console.log(increment());
+                var newCategory = {
+                    Course: $("#course").val(),
+                    Subject: $("#subject").val(),
+                    UID: increment(),
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "./api/addCategory",
+                    dataType: "json",
+                    data: newCategory,
+                }).then(
+                    function (response) {
+                        if (response.success == 1) {
+
+                        }
+                        if (response.success == 0) {
+                            newCategory = {};
+                            $.getJSON('./api/viewCategory', function (response) {
+                                if (response.status == 'success') {
+                                    localStorage.setItem("allCategory", JSON.stringify(response.html));
+                                }
+                            });
+                            alert("Course Added!");
+                            window.location.replace("#/manageCategory");
+                            window.location.reload();
+                        }
+                    },
+                );
+            });
+        });
+
+        //updateCategory
+        Path.map("#/editCategory").to(function () {
+
+            App.navbar.html("").append($.Mustache.render("top-nav-bar"));
+            App.menubar.html("").append($.Mustache.render("side-menu-bar"));
+            App.canvas.html("").append($.Mustache.render("editCategory"));
+
+            var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+
+            if (currentUser === null) {
+                alert("Please login first!");
+                window.location.replace("#/login");
+                window.location.reload();
+            }
+
+            $("#categoryBack").click(function (e) {
+                e.preventDefault();
+                window.location.replace("#/manageCategory");
+                window.location.reload();
+            });
+
+            $("#logout").click(function (e) {
+                e.preventDefault();
+
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
+            });
+
+            $(document).on('click', '#updateCategory', function () {
+
+                var updateCourse = $('#updateCourse');
+                var updateSubject = $('#updateSubject');
+
+                var updateCategory = {
+                    CID: $("#updateID").val(),
+                    CCourse: $("#updateCourse").val(),
+                    CSubject: $("#updateSubject").val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "./api/updateCategory",
+                    dataType: "json",
+                    data: updateCategory,
+                }).then(
+                    function (response) {
+                        if (response.success == 0) {
+                            $.getJSON('./api/viewCategory', function (response) {
+                                if (response.status == 'success') {
+                                    localStorage.setItem("allCategory", JSON.stringify(response.html));
+                                }
+                            });
+                            window.location.replace("#/manageCategory");
+                            alert("Updated successfully!");
+                            window.location.reload();
+                        }
+                    },
+                );
+            });
+        });
+
+        //manageExam
+        Path.map("#/manageExam").to(function () {
+
+            App.navbar.html("").append($.Mustache.render("top-nav-bar"));
+            App.menubar.html("").append($.Mustache.render("side-menu-bar"));
+
+            var allExam = JSON.parse(localStorage.getItem('allExam'));
+            console.log(allExam);
+
+            if (allExam === null) {
+                alert("No current data.");
+            }
+            else {
+                var data = [];
+                $.each(allExam, function (index, item) {
+                    var html = {
+                        id: item.id,
+                        exam_id: item.exam_id,
+                        exam_key: item.exam_key,
+                        exam_value: item.exam_value,
+                        exam_level: item.exam_level
+                    }
+                    data.push(html);
+                });
+                var examData = {
+                    exam: data
+                }
+                console.log(examData);
+
+                $.getJSON('./api/viewExam', function (response) {
+                    if (response.status == 'success') {
+                        localStorage.setItem("allExam", JSON.stringify(response.html));
+                    }
+                });
+
+                App.canvas.html("").append($.Mustache.render("manageExam", examData));
+            }
+
+            $('#examTable').dataTable();
+
+            var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+
+            if (currentUser === null) {
+                alert("Please login first!");
+                window.location.replace("#/login");
+                window.location.reload();
+            }
+
+            $("#logout").click(function (e) {
+                e.preventDefault();
 
                 if (currentUser === null) {
                     alert("No current user detected.");
@@ -72,24 +338,24 @@ $(document).ready(function () {
             });
 
             $(document).on('click', '#btnDelete', function () {
-                var currentUser = JSON.parse(localStorage.getItem('allQuestions'));
+                var currentUser = JSON.parse(localStorage.getItem('allExam'));
 
                 var DeleteID = $(this).attr('data-id2');
-                $(document).on("click", '#deleteQuestion', function () {
+                $(document).on("click", '#deleteExam', function () {
                     $.ajax({
                         type: "POST",
-                        url: "./api/delete",
+                        url: "./api/deleteExam",
                         data: { ID: DeleteID },
                     }).then(
                         function (response) {
-                            $.getJSON('./api/view', function (response) {
+                            $.getJSON('./api/viewExam', function (response) {
                                 if (response.status == 'success') {
-                                    localStorage.setItem("allQuestions", JSON.stringify(response.html));
+                                    localStorage.setItem("allExam", JSON.stringify(response.html));
                                     window.location.reload();
                                 }
                             });
                             if (currentUser.length == 1) {
-                                localStorage.removeItem("allQuestions");
+                                localStorage.removeItem("allExam");
                                 alert(response);
                                 window.location.reload();
                             }
@@ -105,81 +371,160 @@ $(document).ready(function () {
             $(document).on('click', '#btnEdit', function () {
 
                 var ID = $(this).attr('data-id');
-                $.getJSON("./api/getData?userID=" + ID, function (response) {
+                $.getJSON("./api/getExam?examID=" + ID, function (response) {
                     $("#updateID").val(response.id);
-                    $("#updateQuestionnaire").val(response.question);
-                    $("#updateChoice1").val(response.choice1);
-                    $("#updateChoice2").val(response.choice2);
-                    $("#updateChoice3").val(response.choice3);
-                    $("#updateChoice4").val(response.choice4);
-                    $("#updateAnswer").val(response.answer);
-                    $("#updateLevel").val(response.level);
+                    $("#updateExam_ID").val(response.exam_id);
+                    $("#updateExam_Key").val(response.exam_key);
+                    $("#updateExam_Value").val(response.exam_value);
+                    $("#updateExam_Level").val(response.exam_level);
                 });
             });
         });
 
-        //add
-        Path.map("#/addQuestion").to(function () {
+        //chooseExamCategory
+        Path.map("#/chooseExamCategory").to(function () {
 
             App.navbar.html("").append($.Mustache.render("top-nav-bar"));
             App.menubar.html("").append($.Mustache.render("side-menu-bar"));
-            App.canvas.html("").append($.Mustache.render("addQuestion"));
 
-            $("#back").click(function (e) {
+            $.getJSON('./api/viewCourse', function (response) {
+                if (response.status == 'success') {
+                    localStorage.setItem("allCourse", JSON.stringify(response.html));
+                }
+            });
+
+            var allCourse = JSON.parse(localStorage.getItem('allCourse'));
+            console.log(allCourse);
+
+            var data = [];
+            $.each(allCourse, function (index, item) {
+                var html = {
+                    course: item.course
+                }
+                data.push(html);
+            });
+
+            var courseData = {
+                courses: data
+            }
+
+            console.log(courseData);
+
+            App.canvas.html("").append($.Mustache.render("chooseExamCategory", courseData, subjectsData));
+
+            $("#chooseCategoryBack").click(function (e) {
                 e.preventDefault();
-                window.location.replace("#/adminSide");
+                window.location.replace("#/manageExam");
+                window.location.reload();
             });
 
-            //get subject
-            $.getJSON('./api/json/category.json', function (data) {
-
-                $("#category").change(function () {
-                    alert($("#category option:selected").val());
-                    $.each(data, function (index, Category) {
-                        if ($("#category option:selected").val() == "Hardware") {
-                            $('#subject').html('<option value="--Select--">--Select--</option>');
-                            $('#subject').append('<option value="' + Category.Hardware.Printer + '">' + Category.Hardware.Printer + '</option>' + '<option value="' + Category.Hardware.Networking + '">' + Category.Hardware.Networking + '</option>');
-                        }
-                        if ($("#category option:selected").val() == "Programming") {
-                            $('#subject').html('<option value="--Select--">--Select--</option>');
-                            $('#subject').append('<option value="' + Category.Programming.JQuery + '">' + Category.Programming.JQuery + '</option>' + '<option value="' + Category.Programming.PHP + '">' + Category.Programming.PHP + '</option>' + '</option>' + '<option value="' + Category.Programming.MySQL + '">' + Category.Programming.MySQL + '</option>' + '</option>' + '<option value="' + Category.Programming.Java + '">' + Category.Programming.Java + '</option>');
-                        }
-                    });
-                });
+            $("#course").change(function () {
+                alert($("#course option:selected").val());
             });
 
-            //add question
-            $(document).on('click', '#addQuestion', function () {
-                var newQuestion = {
-                    Question: $("#question").val(),
-                    Choice1: $("#choice1").val(),
-                    Choice2: $("#choice2").val(),
-                    Choice3: $("#choice3").val(),
-                    Choice4: $("#choice4").val(),
-                    Answer: $("#answer").val(),
-                    Category: $("#category").val(),
-                    Subject: $("#subject").val(),
-                    Level: $("#level").val()
+            var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+
+            if (currentUser === null) {
+                alert("Please login first!");
+                window.location.replace("#/login");
+                window.location.reload();
+            }
+
+            $("#logout").click(function (e) {
+                e.preventDefault();
+
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
+            });
+
+            $.getJSON('./api/viewSubject', function (response) {
+                if (response.status == 'success') {
+                    localStorage.setItem("allSubject", JSON.stringify(response.html));
+                }
+            });
+
+            var allSubject = JSON.parse(localStorage.getItem('allSubject'));
+            console.log(allSubject);
+
+            var data = [];
+            $.each(allSubject, function (index, item) {
+                var html = {
+                    subject: item.subject
+                }
+                data.push(html);
+            });
+
+            var subjectsData = {
+                subjects: data
+            }
+        });
+
+        //addExam
+        Path.map("#/addExam").to(function () {
+
+            App.navbar.html("").append($.Mustache.render("top-nav-bar"));
+            App.menubar.html("").append($.Mustache.render("side-menu-bar"));
+            App.canvas.html("").append($.Mustache.render("addExam"));
+
+            var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+
+            if (currentUser === null) {
+                alert("Please login first!");
+                window.location.replace("#/login");
+                window.location.reload();
+            }
+
+            $("#addExamBack").click(function (e) {
+                e.preventDefault();
+                window.location.replace("#/chooseExamCategory");
+            });
+
+            $("#logout").click(function (e) {
+                e.preventDefault();
+
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
+            });
+
+            $(document).on('click', '#addExam', function () {
+                var newExam = {
+                    Exam_ID: $("#exam_id").val(),
+                    Exam_Key: $("#exam_key").val(),
+                    Exam_Value: $("#exam_value").val(),
+                    Exam_Level: $("#exam_level").val()
                 };
 
                 $.ajax({
                     type: "POST",
-                    url: "./api/add",
+                    url: "./api/addExam",
                     dataType: "json",
-                    data: newQuestion,
+                    data: newExam,
                 }).then(
                     function (response) {
                         if (response.success == 0) {
-                            alert("Question already in use!");
-                            $("#question").focus();
-                        }
-                        if (response.success == 1) {
-                            $.getJSON('./api/view', function (response) {
+                            $.getJSON('./api/viewExam', function (response) {
                                 if (response.status == 'success') {
-                                    localStorage.setItem("allQuestions", JSON.stringify(response.html));
+                                    localStorage.setItem("allExam", JSON.stringify(response.html));
                                 }
                             });
-                            alert("Question Added!");
+                            alert("Exam Added!");
+                            window.location.replace("#/manageExam");
                             window.location.reload();
                         }
                     },
@@ -187,93 +532,140 @@ $(document).ready(function () {
             });
         });
 
-        //edit
-        Path.map("#/editQuestion").to(function () {
+        //editExam
+        Path.map("#/editExam").to(function () {
 
             App.navbar.html("").append($.Mustache.render("top-nav-bar"));
             App.menubar.html("").append($.Mustache.render("side-menu-bar"));
-            App.canvas.html("").append($.Mustache.render("editQuestion"));
+            App.canvas.html("").append($.Mustache.render("editExam"));
+
+            var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+
+            if (currentUser === null) {
+                alert("Please login first!");
+                window.location.replace("#/login");
+                window.location.reload();
+            }
 
             $("#updateback").click(function (e) {
                 e.preventDefault();
-                window.location.replace("#/adminSide");
+                window.location.replace("#/manageExam");
             });
 
-            $.getJSON('./api/json/category.json', function (data) {
-                $("#updateCategory").change(function () {
-                    $.each(data, function (index, Category) {
-                        if ($("#updateCategory option:selected").val() == "Hardware") {
-                            $('#updateSubject').html('<option value="--Select--">--Select--</option>');
-                            $('#updateSubject').append('<option value="' + Category.Hardware.Printer + '">' + Category.Hardware.Printer + '</option>' + '<option value="' + Category.Hardware.Networking + '">' + Category.Hardware.Networking + '</option>');
-                        }
-                        if ($("#updateCategory option:selected").val() == "Programming") {
-                            $('#updateSubject').html('<option value="--Select--">--Select--</option>');
-                            $('#updateSubject').append('<option value="' + Category.Programming.JQuery + '">' + Category.Programming.JQuery + '</option>' + '<option value="' + Category.Programming.PHP + '">' + Category.Programming.PHP + '</option>' + '</option>' + '<option value="' + Category.Programming.MySQL + '">' + Category.Programming.MySQL + '</option>' + '</option>' + '<option value="' + Category.Programming.Java + '">' + Category.Programming.Java + '</option>');
-                        }
-                    });
-                });
+            $("#logout").click(function (e) {
+                e.preventDefault();
+
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
             });
 
-            $(document).on('click', '#updateQuestion', function () {
+            $(document).on('click', '#updateExam', function () {
 
-                var updateQuestionnaire = $('#updateQuestionnaire');
-                var updateChoice1 = $('#updateChoice1');
-                var updateChoice2 = $('#updateChoice2');
-                var updateChoice3 = $('#updateChoice3');
-                var updateChoice4 = $('#updateChoice4');
-                var updateAnswer = $('#updateAnswer');
-                var updateCategory = $('#updateCategory');
-                var updateSubject = $("updateSubject");
-                var updateLevel = $("updateLevel");
+                var updateExam_ID = $('#updateExam_ID');
+                var updateExam_Key = $('#updateExam_Key');
+                var updateExam_Value = $('#updateExam_Value');
+                var updateExam_Level = $('#updateExam_Level');
 
-                var updateQuestion = {
-                    UID: $("#updateID").val(),
-                    QQuestion: $("#updateQuestionnaire").val(),
-                    QChoice1: $("#updateChoice1").val(),
-                    QChoice2: $("#updateChoice2").val(),
-                    QChoice3: $("#updateChoice3").val(),
-                    QChoice4: $("#updateChoice4").val(),
-                    QAnswer: $("#updateAnswer").val(),
-                    QCategory: $("#updateCategory").val(),
-                    QSubject: $("#updateSubject").val(),
-                    QLevel: $("#updateLevel").val()
+                var updateExam = {
+                    EID: $("#updateID").val(),
+                    EExam_ID: $("#updateExam_ID").val(),
+                    EExam_Key: $("#updateExam_Key").val(),
+                    EExam_Value: $("#updateExam_Value").val(),
+                    EExam_Level: $("#updateExam_Level").val()
                 };
 
                 $.ajax({
                     type: "POST",
-                    url: "./api/update",
+                    url: "./api/updateExam",
                     dataType: "json",
-                    data: updateQuestion,
+                    data: updateExam,
                 }).then(
                     function (response) {
                         if (response.success == 1) {
-                            window.location.reload();
-                            $.getJSON('./api/view', function (response) {
+                            $.getJSON('./api/viewExam', function (response) {
                                 if (response.status == 'success') {
-                                    localStorage.setItem("allQuestions", JSON.stringify(response.html));
+                                    localStorage.setItem("allExam", JSON.stringify(response.html));
                                 }
                             });
-                            window.location.reload();
+                            window.location.replace("#/manageExam");
                             alert("Data updated successfully!");
-                        }
-                        if (response.success == 0) {
-                            alert("Please choose another question.");
-                            $("#updateQuestionnaire").focus();
-
+                            window.location.reload();
                         }
                     },
                 );
             });
         });
 
-        // user information
-        Path.map("#/userInformation").to(function () {
+        // examineeRanking
+        Path.map("#/examineeRanking").to(function () {
+
+            App.navbar.html("").append($.Mustache.render("top-nav-bar"));
+            App.menubar.html("").append($.Mustache.render("side-menu-bar"));
+
+            var examineeRanking = JSON.parse(localStorage.getItem('examineeRanking'));
+            console.log(examineeRanking);
+
+            var data = [];
+            $.each(examineeRanking, function (index, item) {
+                var html = {
+                    firstname: item.firstname,
+                    lastname: item.lastname,
+                    course: item.course,
+                    subject: item.subject,
+                    score: item.score
+                }
+                data.push(html);
+            });
+            var rankingData = {
+                ranking: data
+            }
+            console.log(rankingData);
+
+            $.getJSON('./api/viewRanking', function (response) {
+                if (response.status == 'success') {
+                    localStorage.setItem("examineeRanking", JSON.stringify(response.html));
+                }
+            });
+
+            App.canvas.html("").append($.Mustache.render("examineeRanking", rankingData));
+
+            $('#rankingTable').dataTable();
+
+            var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
+
+            $("#logout").click(function (e) {
+                e.preventDefault();
+
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
+            });
+        });
+
+        // manageExaminee
+        Path.map("#/manageExaminee").to(function () {
 
             App.navbar.html("").append($.Mustache.render("top-nav-bar"));
             App.menubar.html("").append($.Mustache.render("side-menu-bar"));
 
             var examineesData = JSON.parse(localStorage.getItem('examineesData'));
             console.log(examineesData);
+
             var data = [];
             $.each(examineesData, function (index, item) {
                 var html = {
@@ -286,10 +678,10 @@ $(document).ready(function () {
                 }
                 data.push(html);
             });
-            var templateData = {
+            var userData = {
                 userInformation: data
             }
-            console.log(templateData);
+            console.log(userData);
 
             $.getJSON('./api/viewUser', function (response) {
                 if (response.status == 'success') {
@@ -297,24 +689,35 @@ $(document).ready(function () {
                 }
             });
 
-            App.canvas.html("").append($.Mustache.render("userInformation", templateData));
+            App.canvas.html("").append($.Mustache.render("manageExaminee", userData));
+
+            $('#examineeTable').dataTable();
 
             var currentUser = JSON.parse(localStorage.getItem('adminLogin'));
 
-            if (currentUser === null) {
-                alert("Please login first!");
-                window.location.replace("#/login");
-                window.location.reload();
-            }
+            $("#logout").click(function (e) {
+                e.preventDefault();
+
+                if (currentUser === null) {
+                    alert("No current user detected.");
+                    return false;
+                }
+                else {
+                    localStorage.removeItem("adminLogin");
+                    alert("Logged out successfully.");
+                    window.location.replace("#/home");
+                    window.location.reload();
+                }
+            });
         });
 
-
+        // admin login
         Path.map("#/login").to(function () {
             App.canvas.html("").append($.Mustache.render("login"));
 
             $(document).on('click', '#login', function (e) {
                 e.preventDefault();
-                if ($("#username").val() != "admin" && $("#password").val() != "admin") {
+                if ($("#username").val() != "admin" || $("#password").val() != "admin") {
                     alert("Invalid Credentials!");
                 }
                 else {
@@ -322,11 +725,12 @@ $(document).ready(function () {
                     var password = $("#password").val();
                     var adminLogin = {
                         Username: username,
-                        Password: password,
+                        Password: CryptoJS.MD5(password),
                     };
                     alert("Logged in as Admin!");
                     localStorage.setItem('adminLogin', JSON.stringify(adminLogin));
-                    window.location.replace("#/adminSide");
+                    window.location.replace("#/manageCategory");
+                    window.location.reload();
                 }
             });
         });
@@ -334,21 +738,31 @@ $(document).ready(function () {
         //home
         Path.map("#/home").to(function () {
             App.canvas.html("").append($.Mustache.render("home"));
-            $(document).on('click', '#credentials', function (e) {
+            $(document).on('click', '#userCredentials', function (e) {
                 e.preventDefault();
-                window.location.replace("#/credentials");
+                window.location.replace("#/userCredentials");
             });
         });
 
+        //userCredentials
+        Path.map("#/userCredentials").to(function () {
+            App.canvas.html("").append($.Mustache.render("userCredentials"));
 
+            $.getJSON('./api/json/category.json', function (data) {
 
-
-
-        // user side
-
-        // add user
-        Path.map("#/credentials").to(function () {
-            App.canvas.html("").append($.Mustache.render("credentials"));
+                $("#category").change(function () {
+                    $.each(data, function (index, Category) {
+                        if ($("#category option:selected").val() == "Hardware") {
+                            $('#subject').html('<option value="--Select--">--Select--</option>');
+                            $('#subject').append('<option value="' + Category.Hardware.Printer + '">' + Category.Hardware.Printer + '</option>' + '<option value="' + Category.Hardware.Networking + '">' + Category.Hardware.Networking + '</option>');
+                        }
+                        if ($("#category option:selected").val() == "Programming") {
+                            $('#subject').html('<option value="--Select--">--Select--</option>');
+                            $('#subject').append('<option value="' + Category.Programming.JQuery + '">' + Category.Programming.JQuery + '</option>' + '<option value="' + Category.Programming.PHP + '">' + Category.Programming.PHP + '</option>' + '</option>' + '<option value="' + Category.Programming.MySQL + '">' + Category.Programming.MySQL + '</option>' + '</option>' + '<option value="' + Category.Programming.Java + '">' + Category.Programming.Java + '</option>');
+                        }
+                    });
+                });
+            });
 
             $(document).on('click', '#beginExam', function (e) {
                 e.preventDefault();
@@ -368,10 +782,6 @@ $(document).ready(function () {
                 }).then(
                     function (response) {
                         if (response.success == 0) {
-                            alert("Username already in use!");
-                            $("#uname").focus();
-                        }
-                        if (response.success == 1) {
                             console.log("First name: " + $("#fname").val());
                             console.log("Last name: " + $("#lname").val());
                             console.log("Email: " + $("#email").val());
@@ -384,16 +794,25 @@ $(document).ready(function () {
                                 }
                             });
                             alert("Successfully Registered!");
-                            window.location.replace("#/home");
+                            window.location.replace("#/showQuestion");
+                            window.location.reload();
                         }
                     },
                 );
             });
         });
 
-        Path.map("#/cate").to(function () {
-            App.canvas.html("").append($.Mustache.render("credentials"));
+        Path.map("#/showQuestion").to(function () {
+            App.canvas.html("").append($.Mustache.render("showQuestion"));
 
+            $.getJSON("./api/showQuestion", function (response) {
+                $("#questionID").val(response.id);
+                $("#question").val(response.id);
+                $("#questionChoice1").val(response.exam_id);
+                $("#questionChoice2").val(response.exam_key);
+                $("#questionChoice3").val(response.exam_value);
+                $("#questionChoice4").val(response.exam_level);
+            });
         });
 
         Path.root("#/home");
